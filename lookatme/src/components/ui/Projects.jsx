@@ -47,7 +47,7 @@ export const Project = () => {
     ];
   
     return (
-      <section id="projects" className="h-screen w-full py-16 px-6">
+      <section id="projects" className="h-screen w-full py-16 px-6 overflow-scroll">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-6xl font-bold text-bold mb-12">
             My Projects
