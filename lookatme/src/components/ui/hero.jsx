@@ -2,7 +2,7 @@ export const Hero = () => {
     return (
       <div className="h-screen py-16 px-6">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
-          <div className="w-64 h-64 rounded-full overflow-hidden border-4 border-black mb-12">
+          <div className="w-80 h-80 rounded-full overflow-hidden border-4 border-black mb-12 hover:border-blue-700">
             <img 
               src="/images/me.jpeg" 
               alt="Profile"
