@@ -53,7 +53,7 @@ export const Project = () => {
             My Projects
           </h2>
           <h3 className="text-4xl font-bold text-bold mb-12">
-            Meesa Loves Making Things. Here's some of them: 
+            Me Loves Making Things. Here's some of them: 
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {projects.map((project, index) => (
