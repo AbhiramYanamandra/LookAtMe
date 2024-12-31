@@ -9,7 +9,7 @@ export const Navigation = () => {
           <div className="text-2xl font-bold border-2 border-black p-2">
             <a href="#home">AY</a>
           </div>
-          <div className="space-x-8">
+          <div className="flex flex-col sm:flex-row sm:space-x-8 items-center space-y-4 sm:space-y-0">
             {['Projects', 'Extras', 'Media'].map((item) => (
               <a
                 key={item}
@@ -22,7 +22,7 @@ export const Navigation = () => {
             ))}
           </div>
         </div>
-        <Button variant="outline" className="border-2 border-black px-8 py-6 font-bold text-2xl hover:text-white hover:bg-black">
+        <Button variant="outline" className="border-2 border-black px-3 py-2 md:px-8 md:py-6 font-bold text-2xl hover:text-white hover:bg-black">
           <a href="#contact">Contact Me</a>
         </Button>
       </div>
