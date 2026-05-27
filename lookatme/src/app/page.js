@@ -6,9 +6,11 @@ import { Contact } from "@/components/ui/contact";
 
 export default function Home() {
   return (
-    <div id="home" className="min-h-screen bg-white">
-      <Navigation />
-      <Hero />
+    <div id="home" className="bg-white">
+      <div className="h-screen flex flex-col">
+        <Navigation />
+        <Hero />
+      </div>
       <FeaturedWork />
       <Project />
       <Contact />
