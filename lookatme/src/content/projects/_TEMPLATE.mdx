@@ -1,0 +1,58 @@
+---
+# Copy this file to `<slug>.mdx` (lowercase letters, numbers, hyphens).
+# The file name becomes the URL: /projects/<slug>. Files starting with "_" are ignored.
+
+title: Project title
+summary: One or two sentences shown on cards and as the page description.
+badge: Short category label          # optional; defaults to the first field's label
+fields: [frontend]                   # ids from src/content/fields.js; may be empty
+technologies: [React, PostgreSQL]    # optional list
+date: 2025-06                        # optional; YYYY, YYYY-MM, or YYYY-MM-DD
+status: complete                     # optional; complete | in-progress | paused | archived
+role: Solo build                     # optional
+team: Individual project             # optional
+
+cover:                               # optional but recommended
+  src: /images/my-project.png        # file under public/
+  alt: What the image shows
+  fit: contain                       # contain (screenshots, diagrams) | cover (photos)
+  kind: screenshot                   # screenshot | photo | render | diagram | illustration
+
+gallery:                             # optional extra evidence, shown after the body
+  - src: /images/my-project-detail.png
+    alt: What the image shows
+    caption: Short caption
+    kind: screenshot
+
+links:                               # optional
+  - label: Source code
+    url: https://github.com/you/repo
+
+order: 99                            # library "Recommended" rank (required, lower = earlier)
+# featured: 4                        # optional homepage rank; 1 = lead card, 2–3 = supporting cards
+# hero:                              # optional homepage carousel object
+#   order: 6
+#   treatment: frame                 # frame (default) | print | screen | board | paper | terminal
+#   tagline: SHORT LABEL
+# card:
+#   visual: image                    # image (default) | screenshot | board | stages
+#   action: Explore the project      # card action label
+
+draft: true                          # true hides the project everywhere; set false to publish
+---
+
+## Overview
+
+What the project is and why it exists.
+
+## Problem and constraints
+
+## My contribution
+
+## Technical decisions
+
+## Outcomes and lessons
+
+<Figure src="/images/my-project.png" alt="What it shows" caption="Caption" kind="screenshot" />
+
+<Note>Use a note for honest caveats — e.g. that an image is a render or concept illustration.</Note>

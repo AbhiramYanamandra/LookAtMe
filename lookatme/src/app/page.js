@@ -1,24 +1,29 @@
-import { FeaturedWork } from "@/components/ui/Featured";
-import { Hero } from "@/components/ui/hero";
-import { Navigation } from "@/components/ui/navigation";
-import { Project } from "@/components/ui/Projects";
-import { Contact } from "@/components/ui/contact";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { Hero } from "@/components/home/Hero";
+import { Introduction } from "@/components/home/Introduction";
+import { SelectedWork } from "@/components/home/SelectedWork";
+import { ScrollStory } from "@/components/home/ScrollStory";
+import { getPublishedProjects, toSummary } from "@/lib/projects";
+import { featuredProjects, heroProjects, populatedFields } from "@/lib/project-queries";
 
-export default function Home() {
+export default function HomePage() {
+  const projects = getPublishedProjects().map(toSummary);
+
   return (
-    <div id="home" className="bg-white">
-      <div className="h-screen flex flex-col">
-        <Navigation />
-        <Hero />
-      </div>
-      <FeaturedWork />
-      <Project />
-      <Contact />
-      <footer className="bg-slate-900 py-8">
-        <div className="max-w-6xl mx-auto px-4 text-white text-center text-gray-600">
-          <p>&copy; {new Date().getFullYear()} Abhiram Yanamandra. All rights reserved.</p>
+    <>
+      <SiteHeader overlay />
+      <ScrollStory />
+      <main>
+        <Hero projects={heroProjects(projects)} />
+        <div className="al-below">
+          <Introduction />
+          <SelectedWork featured={featuredProjects(projects)} fields={populatedFields(projects)} />
         </div>
-      </footer>
-    </div>
+      </main>
+      <div className="al-below">
+        <SiteFooter />
+      </div>
+    </>
   );
 }

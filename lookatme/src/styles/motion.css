@@ -1,0 +1,456 @@
+/* ==================================================================
+   Motion system. Tokens live in globals.css / src/lib/motion.js.
+
+   Rules of the system:
+   - Scroll reveals own `transform` + `opacity`.
+   - Hover uses the individual `translate` property; press uses `scale`.
+     They compose with reveal transforms, the portrait's rotation, the
+     mini-board rotation, and the carousel's transforms instead of
+     overwriting them.
+   - Each element gets exactly one entrance.
+   ================================================================== */
+
+/* --- Links, buttons, controls -------------------------------------- */
+a,
+button,
+select {
+  transition:
+    color var(--motion-hover) var(--ease-out),
+    border-color var(--motion-hover) var(--ease-out),
+    background-color var(--motion-hover) var(--ease-out),
+    box-shadow var(--motion-hover) var(--ease-out),
+    scale var(--motion-press) var(--ease-out);
+}
+/* Press feedback only on actual controls. */
+button:active,
+.al-card-link:active,
+.al-field-actions a:active,
+.pl-filters a:active,
+.al-intro-links a:active,
+.cs-links a:active,
+.cs-back:active {
+  scale: 0.98;
+}
+.al-control:active {
+  scale: 0.94;
+}
+
+/* Navigation links: a thin blue underline draws across. */
+.al-nav a:not(.al-nav-contact) {
+  position: relative;
+}
+.al-nav a:not(.al-nav-contact)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: var(--al-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-hover) var(--ease-out);
+}
+.al-nav a:not(.al-nav-contact):hover::after,
+.al-nav a:not(.al-nav-contact):focus-visible::after,
+.al-nav a.is-navigating::after {
+  transform: scaleX(1);
+}
+.al-nav-contact:hover {
+  border-bottom-color: var(--al-blue-hover);
+}
+
+/* Arrows travel 2–3px in their pointing direction. */
+.al-card-link svg,
+.al-nav-contact svg,
+.cs-links svg,
+.pl-overview-title svg,
+.al-bottom-left svg,
+.cs-back svg {
+  transition: translate var(--motion-hover) var(--ease-out);
+}
+.al-card-link:hover svg,
+.al-nav-contact:hover svg,
+.cs-links a:hover svg,
+.pl-overview-title a:hover svg {
+  translate: 2px -2px;
+}
+.al-bottom-left a:hover svg {
+  translate: 0 3px;
+}
+.cs-back:hover svg {
+  translate: -3px 0;
+}
+
+/* Restrained brightening for chip-style links and controls. */
+.al-field-actions a:hover,
+.pl-filters a:hover:not([aria-current="true"]),
+.pl-sort select:hover,
+.pl-sort button:hover {
+  background: #0f2240;
+  border-color: #3a76c4;
+}
+.al-control {
+  transition:
+    background-color var(--motion-hover) var(--ease-out),
+    border-color var(--motion-hover) var(--ease-out),
+    scale var(--motion-press) var(--ease-out);
+}
+.is-navigating {
+  color: var(--al-blue-hover);
+}
+.pl-filters a.is-pending {
+  background: var(--al-blue);
+  border-color: var(--al-blue);
+  color: #050505;
+}
+.pl-filters a.is-pending .pl-count {
+  color: #05050599;
+}
+
+/* --- Project cards --------------------------------------------------- */
+@property --lag {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+.al-project-card,
+.pl-overview-card {
+  transition:
+    border-color var(--motion-hover) var(--ease-out),
+    box-shadow var(--motion-hover) var(--ease-out),
+    translate var(--motion-hover) var(--ease-out),
+    transform 460ms var(--ease-out) var(--reveal-delay, 0ms),
+    opacity 320ms var(--ease-out) var(--reveal-delay, 0ms),
+    --lag 620ms var(--ease-out) var(--reveal-delay, 0ms);
+}
+.al-project-card img,
+.al-project-card .al-mini-board {
+  transition: scale var(--motion-hover) var(--ease-out);
+}
+@media (hover: hover) {
+  .al-project-card:hover,
+  .pl-overview-card:hover {
+    translate: 0 -2px;
+    border-color: #3f86e0;
+    box-shadow: 0 0 22px #1685ff12, 0 8px 24px #0006;
+  }
+  .al-project-card:hover .al-card-visual img,
+  .al-project-card:hover .al-image-visual img,
+  .al-project-card:hover .pl-card-visual img,
+  .al-project-card:hover .al-mini-board {
+    scale: 1.01;
+  }
+  .al-project-card:hover .al-card-link svg {
+    translate: 2px -2px;
+  }
+}
+/* Touch: brighten the border on press; no scaling of the whole card. */
+.al-project-card:active {
+  border-color: var(--al-blue);
+}
+
+/* --- Scroll-linked movement (ScrollStory.jsx; reversible) --------------- */
+/* Leaving the hero, the carousel drifts up and fades near the edge. */
+.al-orbit {
+  translate: 0 var(--hero-shift, 0px);
+  opacity: var(--hero-fade, 1);
+}
+/* Card imagery sits a little deeper than its frame. */
+[data-depth] {
+  translate: 0 var(--depth, 0px);
+}
+.al-object {
+  opacity: var(--al-carousel-visibility, 1);
+}
+.al-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* --- One-time entrances ("data-reveal") -------------------------------- */
+/* Hidden only while JavaScript runs and motion is allowed, so no-JS and
+   reduced-motion visitors see everything at once. A CSS safety timer shows
+   content anyway if the observer never runs. Element-level hidden states
+   use `transform`; child-level states use `translate`, so nothing collides
+   with hover (`translate` on cards) or rest transforms. */
+:root {
+  --reveal-distance: 12px;
+  --reveal-tilt: 5deg;
+  --reveal-lift: 18px;
+}
+@media (max-width: 700px) {
+  :root {
+    --reveal-distance: 8px;
+    --reveal-tilt: 3deg;
+    --reveal-lift: 12px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] {
+    --d: var(--reveal-delay, 0ms);
+  }
+
+  /* Default: fade up. */
+  html.js [data-reveal]:not(.is-revealed):not(.al-project-card):not(.al-portrait):not([data-reveal="draw"]) {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance));
+    animation: al-reveal-safety 1ms linear 3000ms forwards;
+  }
+  html.js [data-reveal]:not(.al-project-card):not(.pl-overview-card):not(.al-portrait) {
+    transition:
+      opacity var(--motion-reveal) var(--ease-out) var(--d),
+      transform var(--motion-reveal) var(--ease-out) var(--d);
+  }
+  html.js [data-reveal].is-revealed:not(.al-portrait) {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Children that arrive in their own order (copy, heading, sequences). */
+  html.js [data-reveal] :is(.lr-word, .al-intro-text, .al-intro-links, .al-profile-copy > .al-mono, .al-work-heading .al-mono, .al-work-heading h2, .al-work-heading > span, .al-field-discovery > span, .al-field-actions a, .al-contact > *, .al-portrait figcaption) {
+    transition:
+      opacity var(--motion-reveal) var(--ease-out) var(--child-delay, 0ms),
+      translate var(--motion-reveal) var(--ease-out) var(--child-delay, 0ms);
+  }
+  html.js [data-reveal]:not(.is-revealed) :is(.lr-word, .al-intro-text, .al-intro-links, .al-profile-copy > .al-mono, .al-work-heading .al-mono, .al-work-heading h2, .al-work-heading > span, .al-field-discovery > span, .al-field-actions a, .al-contact > *, .al-portrait figcaption) {
+    opacity: 0;
+    translate: 0 8px;
+    animation: al-reveal-safety-child 1ms linear 3000ms forwards;
+  }
+
+  /* Introduction copy: label → heading line by line → text → links. */
+  html.js [data-reveal="copy"] .lr-word {
+    display: inline-block;
+    translate: 0 0;
+  }
+  html.js [data-reveal="copy"]:not(.is-revealed) .lr-word {
+    translate: 0 0.5em;
+  }
+  html.js [data-reveal="copy"] .al-mono { --child-delay: var(--d); }
+  html.js [data-reveal="copy"] .lr-word { --child-delay: calc(var(--d) + 60ms + var(--line, 0) * 90ms); }
+  html.js [data-reveal="copy"] .al-intro-text { --child-delay: calc(var(--d) + 220ms); }
+  html.js [data-reveal="copy"] .al-intro-links { --child-delay: calc(var(--d) + 300ms); }
+  html.js [data-reveal="copy"]:not(.is-revealed) {
+    transform: none;
+  }
+
+  /* Portrait: a mask slides upward, uncovering the photograph, while the
+     frame settles into its approved -3deg. The blue offset frame is part
+     of the same box, so it is uncovered with the photo. */
+  html.js .al-portrait[data-reveal] {
+    transition: transform 620ms var(--ease-out) var(--d);
+  }
+  html.js .al-portrait[data-reveal] .al-portrait-frame {
+    /* Generous negative insets keep the approved soft shadow uncut at rest. */
+    clip-path: inset(-40px -50px -50px -40px);
+    transition: clip-path 560ms var(--ease-out) var(--d);
+  }
+  html.js .al-portrait[data-reveal]:not(.is-revealed) {
+    transform: rotate(-1deg) translateY(6px);
+    animation: al-reveal-safety-portrait 1ms linear 3000ms forwards;
+  }
+  html.js .al-portrait[data-reveal]:not(.is-revealed) .al-portrait-frame {
+    clip-path: inset(100% -50px -50px -40px);
+    animation: al-reveal-safety-clip 1ms linear 3000ms forwards;
+  }
+  html.js .al-portrait[data-reveal].is-revealed {
+    transform: rotate(-3deg);
+  }
+  html.js .al-portrait[data-reveal] figcaption { --child-delay: calc(var(--d) + 320ms); }
+
+  /* Selected work heading: label, then heading rises, then the aside. */
+  html.js [data-reveal="heading"]:not(.is-revealed) {
+    opacity: 1;
+    transform: none;
+  }
+  html.js [data-reveal="heading"] .al-mono { --child-delay: var(--d); }
+  html.js [data-reveal="heading"] h2 { --child-delay: calc(var(--d) + 80ms); }
+  html.js [data-reveal="heading"] > span { --child-delay: calc(var(--d) + 160ms); }
+  html.js [data-reveal="heading"]:not(.is-revealed) h2 {
+    translate: 0 var(--reveal-lift);
+  }
+
+  /* Project cards: rise with a slight tilt that settles flat; imagery lags
+     the frame by a few pixels for depth. */
+  html.js .al-project-card[data-reveal] {
+    transform-origin: 50% 100%;
+  }
+  html.js .al-project-card[data-reveal]:not(.is-revealed) {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(var(--reveal-tilt)) translateY(var(--reveal-lift));
+    --lag: -10px;
+    animation: al-reveal-safety 1ms linear 3000ms forwards;
+  }
+  html.js .al-project-card[data-reveal].is-revealed {
+    --lag: 0px;
+  }
+  .al-image-visual img,
+  .al-diagram-visual span {
+    transform: translateY(var(--lag, 0px));
+  }
+
+  /* Field links appear in a quick sequence. */
+  html.js [data-reveal="sequence"]:not(.is-revealed) {
+    transform: translateY(6px);
+  }
+  html.js [data-reveal="sequence"] > span { --child-delay: var(--d); }
+  html.js [data-reveal="sequence"] .al-field-actions a { --child-delay: calc(var(--d) + 80ms + var(--seq, 0) * 40ms); }
+
+  /* Footer: a blue divider draws across, then "Let's build something"
+     rises as the final focal point. */
+  html.js [data-reveal="draw"] {
+    position: relative;
+  }
+  html.js [data-reveal="draw"]::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 1px;
+    background: var(--al-blue);
+    transform: scaleX(1);
+    transform-origin: left;
+    opacity: 0;
+    transition:
+      transform 620ms var(--ease-out) var(--d),
+      opacity 400ms var(--ease-out) calc(var(--d) + 620ms);
+  }
+  html.js [data-reveal="draw"]:not(.is-revealed)::before {
+    transform: scaleX(0);
+    opacity: 1;
+    transition: none;
+  }
+  html.js [data-reveal="draw"] > a:first-child { --child-delay: calc(var(--d) + 360ms); }
+  html.js [data-reveal="draw"] > .al-contact-links { --child-delay: calc(var(--d) + 260ms); }
+  html.js [data-reveal="draw"] > span { --child-delay: calc(var(--d) + 300ms); }
+  html.js [data-reveal="draw"]:not(.is-revealed) > a:first-child {
+    translate: 0 12px;
+  }
+}
+/* Shown without motion: already in view after a navigation, arriving from
+   above, focused, or history. */
+html.js [data-reveal].is-instant,
+html.js [data-reveal].is-instant *,
+html.js [data-reveal].is-instant::before {
+  transition: none !important;
+}
+@keyframes al-reveal-safety {
+  to {
+    opacity: 1;
+    transform: none;
+    --lag: 0px;
+  }
+}
+@keyframes al-reveal-safety-child {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes al-reveal-safety-portrait {
+  to {
+    transform: rotate(-3deg);
+  }
+}
+@keyframes al-reveal-safety-clip {
+  to {
+    clip-path: inset(-40px -50px -50px -40px);
+  }
+}
+
+/* --- Hero entrance: droplet → wordmark ---------------------------------- */
+/* Set by the bootstrap script before the hero is painted, so the name and
+   the carousel never flash before the droplet. A CSS timer un-hides the name
+   if the entrance script never takes over (e.g. a script error). */
+@media (prefers-reduced-motion: no-preference) {
+  html.al-entrance-pending .al-wordmark {
+    clip-path: polygon(0 0, 0 0, 0 0);
+    animation: al-wordmark-unhide 1ms linear 2500ms forwards;
+  }
+  html.al-entrance-pending .al-object {
+    opacity: 0;
+    animation: al-object-in 1ms linear 2500ms forwards;
+  }
+  html.al-entrance-playing .al-wordmark {
+    text-shadow: none;
+  }
+  html.al-entrance-settled .al-wordmark {
+    animation: al-glow-in 260ms var(--ease-out) both;
+  }
+}
+@keyframes al-wordmark-unhide {
+  to {
+    clip-path: none;
+  }
+}
+@keyframes al-object-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes al-glow-in {
+  from {
+    text-shadow: 0 0 35px #1685ff00, 0 0 100px #0879ff00;
+  }
+  to {
+    text-shadow: var(--al-glow-wordmark);
+  }
+}
+/* Decorative particles: transparent until their own animation starts. */
+.al-droplet,
+.al-splash,
+.al-ripple {
+  position: absolute;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+.al-droplet {
+  border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+  background: var(--al-blue);
+  box-shadow: 0 0 10px #1685ff66;
+}
+.al-splash {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--al-blue);
+}
+.al-ripple {
+  border: 1.5px solid var(--al-blue);
+  border-radius: 50%;
+}
+
+/* --- Reading progress ---------------------------------------------------- */
+.cs-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+  background: var(--al-blue);
+  transform-origin: left;
+  transform: scaleX(0);
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--ease-out);
+}
+.cs-progress.is-visible {
+  opacity: 1;
+}
+
+/* --- Animated library grid ----------------------------------------------- */
+.pl-grid {
+  position: relative;
+}
+.pl-cell.is-leaving {
+  position: absolute;
+  pointer-events: none;
+}

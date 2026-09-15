@@ -1,0 +1,43 @@
+---
+title: Five-stage processor
+summary: A pipelined MIPS-style processor, extended to support Branch Not Equal.
+badge: Digital systems
+fields: [hardware]
+technologies: []
+cover:
+  src: /images/processor.png
+  alt: Diagram of a five-stage pipelined MIPS datapath with IF/ID, ID/EX, EX/MEM, and MEM/WB pipeline registers
+  fit: contain
+  kind: diagram
+  caption: Reference diagram of the standard five-stage pipelined datapath with control signals. It explains the architecture the project follows; it is not the project’s own schematic or a simulation screenshot.
+order: 3
+featured: 3
+hero:
+  order: 3
+  treatment: paper
+  eyebrow: DIGITAL SYSTEMS
+  headline: Inside the instruction cycle.
+  tagline: FIVE-STAGE PIPELINE
+  footnote: BNE ↗
+card:
+  visual: stages
+  action: Inside the architecture
+  titleLines: [Five-stage, processor]
+draft: false
+---
+
+## Overview
+
+A pipelined, MIPS-style processor split into the classic five stages — **Fetch, Decode, Execute, Memory, and Writeback** — with pipeline registers between each stage so several instructions are in flight at once.
+
+## The BNE extension
+
+The base design was extended to support the **Branch Not Equal (BNE)** instruction, which requires the branch-decision logic to act on the ALU's comparison result and steer the program counter accordingly.
+
+## About the diagram
+
+The datapath diagram at the top of this page is the **standard textbook five-stage pipeline** with its control signals. It is shown to explain the architecture the project follows; it is not the project’s own schematic or a simulation screenshot. The simplified five-box illustration on the homepage card is likewise an explanatory graphic, not implementation evidence.
+
+<Note>
+  The hardware description language, the simulation or FPGA target, the verification approach, and any measured results are not yet documented here.
+</Note>
