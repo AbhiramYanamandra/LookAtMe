@@ -83,6 +83,44 @@
   width: 95%;
   user-select: none;
 }
+/* The light source. Sits above the wordmark (z 1) and below the carousel
+   objects (z 3–4), so it washes across the signature without touching the
+   artefacts. Only opacity transitions — the position must not lag the
+   pointer, or it stops reading as light and starts reading as a blob. */
+.al-hero-light {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 760px;
+  height: 760px;
+  margin: -380px 0 0 -380px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(closest-side, #1685ff2b, #1685ff10 46%, transparent 72%);
+  transform: translate3d(var(--hero-lx, 0px), var(--hero-ly, 0px), 0);
+  transition: opacity 420ms var(--ease-out);
+}
+.al-hero[data-lit] .al-hero-light {
+  opacity: 1;
+  will-change: transform;
+}
+
+/* Current through the signature. Sits directly over the lettering (z 1) and
+   under the carousel objects, so the pulse reads as travelling inside the
+   stroke rather than floating above the page. Additive light only — the
+   canvas is transparent between pulses and carries nothing semantic. */
+.al-wordmark-trace {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .al-side {
   position: absolute;
   z-index: 4;
@@ -546,10 +584,25 @@
 }
 .al-intro-links {
   display: flex;
-  gap: 23px;
+  flex-wrap: wrap;
+  gap: 8px 23px;
   margin-top: 20px;
   font-size: 12px;
   color: var(--al-blue);
+}
+.al-intro-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  transition: color var(--motion-hover) var(--ease-out);
+}
+.al-intro-links a svg {
+  width: 13px;
+  height: 13px;
+}
+.al-intro-links a:hover {
+  color: var(--al-blue-hover);
 }
 .al-work {
   padding: 23px 0 46px;
@@ -758,6 +811,18 @@
   border-radius: 10px;
   border: 1px solid #1685ff88;
   box-shadow: 7px 7px 0 #1685ff, 0 12px 35px #0007;
+  transition: transform var(--motion-hover) var(--ease-out),
+    box-shadow var(--motion-hover) var(--ease-out);
+}
+/* The one photograph on the page is a print pasted to the black, so it
+   behaves like one: it lifts a little toward the light and its hard shadow
+   lengthens. It never glows — objects don't, under The Glow/Paste Rule.
+   Kept to 2px so it reads as material, not as a clickable affordance. */
+@media (hover: hover) {
+  .al-portrait:hover img {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0 var(--al-blue), 0 16px 42px #0008;
+  }
 }
 .al-portrait figcaption {
   font-family: var(--font-mono);
@@ -820,6 +885,19 @@
   display: flex;
   flex-direction: column;
 }
+/* The lead card is as tall as the two support cards stacked, but its copy is
+   no longer. The artefact takes the slack instead of the body, which used to
+   leave ~130px of void under the summary — and the screenshot gets the room. */
+.al-lead-card .al-card-visual {
+  flex: 1;
+  height: auto;
+  min-height: 264px;
+  /* Clearance for the index label so it never collides with the plate. */
+  padding: 44px 25px 25px;
+}
+.al-lead-card .al-card-body {
+  flex: 0 0 auto;
+}
 .al-card-visual {
   height: 264px;
   background: radial-gradient(ellipse at 50% 75%, #163a75, #080e1b 80%);
@@ -833,6 +911,10 @@
 .al-card-visual img {
   width: 100%;
   height: auto;
+  /* The plate is contained, never cropped: a screenshot clipped by its own
+     frame reads as a mistake, not as a crop. */
+  max-height: 100%;
+  object-fit: contain;
   display: block;
   border: 1px solid #4c6792;
   border-radius: 6px;
@@ -849,6 +931,160 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
+/* --- Drafting annotations on the selected-work cards ------------------
+   The card becomes a plate on a drawing: crop marks strike out from their
+   corners, the dimension line draws from the centre, the measurement lands
+   last. Pointer and keyboard only — on touch there is no hover state to
+   hang them from, and they are supplementary to information the card
+   already states in its badge, title, and summary. */
+.al-spec {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.al-spec i {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--al-blue);
+  opacity: 0;
+  transform: scale(0.1);
+  transition: opacity var(--motion-hover) var(--ease-out),
+    transform var(--motion-reveal) var(--ease-out);
+}
+.al-spec .al-spec-tl {
+  top: 12px;
+  left: 12px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  transform-origin: 0 0;
+}
+.al-spec .al-spec-tr {
+  top: 12px;
+  right: 12px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  transform-origin: 100% 0;
+}
+.al-spec .al-spec-bl {
+  bottom: 12px;
+  left: 12px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  transform-origin: 0 100%;
+}
+.al-spec .al-spec-br {
+  bottom: 12px;
+  right: 12px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  transform-origin: 100% 100%;
+}
+.al-spec-dim {
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: 20px;
+  height: 1px;
+  background: var(--al-blue);
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity var(--motion-hover) var(--ease-out) 60ms,
+    transform var(--motion-reveal) var(--ease-out) 60ms;
+}
+/* End ticks, so it reads as a measurement and not as a divider. */
+.al-spec-dim::before,
+.al-spec-dim::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 9px;
+  background: var(--al-blue);
+}
+.al-spec-dim::before {
+  left: 0;
+}
+.al-spec-dim::after {
+  right: 0;
+}
+.al-spec-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 27px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8dc5ff;
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--ease-out) 140ms;
+}
+/* The compact variant lives in a 116px column: crop marks and the reading,
+   no dimension line, because there is no width to measure across. */
+.al-spec--compact .al-spec-label {
+  bottom: 12px;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+.al-spec--compact i {
+  width: 10px;
+  height: 10px;
+  top: auto;
+  bottom: auto;
+}
+.al-spec--compact .al-spec-tl,
+.al-spec--compact .al-spec-tr {
+  top: 9px;
+}
+.al-spec--compact .al-spec-bl,
+.al-spec--compact .al-spec-br {
+  bottom: 26px;
+}
+.al-spec--compact .al-spec-tl,
+.al-spec--compact .al-spec-bl {
+  left: 9px;
+}
+.al-spec--compact .al-spec-tr,
+.al-spec--compact .al-spec-br {
+  right: 9px;
+}
+
+@media (hover: hover) {
+  .al-project-card:hover .al-spec i,
+  .al-project-card:hover .al-spec-dim,
+  .al-project-card:hover .al-spec-label {
+    opacity: 1;
+    transform: none;
+  }
+  .al-project-card:hover .al-spec i {
+    opacity: 0.8;
+  }
+}
+.al-project-card:focus-within .al-spec i,
+.al-project-card:focus-within .al-spec-dim,
+.al-project-card:focus-within .al-spec-label {
+  opacity: 1;
+  transform: none;
+}
+.al-project-card:focus-within .al-spec i {
+  opacity: 0.8;
+}
+
+/* Reduced motion keeps the annotation — it carries information — and drops
+   only the drawing-in. */
+@media (prefers-reduced-motion: reduce) {
+  .al-spec i {
+    transform: none;
+  }
+  .al-spec-dim {
+    transform: scaleX(1);
+  }
+}
+
 .al-card-body {
   padding: 24px;
   display: flex;
@@ -949,6 +1185,7 @@
   top: -23px;
 }
 .al-diagram-visual {
+  position: relative;
   background: radial-gradient(ellipse, #103261, #091423);
   display: flex;
   flex-direction: column;
@@ -958,7 +1195,13 @@
   padding: 14px;
   min-height: 242px;
 }
-.al-diagram-visual span {
+.al-stage-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+.al-stage-stack span {
   position: relative;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -970,7 +1213,7 @@
   padding: 6px 0;
   border-radius: 3px;
 }
-.al-diagram-visual span:not(:last-child):after {
+.al-stage-stack span:not(:last-child):after {
   content: "";
   position: absolute;
   width: 1px;
@@ -1018,20 +1261,37 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+/* The same chip as the project library, held to the same 44px standard. */
 .al-field-actions a {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   border: 1px solid #24538b;
   background: #0b1a2e;
   color: #88bcff;
   border-radius: 5px;
-  padding: 8px 10px;
-  font-size: 11px;
-  min-height: 35px;
+  padding: 10px 13px;
+  font-size: 12px;
+  min-height: 44px;
+  transition: border-color var(--motion-hover) var(--ease-out),
+    color var(--motion-hover) var(--ease-out),
+    scale var(--motion-press) var(--ease-out);
+}
+.al-field-actions a svg {
+  width: 13px;
+  height: 13px;
+}
+.al-field-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #6f86ad;
 }
 .al-field-actions a:hover {
   border-color: var(--al-blue);
   color: var(--al-blue);
+}
+.al-field-actions a:active {
+  scale: 0.98;
 }
 @media (max-width: 800px) {
   .al-featured-grid {
@@ -1058,16 +1318,16 @@
   .al-image-visual {
     min-height: 180px;
   }
-  .al-diagram-visual {
+  .al-stage-stack {
     flex-direction: row;
     gap: 4px;
   }
-  .al-diagram-visual span {
+  .al-stage-stack span {
     width: 35px;
     font-size: 9px;
     padding: 8px 0;
   }
-  .al-diagram-visual span:after {
+  .al-stage-stack span:after {
     display: none;
   }
   .al-mini-board {
@@ -1167,11 +1427,11 @@
   .al-image-visual {
     min-height: 237px;
   }
-  .al-diagram-visual {
+  .al-stage-stack {
     flex-direction: column;
     gap: 7px;
   }
-  .al-diagram-visual span {
+  .al-stage-stack span {
     width: 60px;
     padding: 6px 0;
   }
@@ -1192,6 +1452,6 @@
     padding: 16px;
   }
   .al-field-actions a {
-    min-height: 40px;
+    padding: 10px 11px;
   }
 }

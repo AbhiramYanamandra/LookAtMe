@@ -1,0 +1,22 @@
+---
+title: PETspot relational database
+summary: An ER model and normalised schema for a multi-sided pet marketplace, carried through to third normal form.
+badge: Data modelling
+fields: [backend]
+technologies: [Relational modelling, ERD, Normalization]
+team: Course project
+order: 9
+draft: false
+---
+
+## Overview
+
+PETspot is a marketplace with several distinct kinds of participant, which is what makes it a worthwhile modelling exercise rather than a CRUD table. The data model covers **buyers, sellers, pets, services, enquiries and breeds**, and the relationships between them are where the design decisions live — a seller offering services is not the same relationship as a seller listing a pet, and an enquiry can point at either.
+
+## Normalisation
+
+Functional dependencies were derived from the model and the relations carried through **first, second and third normal form**, producing a schema with redundancy removed and update anomalies designed out rather than handled in application code.
+
+<Note>
+  A team project; the model is a contribution rather than sole ownership. The final database creation was submitted as a separate SQL file that is not part of this record, so this write-up covers the design and normalisation work only — not a claim of substantial SQL implementation.
+</Note>

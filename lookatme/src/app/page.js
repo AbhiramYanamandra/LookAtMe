@@ -18,7 +18,11 @@ export default function HomePage() {
         <Hero projects={heroProjects(projects)} />
         <div className="al-below">
           <Introduction />
-          <SelectedWork featured={featuredProjects(projects)} fields={populatedFields(projects)} />
+          <SelectedWork
+            featured={featuredProjects(projects)}
+            fields={populatedFields(projects)}
+            total={projects.length}
+          />
         </div>
       </main>
       <div className="al-below">

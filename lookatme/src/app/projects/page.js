@@ -8,7 +8,7 @@ import { LibraryOverview } from "@/components/project/LibraryOverview";
 import { SortControl } from "@/components/project/SortControl";
 import { RememberLibraryState } from "@/components/project/LibraryState";
 import { getPublishedProjects, toSummary } from "@/lib/projects";
-import { ALL_FIELDS, filterByField, populatedFields, resolveField, resolveSort, sortProjects } from "@/lib/project-queries";
+import { ALL_FIELDS, availableSorts, filterByField, populatedFields, resolveField, resolveSort, sortProjects } from "@/lib/project-queries";
 import { fieldLabel, getField } from "@/content/fields";
 import { profile } from "@/content/profile";
 
@@ -26,11 +26,21 @@ export default async function ProjectsPage({ searchParams }) {
   const params = await searchParams;
   const projects = getPublishedProjects().map(toSummary);
   const field = resolveField(first(params?.field));
-  const sort = resolveSort(first(params?.sort));
+  // Pass the collection so a sort it cannot perform falls back instead of
+  // reporting an order change that never happened.
+  const sort = resolveSort(first(params?.sort), projects);
+  const sortOptions = availableSorts(projects);
   const fields = populatedFields(projects);
   const results = sortProjects(filterByField(projects, field), sort);
   const isFiltered = field !== ALL_FIELDS || sort !== "recommended";
   const activeField = field === ALL_FIELDS ? null : getField(field);
+  // A field with no published projects is still a reachable URL. Give it a
+  // chip so the toolbar shows which filter is on; without it the empty grid
+  // appears with nothing selected.
+  const chipFields =
+    activeField && !fields.some((item) => item.id === field)
+      ? [...fields, { id: field, label: activeField.label, count: 0 }]
+      : fields;
 
   return (
     <>
@@ -53,8 +63,8 @@ export default async function ProjectsPage({ searchParams }) {
         <LibraryOverview projects={projects} fields={fields} />
 
         <div className="pl-toolbar" id="browse">
-          <FilterChips fields={fields} total={projects.length} field={field} sort={sort} />
-          <SortControl field={field} sort={sort} />
+          <FilterChips fields={chipFields} total={projects.length} field={field} sort={sort} />
+          <SortControl field={field} sort={sort} options={sortOptions} />
         </div>
 
         <div className="pl-status" role="status" aria-live="polite">

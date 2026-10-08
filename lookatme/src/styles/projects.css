@@ -75,14 +75,20 @@
   background: #0b1a2e;
   color: #88bcff;
   border-radius: 5px;
-  padding: 8px 10px;
-  font-size: 11px;
-  min-height: 35px;
+  padding: 10px 13px;
+  font-size: 12px;
+  min-height: 44px;
   white-space: nowrap;
+  transition: border-color var(--motion-hover) var(--ease-out),
+    color var(--motion-hover) var(--ease-out),
+    scale var(--motion-press) var(--ease-out);
 }
 .pl-filters a:hover {
   border-color: var(--al-blue);
   color: var(--al-blue);
+}
+.pl-filters a:active {
+  scale: 0.98;
 }
 .pl-filters a[aria-current="true"] {
   background: var(--al-blue);
@@ -91,7 +97,7 @@
   font-weight: 500;
 }
 .pl-filters a[aria-current="true"] .pl-count {
-  color: #05050599;
+  color: #050505cc;
 }
 .pl-count {
   font-family: var(--font-mono);
@@ -102,20 +108,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 11px;
+  font-size: 12px;
   color: #a4b9d8;
 }
 .pl-sort select {
   appearance: none;
   -webkit-appearance: none;
-  background: #0b1a2e url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%2388bcff' stroke-width='1.5'/></svg>") no-repeat right 10px center;
+  background: #0b1a2e url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%2388bcff' stroke-width='1.5'/></svg>") no-repeat right 12px center;
   border: 1px solid #24538b;
   color: #88bcff;
   border-radius: 5px;
-  padding: 8px 28px 8px 10px;
-  font-size: 11px;
+  padding: 10px 32px 10px 13px;
+  font-size: 12px;
   font-family: inherit;
-  min-height: 35px;
+  min-height: 44px;
+  transition: border-color var(--motion-hover) var(--ease-out);
 }
 .pl-sort select:hover {
   border-color: var(--al-blue);
@@ -125,9 +132,17 @@
   background: #0b1a2e;
   color: #88bcff;
   border-radius: 5px;
-  padding: 8px 10px;
-  font-size: 11px;
-  min-height: 35px;
+  padding: 10px 13px;
+  font-size: 12px;
+  min-height: 44px;
+  transition: border-color var(--motion-hover) var(--ease-out),
+    scale var(--motion-press) var(--ease-out);
+}
+.pl-sort button:hover {
+  border-color: var(--al-blue);
+}
+.pl-sort button:active {
+  scale: 0.98;
 }
 .pl-status {
   display: flex;
@@ -136,7 +151,7 @@
   gap: 16px;
   flex-wrap: wrap;
   padding: 18px 2px 16px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--al-text-muted);
 }
 .pl-status strong {
@@ -144,7 +159,14 @@
   font-weight: 500;
 }
 .pl-status a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--al-blue);
+  transition: color var(--motion-hover) var(--ease-out);
+}
+.pl-status a:hover {
+  color: var(--al-blue-hover);
 }
 
 /* --- Library grid ---------------------------------------------------- */
@@ -185,7 +207,8 @@
 .pl-card-visual--placeholder {
   flex-direction: column;
   gap: 10px;
-  color: #5f7ba8;
+  /* 4.83:1 on the tile gradient; the old #5f7ba8 was 4.05:1. */
+  color: #6d88b4;
 }
 .pl-card-visual--placeholder span {
   font-family: var(--font-mono);
@@ -197,7 +220,9 @@
   font-family: var(--font-script);
   font-weight: 400;
   font-size: 44px;
-  color: #1f4a86;
+  /* Still recessive by design, but legible: at #1f4a86 the initial sat at
+     1.97:1 and the tile read as broken rather than deliberately empty. */
+  color: #2d5f9e;
   line-height: 1;
 }
 .pl-card .al-card-body h3 {
@@ -220,7 +245,11 @@
 }
 .pl-empty {
   grid-column: 1 / -1;
-  padding: 46px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 36px 24px 30px;
   text-align: center;
   border: 1px dashed #24538b;
   border-radius: 12px;
@@ -228,8 +257,21 @@
   font-size: 14px;
   line-height: 1.7;
 }
+.pl-empty p {
+  margin: 0;
+  max-width: 44ch;
+}
 .pl-empty a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--al-blue);
+  transition: color var(--motion-hover) var(--ease-out);
+}
+.pl-empty a:hover {
+  color: var(--al-blue-hover);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 /* --- Case study --------------------------------------------------- */
@@ -632,7 +674,7 @@
     gap: 17px;
   }
   .pl-filters a {
-    min-height: 40px;
+    padding: 10px 11px;
   }
   .cs-header h1 {
     font-size: 36px;
@@ -700,8 +742,11 @@
 }
 .pl-overview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
   gap: 15px;
+  /* Each card hugs its own list instead of stretching to the tallest in the
+     row, which left 90–190px of dead space under the shorter fields. */
+  align-items: start;
 }
 .pl-overview-card {
   background: var(--al-surface);
@@ -719,29 +764,38 @@
 .pl-overview-title {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* Baseline, not center: a two-line field name (Developer Tools /
+     Automation) used to drag the count down beside its second line. */
+  align-items: baseline;
   gap: 10px;
   margin-bottom: 8px;
 }
 .pl-overview-title a,
 .pl-overview-title > span:first-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   font-size: 17px;
   font-weight: 500;
   letter-spacing: -0.4px;
+  line-height: 1.25;
   color: var(--al-blue);
+  text-wrap: balance;
 }
+/* Inline, so the arrow stays attached to the last word when the name wraps
+   rather than drifting to the far edge of the row. */
 .pl-overview-title svg {
+  display: inline;
   width: 14px;
   height: 14px;
+  margin-left: 6px;
+  vertical-align: -2px;
+}
+.pl-overview-title .pl-count {
+  flex-shrink: 0;
 }
 .pl-overview-card p {
   font-size: 12px;
   line-height: 1.65;
   color: var(--al-text-card);
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 .pl-overview-card ul {
   list-style: none;
@@ -769,6 +823,22 @@
   }
   .pl-overview-head h2 {
     font-size: 22px;
+  }
+  /* Nine stacked tiles put the first card 1760px down the page. Two columns
+     without descriptions keeps the overview a glance, which is its job. */
+  .pl-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .pl-overview-card {
+    padding: 14px;
+  }
+  .pl-overview-card p {
+    display: none;
+  }
+  .pl-overview-title a,
+  .pl-overview-title > span:first-child {
+    font-size: 14px;
   }
 }
 

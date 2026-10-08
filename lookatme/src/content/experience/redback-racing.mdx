@@ -1,0 +1,36 @@
+---
+organisation: UNSW Redback Racing
+role: Data Analyst, Full-Stack Developer & Firmware Engineer
+location: Sydney
+start: 2023-09
+end: 2025-06
+kind: engineering
+summary: Production telemetry for a Formula SAE team — the web platform race engineers use, the pipeline behind it, and the firmware on the car's driver display.
+technologies: [React, Next.js, Node.js, TypeScript, Tailwind, Playwright, Docker, AWS S3, C++, STM32, FreeRTOS, CAN, TouchGFX]
+---
+
+## Software that runs during a session
+
+Redback's telemetry platform is used by race engineers while the car is running, which makes it production software with an unusually unforgiving deadline: if it is wrong or slow during a test session, the session is what gets wasted.
+
+I delivered features across the stack — **React, Next.js, Node and TypeScript**, frontend and backend — for live vehicle monitoring and the setup decisions engineers make from it.
+
+## Making the data comparable
+
+Live monitoring answers "what is the car doing now." The harder question is "what did it do differently last time," and that needs the data to outlive the session.
+
+I designed a **centralised logging pipeline** converting raw vehicle sensor output into structured records stored in **AWS S3**, so runs become traceable and configurations can be compared against each other rather than against memory. Services were containerised with **Docker** and deployed on AWS to keep live and historical data reliably reachable.
+
+## Testing a tool people depend on
+
+I introduced **Playwright end-to-end testing** across the telemetry workflows, **increasing automated test coverage by 20%**. On a volunteer team with rotating membership, the tests are also documentation — they state what the platform is supposed to do after the person who wrote the feature has graduated.
+
+## The other end: firmware on the car
+
+The same work ran down to the vehicle itself. I developed and debugged **real-time firmware for an STM32 U-series driver display HUD**, using **C++ with FreeRTOS**, reading vehicle data off **CAN** and rendering it with **TouchGFX** — live performance information in front of the driver, at a refresh rate that is useful at speed.
+
+I also designed the **compact waterproof enclosure** for that display, with thermal management considered as part of the design. A HUD on a race car is an electronics problem and a mechanical one at the same time, and the two constraints resolve together or not at all.
+
+## How the team worked
+
+Agile sprints, code reviews and written documentation through Jira, Confluence and Bitbucket, across firmware, data and race-engineering sub-teams — the coordination that makes a volunteer team of this size deliver anything at all.

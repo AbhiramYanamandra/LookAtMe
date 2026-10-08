@@ -1,0 +1,51 @@
+---
+title: High-precision photonic computing
+summary: Six correction schemes for noisy photonic matrix multiplication, evaluated down to the component and up to ImageNet.
+badge: Honours thesis
+fields: [research, ml]
+technologies: [Python, NumPy, PyTorch, ImageNet-1k, AlexNet, ResNet18, VGG19]
+role: Honours thesis
+team: Individual research project
+order: 1
+draft: false
+---
+
+## Overview
+
+Photonic matrix multiplication is fast and power-efficient, and it is noisy. Analog optical components drift, so the product you get back is not quite the product you asked for. This thesis asks a narrow question with a wide consequence: **how much of that error can be corrected in the numerics, rather than in the hardware?**
+
+It evaluates **six correction schemes** under a single shared Gaussian noise model — baseline, corner-LUT, non-uniform, parallel non-uniform, low-bit congruent, and low-bit decomposed — so that for the first time they can be compared against each other rather than each against its own favourable setup. Establishing that common comparison framework is as much the contribution as any individual scheme.
+
+## What the correction achieves
+
+**Low-bit decomposed correction reduced mean absolute error by 95.5% against the baseline**, and it did so without requiring any additional FP16 subproducts. That last clause matters: the accuracy is not bought with extra multiplications, which is the usual way to make this number look good.
+
+At the network level, **corner correction extended the 1-percentage-point ImageNet noise threshold by roughly 11.24× on average** across AlexNet and ResNet18 — the noise can grow by an order of magnitude before the model loses a single point of top-1 accuracy.
+
+<Note>
+  The 11.24× figure is an average across AlexNet and ResNet18. VGG19 did not reach its threshold within the tested noise range, so the result should not be extended to it.
+</Note>
+
+## Correction versus retraining
+
+The obvious alternative to correcting the hardware is teaching the network to tolerate it. Noise-aware training was evaluated head-to-head against photonic correction at σ = 22:
+
+- **Noise-aware training** recovered **3.03 percentage points** of the baseline degradation.
+- **Corner correction alone** left a residual gap of **0.01 points**.
+
+At that setting, correcting the arithmetic dominated adapting the model — which is a useful result for anyone deciding where to spend their engineering effort.
+
+<Note>
+  Measured at σ = 22 on ImageNet-1k. Both the sigma and the dataset are load-bearing; the comparison is not claimed to hold at arbitrary noise levels.
+</Note>
+
+## The cost side
+
+Accuracy results are only half an engineering argument, so every scheme was also costed. Parallel non-uniform slicing produced the most interesting trade: it cut FP16 subproducts **from 16 to 12** against non-uniform slicing, and needed only a **16-entry lookup table** rather than the 256-entry direct corner LUT — a design carrying 33.3% overhead with substantially smaller on-chip tables.
+
+## How it was validated
+
+- **Component level:** error characterisation across **40,000 samples**, using a paired-noise comparison so that schemes are measured against the same noise draws rather than against independently sampled runs.
+- **Network level:** evaluation across the full **50,000-image ImageNet-1k validation set**.
+
+The simulation and evaluation workflow was built for this project in Python, NumPy and PyTorch.

@@ -1,0 +1,35 @@
+---
+title: Agricultural pest detection
+summary: Fine-tuning RT-DETR on a 12-class pest dataset, and diagnosing the ceiling it ran into rather than tuning past it.
+badge: Computer vision
+fields: [ml]
+technologies: [PyTorch, Hugging Face, RT-DETR, Roboflow, Supervision, Albumentations, OpenCV]
+team: Course project (COMP9517)
+order: 6
+draft: false
+---
+
+## Overview
+
+Detecting pests in field photography is object detection under unhelpful conditions: small targets, cluttered backgrounds, and classes that look alike. This project worked the **AgroPest-12** benchmark — **11,502 training, 1,095 validation and 546 test images across 12 classes** — and compared three approaches: RT-DETR, YOLOv8m, and a YOLO + SVM hybrid.
+
+## The RT-DETR pipeline
+
+The transformer detector needed a data path that did not exist off the shelf. YOLO-format annotations were converted to COCO, then fed through a **custom PyTorch wrapper** so Hugging Face's `AutoImageProcessor` and the Supervision toolkit could drive fine-tuning on a custom dataset.
+
+A pretrained **RT-DETR R50** was fine-tuned across several configurations. The best short run reached **0.77 mAP@50** and **0.49 mAP@50:95** — competitive coarse localisation, weaker under strict IoU.
+
+## The more useful result is the ceiling
+
+Runs at 2, 5, 7 and 15 epochs were compared, along with batch size, early stopping, and augmentation. The model **plateaued and then overfit** rather than continuing to improve, and augmentation barely moved it: roughly **0.48 mAP@50:95 augmented against a 0.47–0.49 baseline**.
+
+That is a negative result, and it is the one worth reporting. The constraint was data and compute, not hyperparameters — so more tuning would have been effort spent in the wrong place.
+
+## Comparison across the team's approaches
+
+<Note>
+  The two results below are **team results**, included for comparison. They are not claimed as sole implementations; the RT-DETR pipeline and analysis above are the personal contribution.
+</Note>
+
+- **YOLOv8m** reached 91.7% precision, 85.1% recall and 91.9% mAP@0.5 at 9.9 ms per image — the strongest detector in the comparison.
+- **YOLO + SVM** combined 200-dimensional HSV, HOG, Hu-moment, Laplacian and statistical features with an RBF SVM. It achieved **93.1% mean five-fold cross-validation accuracy against roughly 40% on held-out test data** — a textbook cross-validation-to-test collapse, traced to the feature pipeline and SMOTE resampling generalising poorly.

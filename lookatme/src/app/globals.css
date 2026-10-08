@@ -79,6 +79,13 @@ button {
   border-radius: 3px;
 }
 
+/* The browser's default selection is a system blue on white — the one surface
+   on the page that wasn't wearing the palette. */
+::selection {
+  background: var(--al-blue);
+  color: #050505;
+}
+
 .al-mono {
   font-family: var(--font-mono);
   font-size: 11px;

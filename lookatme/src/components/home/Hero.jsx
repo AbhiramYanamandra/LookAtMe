@@ -3,6 +3,8 @@ import { profile } from "@/content/profile";
 import { HeroObjectVisual, OBJECT_CLASS } from "./HeroObject";
 import { ProjectCarousel } from "./ProjectCarousel";
 import { HeroEntrance } from "./HeroEntrance";
+import { HeroLight } from "./HeroLight";
+import { WordmarkTrace } from "./WordmarkTrace";
 
 /**
  * Full-width black hero: giant handwritten wordmark, side labels, tagline,
@@ -28,6 +30,8 @@ export function Hero({ projects }) {
   return (
     <section className="al-hero" id="home" aria-label={`${profile.firstName} — software and hardware engineer portfolio`}>
       <h1 className="al-wordmark">{profile.firstName}</h1>
+      <HeroLight />
+      <WordmarkTrace reviewEnabled={reviewEnabled} />
       <HeroEntrance reviewEnabled={reviewEnabled} />
       <span className="al-side al-side-left" aria-hidden="true">
         {profile.hero.sideLeft}

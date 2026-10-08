@@ -20,8 +20,8 @@ export function SiteHeader({ overlay = false }) {
       </Link>
       <nav className="al-nav" aria-label="Main navigation">
         <Link href="/projects" aria-current={pathname.startsWith("/projects") ? "page" : undefined}>Work</Link>
-        <Link href="/about" className="al-nav-about" aria-current={pathname === "/about" ? "page" : undefined}>
-          About
+        <Link href="/background" className="al-nav-about" aria-current={pathname === "/background" ? "page" : undefined}>
+          Background
         </Link>
         <a href={profile.resume} target="_blank" rel="noopener noreferrer">
           Resume

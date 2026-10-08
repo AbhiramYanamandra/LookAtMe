@@ -3,14 +3,15 @@ title: 3×3 Macropad
 summary: A custom nine-key macropad with per-key RGB and programmable layers.
 badge: Hardware engineering
 fields: [hardware]
-technologies: []
+technologies: [XIAO RP2040, KiCad, CircuitPython, KMK, SSD1306, I2C, FreeCAD]
 cover:
   src: /images/macropad.png
   alt: PCB render of the nine-key macropad showing the 3×3 switch grid, a display module, and a pin header
   fit: contain
   kind: render
   caption: Full PCB render of the board, shown uncropped. The carousel and homepage card use a tight CSS crop of this same image.
-order: 2
+role: Personal project
+order: 4
 featured: 2
 hero:
   order: 1
@@ -34,6 +35,20 @@ The image on this page is a **PCB render**, not a photograph of a finished unit.
 - a six-pin header beside the display;
 - four mounting holes at the board corners.
 
+## The board
+
+The PCB is designed in **KiCad** around a **Seeed XIAO RP2040**, carrying nine mechanical switches and nine diodes in a 3×3 matrix, plus an **SSD1306 OLED** on I²C and a rotary encoder.
+
+It was taken all the way through to a manufacturable package — **Gerbers, drill files, bill of materials, position data and production ZIPs** — rather than stopping at a schematic that works in simulation.
+
+## Firmware
+
+Firmware runs **CircuitPython with KMK**, presenting the board as a USB HID device over a nine-key matrix. The rotary encoder is mapped to volume down and up, with push to mute.
+
+## Enclosure
+
+The finished PCB was exported to **STEP** and a matching enclosure modelled in **FreeCAD**, so the electrical and mechanical designs are dimensioned against the same source geometry rather than measured by hand.
+
 <Note>
-  Firmware details, the microcontroller used, the switch and LED parts, and whether the board has been fabricated are not yet documented here. They will be added once confirmed.
+  An earlier prototype of this board used an ESP32-S3; the final design is the XIAO RP2040 described above. Per-key RGB appears in the summary but is not covered by the build record this page draws on.
 </Note>

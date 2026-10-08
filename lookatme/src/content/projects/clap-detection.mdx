@@ -1,0 +1,34 @@
+---
+title: Clap detection sensor
+summary: I²S microphone data streamed through FPGA fabric into ARM-side processing, ending in a clap-triggered LED.
+badge: FPGA / embedded audio
+fields: [fpga, embedded]
+technologies: [Kria KV260, VHDL, I2S, AXI4-Stream, AXI DMA, PYNQ, Python, NumPy]
+team: Course project (COMP3601)
+order: 8
+draft: false
+---
+
+## Overview
+
+A clap detector is a trivial algorithm sitting behind a genuinely awkward data path. On a Kria KV260, audio has to get from an **I²S microphone**, through FPGA fabric, across the programmable-logic / processing-system boundary, and into software — in real time, without dropping samples.
+
+The final system streams microphone data through a **FIFO and AXI4-Stream into AXI DMA**, landing it in memory where **ARM-side PYNQ/Python** performs threshold detection and drives LED and Bluetooth output.
+
+<Note>
+  Detection happens on the ARM side in PYNQ, not in FPGA DSP. The programmable logic handles capture and streaming; the decision logic is software.
+</Note>
+
+## Where the work actually went
+
+Almost none of it was the detection.
+
+**Debugging the capture path** was the bulk of the project — the I²S interface, the FIFO, and the PS–PL boundary where timing and handshaking problems surface as silence or garbage rather than as errors. Stabilising that path is what made everything downstream possible.
+
+**Bringing up the software side** meant standing up Ubuntu and PYNQ on the board and establishing the **first end-to-end clap-to-LED path** — the moment that proves the whole chain, hardware through software, actually carries data.
+
+The system was demonstrated over **100+ iterations** in the lab.
+
+<Note>
+  A team project. The audio pipeline debugging is a contribution rather than sole ownership; the Ubuntu/PYNQ bring-up and the first working end-to-end path are supported as personal contributions.
+</Note>

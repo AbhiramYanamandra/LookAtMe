@@ -1,0 +1,38 @@
+---
+title: Smartwatch prototype
+summary: A full smartwatch feature set driven by four buttons and a 16×2 character LCD.
+badge: Embedded firmware
+fields: [embedded]
+technologies: [STM32F303RE, C, LCD, GPIO, Interrupts, Timers]
+team: Course project (DESN2000)
+order: 7
+draft: false
+---
+
+## Overview
+
+The constraint is the project. An STM32 Nucleo-F303RE, **four buttons**, and a **16×2 character LCD** — thirty-two characters of output, total — and the brief is a smartwatch.
+
+Implemented on that hardware: time and day display, activity screens, alarm, stopwatch, countdown timer, configurable sound and haptic feedback, an LDR-driven charging screen, and an LED flashlight.
+
+## Designing an interface with no room
+
+Thirty-two characters cannot hold a menu, so the interface is **paged**, and the four buttons are **context-dependent** — each one means something different depending on which page you are on. Navigation is a finite state machine, which keeps the mapping explicit rather than scattered through the input handling.
+
+Getting that right is the actual UX problem here: the user has to be able to predict what a button will do before pressing it, with no on-screen affordance to tell them.
+
+## Firmware approach
+
+The implementation is deliberately conservative with resources:
+
+- **Interrupt-driven buttons** rather than polling.
+- **Fixed, statically allocated data structures** — no dynamic allocation.
+- **Integer arithmetic** throughout, avoiding floating point.
+
+<Note>
+  These are design and implementation choices, described as such. No power or performance measurements were taken, so no low-power optimisation claim is made for them.
+</Note>
+
+## Assessment
+
+The prototype was assessed by viva, scoring **74 of 87** across two marking sheets, with most core features receiving full or near-full marks.

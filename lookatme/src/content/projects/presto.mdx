@@ -3,13 +3,15 @@ title: Presto
 summary: A browser-based presentation builder for creating and sharing slide decks. Ideas, slide by slide.
 badge: Web application
 fields: [frontend]
-technologies: []
+technologies: [React, TypeScript, Vite, React Router, Chakra UI, Cypress, Vercel]
 cover:
   src: /images/presto.png
   alt: Presto dashboard listing two saved presentations with a New Presentation action
   fit: contain
   kind: screenshot
-order: 1
+role: Solo build
+team: Course project (COMP6080)
+order: 3
 featured: 1
 hero:
   order: 2
@@ -30,6 +32,16 @@ Presto is a presentation builder that runs in the browser, inspired by Slides.co
 
 The dashboard above is an actual screenshot of the application: a signed-in session, saved presentations shown as cover cards, and a **New Presentation** action for starting a fresh deck. It is presented as-is; no interface has been mocked up for this page.
 
-<Note>
-  A detailed breakdown of the editor, the technical decisions behind it, and the stack is still to be written. Nothing beyond what the screenshot and description show is claimed here.
-</Note>
+## The editor
+
+Presto is a **React and TypeScript single-page application**, built with Vite and routed with React Router. The frontend talks to a REST API for authentication and for persisting presentation state, so a deck survives a session rather than living in browser memory.
+
+Inside the editor: rich slide elements, **drag and resize** interactions for positioning them, slide reordering, configurable backgrounds, and a preview mode — the working set of a lightweight presentation tool rather than a static viewer.
+
+## Revision history
+
+The feature worth calling out is **timestamped revision history**. Snapshots are throttled to a minimum one-minute interval so that normal editing does not flood the history, and any snapshot can be restored. It turns the editor from something you can break into something you can back out of.
+
+## Testing and deployment
+
+Key user journeys are covered by **Cypress end-to-end suites** — authentication, the presentation lifecycle, editor actions, error paths, and restoring a revision. The completed frontend is deployed to **Vercel**.

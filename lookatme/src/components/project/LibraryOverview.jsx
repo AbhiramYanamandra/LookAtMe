@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { libraryHref } from "@/lib/project-queries";
-import { projectHref } from "./CardBody";
 
 /**
- * "At a glance" overview for the library: one card per populated field with
- * its description, count, and the projects in it. Projects without a field
- * are listed in a final "Smaller builds" group so nothing is hidden.
+ * "At a glance" overview for the library: one tile per populated field with
+ * its description and count, linking to that filter. Projects without a field
+ * are counted in a final "Smaller builds" tile so nothing is hidden.
+ *
+ * Deliberately does NOT list project titles — the grid below is the index,
+ * and listing every project twice cost a screenful before the first card.
  */
 export function LibraryOverview({ projects, fields }) {
   const unfielded = projects.filter((project) => project.fields.length === 0);
@@ -49,14 +51,10 @@ export function LibraryOverview({ projects, fields }) {
               )}
               <span className="pl-count">{group.items.length}</span>
             </div>
+            {/* No project list here: the grid below is the index. Listing every
+                project twice cost a screenful before the first card, and the
+                copy went stale the moment a filter was applied. */}
             <p>{group.description}</p>
-            <ul>
-              {group.items.map((project) => (
-                <li key={project.slug}>
-                  <Link href={projectHref(project)}>{project.title}</Link>
-                </li>
-              ))}
-            </ul>
           </div>
         ))}
       </div>

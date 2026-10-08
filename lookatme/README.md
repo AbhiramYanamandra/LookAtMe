@@ -31,6 +31,7 @@ src/
     project/               cards, card visuals, filters/sort, quick facts, case-study MDX components
   content/
     projects/*.mdx         ONE FILE PER PROJECT — the single source of truth
+    experience/*.mdx       ONE FILE PER ROLE — work history
     projects/_TEMPLATE.mdx copy this to add a project
     fields.js              engineering-field taxonomy
     profile.js             name, links, resume path, homepage copy
@@ -38,7 +39,7 @@ src/
     projects.js            loads + validates content (server only)
     project-queries.js     filtering, sorting, featured/hero/related selection
     site.js                site URL (NEXT_PUBLIC_SITE_URL)
-  styles/                  home.css (approved landing-page styles), projects.css (library/case studies)
+  styles/                  home.css (approved landing-page styles), projects.css (library/case studies), background.css
   fonts/                   bundled Geist, Geist Mono, Pacifico (+ licenses)
 public/images/             project imagery and the portrait
 public/resume.pdf          the resume
@@ -63,7 +64,7 @@ Put files under `public/images/` and reference them by site-relative path. Dimen
 
 ### Selecting fields
 
-`fields` takes ids from `src/content/fields.js` (`hardware`, `frontend`, `backend`, `cloud`, `embedded`, `automation`). A project may have several fields or none. Assign fields for the engineering work actually done; list tools in `technologies` instead. Filters and the homepage "Find work in your field" strip only show fields that have at least one published project.
+`fields` takes ids from `src/content/fields.js` (`research`, `ml`, `fpga`, `hardware`, `frontend`, `backend`, `cloud`, `embedded`, `automation`). A project may have several fields or none. Assign fields for the engineering work actually done; list tools in `technologies` instead. Filters and the homepage "Find work in your field" strip only show fields that have at least one published project.
 
 ### Changing homepage highlights
 
@@ -73,7 +74,7 @@ To put a project in the hero carousel, add a `hero:` block with a unique `order`
 
 ### Changing the recommended order
 
-Edit `order` (lower = earlier). "Newest"/"Oldest" use `date`; undated projects always sort after dated ones. Editing text never changes a project's position.
+Edit `order` (lower = earlier). "Newest"/"Oldest" use `date` and are **only offered when at least one published project has one** — otherwise they would return the recommended order while the status line claimed a change. Undated projects always sort after dated ones. Editing text never changes a project's position.
 
 ### Publishing a draft
 
@@ -105,15 +106,29 @@ Timings and easings live in `src/lib/motion.js` and `:root` in `src/app/globals.
 - **Droplet entrance:** one timeline controls fall and impact; overlapping brush tips grow along the original lettering with balanced left/right timing. The name completes at 760ms; the carousel fades into its normal drift by 1080ms. Plays once per tab session. Reduced-motion and no-JS visitors see the finished name.
 - Everything respects `prefers-reduced-motion`, including changes while the page is open.
 
-## About page
+## Background page
 
-The menu links to `/about` from every route, including mobile. The homepage retains its introduction and adds a `More about me` link. The standalone page reads profile information and populated project fields from the same content sources; it is included in the sitemap.
+The menu links to `/background` from every route, including mobile. The homepage retains its introduction and adds a `More about me` link. The page reads profile information, the experience collection, and populated project fields from the same content sources; it is included in the sitemap.
+
+It carries four sections: the portrait and bio, the experience timeline, education, and the engineering fields. `/about` redirects here permanently (308), and `/experience` redirects to the timeline anchor so the parent of `/experience/<slug>` is never a dead end.
+
+### Adding a role
+
+Copy the shape of an existing file in `src/content/experience/`. Required frontmatter: `organisation`, `role`, `summary`, `start` (`YYYY-MM`), `end` (`YYYY-MM` or `present`). Optional: `location`, `technologies`, `kind` (`engineering` | `service`), `draft`.
+
+A role gets its own page at `/experience/<slug>` **only if the file has a body**. `hasStory` is derived from that, never declared, so a role with frontmatter alone renders as a dated line, generates no route, and stays out of the sitemap. Add prose later and the page appears by itself.
+
+### Updating education
+
+Edit `profile.education` in `src/content/profile.js`.
 
 To check a production build without disturbing an existing dev server, run `NEXT_OUTPUT_DIR=.next-review npm run check`. To preview that build, use the same variable with `npm run start -- --port 3001`.
 
 ## Visual review aids
 
 - Append `?entrance=1` to the homepage to replay the droplet entrance, or `?entrance=<ms>` to freeze it at that moment (development builds only).
+
+- Append `?trace=0.3` to the homepage to freeze the wordmark's conducting pulse at that progress (0–1) for an exact screenshot. Development builds only; the pulse is disabled below 900px and under reduced motion.
 
 - Append `?still=1&phase=0.27` to the homepage to pause the carousel at a given phase. Available in `npm run dev`, and in production builds only when built with `CAROUSEL_REVIEW=1`.
 - `node scripts/screenshot.mjs [baseUrl] [outDir]` captures the same viewports/phases as `design/approved-landing-page/screenshots/README.md` (needs Playwright; set `CHROMIUM_PATH` to use a specific Chromium).

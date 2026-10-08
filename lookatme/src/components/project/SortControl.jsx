@@ -8,7 +8,7 @@ import { SORT_OPTIONS, libraryHref } from "@/lib/project-queries";
  * (the Apply button submits); with JavaScript the change navigates at once
  * and the button is hidden.
  */
-export function SortControl({ field, sort }) {
+export function SortControl({ field, sort, options = SORT_OPTIONS }) {
   const router = useRouter();
 
   return (
@@ -21,7 +21,7 @@ export function SortControl({ field, sort }) {
         defaultValue={sort}
         onChange={(event) => router.push(libraryHref({ field, sort: event.target.value }), { scroll: false })}
       >
-        {SORT_OPTIONS.map((option) => (
+        {options.map((option) => (
           <option key={option.id} value={option.id}>
             {option.label}
           </option>

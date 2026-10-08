@@ -10,6 +10,21 @@
  */
 export const FIELDS = [
   {
+    id: "research",
+    label: "Research",
+    description: "Investigation where the result is a finding, not a feature.",
+  },
+  {
+    id: "ml",
+    label: "Machine Learning & Vision",
+    description: "Models, training pipelines, and image understanding.",
+  },
+  {
+    id: "fpga",
+    label: "FPGA & Acceleration",
+    description: "Hardware description, synthesis, and making computation faster in silicon.",
+  },
+  {
     id: "hardware",
     label: "Hardware Engineering",
     description: "Circuit boards, digital logic, and processor design.",

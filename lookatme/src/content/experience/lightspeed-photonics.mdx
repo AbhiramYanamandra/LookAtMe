@@ -1,0 +1,44 @@
+---
+organisation: Lightspeed Photonics
+role: Engineering / Test Engineering Intern
+location: Singapore
+start: 2026-01
+end: 2026-02
+kind: engineering
+summary: Automated optical inspection — microscope workflows, YOLO-based dimensional and defect checks, and the operator-facing tooling around them.
+technologies: [Python, OpenCV, NumPy, Pandas, Ultralytics YOLO, CustomTkinter, PyAutoGUI, PyInstaller]
+---
+
+## Automating the microscope
+
+Optical inspection at 200× is precise, repetitive, and almost entirely mouse work: select the lighting, position the stage, configure the magnification, set XY parameters, run a 3D stitch. Done by hand, it is slow and it is inconsistent between operators.
+
+I built Python automation driving the digital microscope's GUI through the whole sequence, with **operator checkpoints** at the steps where a human needs to confirm what they are looking at. The point was not to remove the operator — it was to remove the clicking and standardise the procedure so two runs are comparable.
+
+## Three models behind one window
+
+The inspection tool integrates **three YOLO checkpoints**, each doing a different job: 200× lens detection, 40× geometry detection, and defect detection. An operator picks a mode; the tool runs the right model and reports what it found.
+
+<Note>
+  These models were integrated into the inspection pipeline. Training ownership is not established by the records this page draws on, so the claim here is integration, not authorship.
+</Note>
+
+## From bounding boxes to measurements
+
+A detection is only useful to a test engineer once it becomes a number with a tolerance on it. Detected boxes are converted to **calibrated physical measurements** — lens diameter, lens spacing, inner and outer rectangle dimensions — and checked against encoded tolerances, with the lens target at **0.240 mm ±0.005 mm**.
+
+A separate **defect-detection mode** runs the cosmetic model, annotates what it finds, and logs the result.
+
+<Note>
+  This is software performing dimensional calculations against encoded tolerances. It is not a metrology certification, and nothing here should be read as one.
+</Note>
+
+## Making it usable by someone who isn't me
+
+The part that decides whether an internal tool survives the intern who wrote it: a **CustomTkinter** interface with image upload, tabbed modes, visible results, zoom and pan, auto-save, and timestamped history.
+
+Inspection results are inspectable. An operator can see what the model saw, which measurement failed, and what the run looked like last week — rather than being handed a verdict by a black box.
+
+<Note>
+  Résumés repeatedly record this work as speeding up the visual-inspection workflow by around 50%. The basis of that measurement is not independently verified in the record, so it is noted here rather than claimed as a headline result.
+</Note>

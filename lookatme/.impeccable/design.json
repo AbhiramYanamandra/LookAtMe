@@ -1,0 +1,560 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T00:00:00Z",
+  "title": "Design System: Abhiram Yanamandra — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "instrument-blue": {
+        "role": "primary",
+        "displayName": "Instrument Blue",
+        "canonical": "oklch(63.5% 0.191 258)",
+        "tonalRamp": [
+          "oklch(15% 0.191 258)",
+          "oklch(26% 0.191 258)",
+          "oklch(37% 0.191 258)",
+          "oklch(48% 0.191 258)",
+          "oklch(59% 0.191 258)",
+          "oklch(70% 0.191 258)",
+          "oklch(81% 0.191 258)",
+          "oklch(92% 0.191 258)"
+        ]
+      },
+      "instrument-blue-soft": {
+        "role": "primary",
+        "displayName": "Instrument Blue Soft",
+        "canonical": "oklch(77.5% 0.106 262)",
+        "tonalRamp": [
+          "oklch(15% 0.106 262)",
+          "oklch(26% 0.106 262)",
+          "oklch(37% 0.106 262)",
+          "oklch(48% 0.106 262)",
+          "oklch(59% 0.106 262)",
+          "oklch(70% 0.106 262)",
+          "oklch(81% 0.106 262)",
+          "oklch(92% 0.106 262)"
+        ]
+      },
+      "instrument-blue-hover": {
+        "role": "primary",
+        "displayName": "Instrument Blue Hover",
+        "canonical": "oklch(84.5% 0.071 272)",
+        "tonalRamp": [
+          "oklch(15% 0.071 272)",
+          "oklch(26% 0.071 272)",
+          "oklch(37% 0.071 272)",
+          "oklch(48% 0.071 272)",
+          "oklch(59% 0.071 272)",
+          "oklch(70% 0.071 272)",
+          "oklch(81% 0.071 272)",
+          "oklch(92% 0.071 272)"
+        ]
+      },
+      "void-black": {
+        "role": "neutral",
+        "displayName": "Void Black",
+        "canonical": "oklch(0% 0 0)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(59% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(81% 0 0)",
+          "oklch(92% 0 0)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "oklch(14.5% 0.021 259)",
+        "tonalRamp": [
+          "oklch(15% 0.021 259)",
+          "oklch(26% 0.021 259)",
+          "oklch(37% 0.021 259)",
+          "oklch(48% 0.021 259)",
+          "oklch(59% 0.021 259)",
+          "oklch(70% 0.021 259)",
+          "oklch(81% 0.021 259)",
+          "oklch(92% 0.021 259)"
+        ]
+      },
+      "control-surface": {
+        "role": "neutral",
+        "displayName": "Control Surface",
+        "canonical": "oklch(19.5% 0.046 261)",
+        "tonalRamp": [
+          "oklch(15% 0.046 261)",
+          "oklch(26% 0.046 261)",
+          "oklch(37% 0.046 261)",
+          "oklch(48% 0.046 261)",
+          "oklch(59% 0.046 261)",
+          "oklch(70% 0.046 261)",
+          "oklch(81% 0.046 261)",
+          "oklch(92% 0.046 261)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border",
+        "canonical": "oklch(31% 0.065 258)",
+        "tonalRamp": [
+          "oklch(15% 0.065 258)",
+          "oklch(26% 0.065 258)",
+          "oklch(37% 0.065 258)",
+          "oklch(48% 0.065 258)",
+          "oklch(59% 0.065 258)",
+          "oklch(70% 0.065 258)",
+          "oklch(81% 0.065 258)",
+          "oklch(92% 0.065 258)"
+        ]
+      },
+      "border-control": {
+        "role": "neutral",
+        "displayName": "Border Control",
+        "canonical": "oklch(40.5% 0.095 254)",
+        "tonalRamp": [
+          "oklch(15% 0.095 254)",
+          "oklch(26% 0.095 254)",
+          "oklch(37% 0.095 254)",
+          "oklch(48% 0.095 254)",
+          "oklch(59% 0.095 254)",
+          "oklch(70% 0.095 254)",
+          "oklch(81% 0.095 254)",
+          "oklch(92% 0.095 254)"
+        ]
+      },
+      "text-card": {
+        "role": "neutral",
+        "displayName": "Text Card",
+        "canonical": "oklch(79% 0.032 263)",
+        "tonalRamp": [
+          "oklch(15% 0.032 263)",
+          "oklch(26% 0.032 263)",
+          "oklch(37% 0.032 263)",
+          "oklch(48% 0.032 263)",
+          "oklch(59% 0.032 263)",
+          "oklch(70% 0.032 263)",
+          "oklch(81% 0.032 263)",
+          "oklch(92% 0.032 263)"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Text Muted",
+        "canonical": "oklch(63.5% 0.043 267)",
+        "tonalRamp": [
+          "oklch(15% 0.043 267)",
+          "oklch(26% 0.043 267)",
+          "oklch(37% 0.043 267)",
+          "oklch(48% 0.043 267)",
+          "oklch(59% 0.043 267)",
+          "oklch(70% 0.043 267)",
+          "oklch(81% 0.043 267)",
+          "oklch(92% 0.043 267)"
+        ]
+      },
+      "text-emphasis": {
+        "role": "neutral",
+        "displayName": "Text Emphasis",
+        "canonical": "oklch(90.5% 0.035 265)",
+        "tonalRamp": [
+          "oklch(15% 0.035 265)",
+          "oklch(26% 0.035 265)",
+          "oklch(37% 0.035 265)",
+          "oklch(48% 0.035 265)",
+          "oklch(59% 0.035 265)",
+          "oklch(70% 0.035 265)",
+          "oklch(81% 0.035 265)",
+          "oklch(92% 0.035 265)"
+        ]
+      },
+      "badge-bg": {
+        "role": "tertiary",
+        "displayName": "Badge Fill",
+        "canonical": "oklch(25.5% 0.078 258)",
+        "tonalRamp": [
+          "oklch(15% 0.078 258)",
+          "oklch(26% 0.078 258)",
+          "oklch(37% 0.078 258)",
+          "oklch(48% 0.078 258)",
+          "oklch(59% 0.078 258)",
+          "oklch(70% 0.078 258)",
+          "oklch(81% 0.078 258)",
+          "oklch(92% 0.078 258)"
+        ]
+      },
+      "placeholder-label": {
+        "role": "neutral",
+        "displayName": "Placeholder Label",
+        "canonical": "oklch(62.5% 0.058 265)",
+        "tonalRamp": [
+          "oklch(15% 0.058 265)",
+          "oklch(26% 0.058 265)",
+          "oklch(37% 0.058 265)",
+          "oklch(48% 0.058 265)",
+          "oklch(59% 0.058 265)",
+          "oklch(70% 0.058 265)",
+          "oklch(81% 0.058 265)",
+          "oklch(92% 0.058 265)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "signature": {
+        "displayName": "Signature",
+        "purpose": "Pacifico. The hero wordmark and the placeholder initial — and nowhere else in the system."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page-level h1. Balanced wrapping, capped near 620px so lines break deliberately."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Major section headings, frequently authored as two short lines with an explicit break."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles. Always Instrument Blue, always the link target."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose. Capped at 680px for long-form reading, 400–490px for intro columns."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The bracketed monospace annotation layer: field counts, image kinds, status, captions, eyebrows."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glow-wordmark",
+        "value": "0 0 35px #1685ff32, 0 0 100px #0879ff12",
+        "purpose": "Two-stage halo, tight and wide, for the signature wordmark only."
+      },
+      {
+        "name": "glow-logo",
+        "value": "0 0 26px #1685ff30",
+        "purpose": "Ambient light around the ay. logo tile in the header."
+      },
+      {
+        "name": "glow-card",
+        "value": "0 0 27px #1685ff14",
+        "purpose": "Hover and :focus-within response on project cards, paired with a border shift to full blue."
+      },
+      {
+        "name": "paste-portrait",
+        "value": "8px 8px 0 #1685ff",
+        "purpose": "Zero-blur accent offset under the −3° tilted portrait. The loudest single gesture in the system."
+      },
+      {
+        "name": "paste-object",
+        "value": "3px 5px 0 #1f2c40",
+        "purpose": "Carousel treatments, keyed to each object's own material tone rather than to blue."
+      },
+      {
+        "name": "paste-object-lit",
+        "value": "7px 7px 0 #1685ff, 0 12px 35px #0007",
+        "purpose": "The print treatment: an accent offset plus a deep ambient drop."
+      },
+      {
+        "name": "ambient-photo",
+        "value": "0 16px 35px #0009",
+        "purpose": "Separates photographic imagery from the black ground. A contrast fix, not a depth signal."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid #1685ff; outline-offset: 3px; border-radius: 3px",
+        "purpose": "Global :focus-visible treatment on every interactive element."
+      },
+      {
+        "name": "hero-light",
+        "value": "radial-gradient(closest-side, #1685ff2b, #1685ff10 46%, transparent 72%)",
+        "purpose": "The homepage hero's pointer-tracked light pool (760px, mix-blend-mode: screen). Sits above the wordmark, below the carousel objects. Pointer-fine only; dark under reduced motion and during the droplet entrance."
+      },
+      {
+        "name": "paste-portrait-hover",
+        "value": "10px 10px 0 #1685ff, 0 16px 42px #0008",
+        "purpose": "The portrait lifted 2px toward the light on hover: the hard shadow lengthens, and the object still never glows."
+      },
+      {
+        "name": "wordmark-trace",
+        "value": "3 additive passes: 0.24em #1685ff a0.10 / 0.085em #4c9dff→#bedcff a0.42 / 0.036em #dcebff→#ffffff a1.0, head bloom 0.15em drawn first",
+        "purpose": "The conducting pulse. The core must be near-white; the lettering is already solid Instrument Blue, so blue on blue reads as glow rather than current."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "purpose": "The system's single easing curve, mirrored in src/lib/motion.js as EASE_OUT."
+      },
+      {
+        "name": "motion-press",
+        "value": "100ms",
+        "purpose": "Active/press feedback."
+      },
+      {
+        "name": "motion-hover",
+        "value": "160ms",
+        "purpose": "Hover state transitions on links and controls."
+      },
+      {
+        "name": "motion-grid",
+        "value": "240ms",
+        "purpose": "Library grid re-layout when filters or sort change (100ms leave, 200ms enter)."
+      },
+      {
+        "name": "motion-reveal",
+        "value": "260ms",
+        "purpose": "Scroll reveal: 260ms fade with 8px movement, re-arming only after the element fully leaves the extended viewport."
+      },
+      {
+        "name": "motion-page",
+        "value": "260ms",
+        "purpose": "Route transition — the destination main fades in without moving the page or header."
+      },
+      {
+        "name": "motion-stagger",
+        "value": "40ms",
+        "purpose": "Per-item delay within a revealed batch, capped at 80ms total."
+      },
+      {
+        "name": "motion-entrance",
+        "value": "1080ms",
+        "purpose": "The droplet wordmark entrance. Name completes at 760ms, carousel settles into drift by 1080ms. Plays once per tab session, never under reduced motion."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all motion tokens → 0ms",
+        "purpose": "prefers-reduced-motion zeroes every duration token at :root and disables all transitions. Honored live, including when toggled while the page is open."
+      },
+      {
+        "name": "wordmark-pulse",
+        "value": "1150ms linear traverse, every 7000ms (+ pointer arrival, 3200ms cooldown)",
+        "purpose": "Current through the signature: a white-hot head travels the authored pen path in writing order. Heartbeat, not loop — zero rAF between beats. Off under reduced motion, offscreen, hidden tab, during the droplet entrance, and below 900px."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "small",
+        "value": "520px"
+      },
+      {
+        "name": "page-max",
+        "value": "1280px"
+      },
+      {
+        "name": "page-narrow",
+        "value": "1120px"
+      },
+      {
+        "name": "prose-max",
+        "value": "680px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single most important action on a surface. Blue fill, near-black type, 44px target, physical press.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Explore my work <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 12px 18px; background: var(--al-blue, #1685ff); color: #000; border-radius: 6px; font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 13px; font-weight: 550; text-decoration: none; transition: background 160ms cubic-bezier(0.2,0.7,0.2,1), scale 100ms cubic-bezier(0.2,0.7,0.2,1); } .ds-btn-primary svg { width: 15px; height: 15px; } .ds-btn-primary:hover { background: var(--al-blue-hover, #afc7ff); } .ds-btn-primary:focus-visible { outline: 2px solid var(--al-blue, #1685ff); outline-offset: 3px; } .ds-btn-primary:active { scale: 0.98; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Field filter in the project library. States both what it filters and how much exists. Selected state inverts completely.",
+      "html": "<nav class=\"ds-chips\"><a class=\"ds-chip\" href=\"#\">All <span class=\"ds-chip-count\">10</span></a><a class=\"ds-chip\" href=\"#\" aria-current=\"true\">Hardware Engineering <span class=\"ds-chip-count\">2</span></a><a class=\"ds-chip\" href=\"#\">Frontend <span class=\"ds-chip-count\">1</span></a></nav>",
+      "css": ".ds-chips { display: flex; gap: 8px; flex-wrap: wrap; } .ds-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 10px 13px; border: 1px solid #24538b; border-radius: 5px; background: #0b1a2e; color: #88bcff; font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 12px; text-decoration: none; white-space: nowrap; transition: border-color 160ms cubic-bezier(0.2,0.7,0.2,1), color 160ms cubic-bezier(0.2,0.7,0.2,1), scale 100ms cubic-bezier(0.2,0.7,0.2,1); } .ds-chip-count { font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 10px; color: #6f86ad; } .ds-chip:hover { border-color: var(--al-blue, #1685ff); color: var(--al-blue, #1685ff); } .ds-chip:focus-visible { outline: 2px solid var(--al-blue, #1685ff); outline-offset: 3px; } .ds-chip:active { scale: 0.98; } .ds-chip[aria-current=\"true\"] { background: var(--al-blue, #1685ff); border-color: var(--al-blue, #1685ff); color: #050505; font-weight: 500; } .ds-chip[aria-current=\"true\"] .ds-chip-count { color: #050505cc; }"
+    },
+    {
+      "name": "Sort Select",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Library sort control. Matches the chip exactly, with a hand-authored inline chevron. Works as a plain GET form without JavaScript.",
+      "html": "<div class=\"ds-sort\"><label for=\"ds-sort-field\">Sort by</label><select id=\"ds-sort-field\"><option>Recommended</option><option>Newest</option><option>Oldest</option></select></div>",
+      "css": ".ds-sort { display: flex; align-items: center; gap: 10px; font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 11px; color: #a4b9d8; } .ds-sort select { appearance: none; -webkit-appearance: none; min-height: 44px; padding: 10px 32px 10px 13px; border: 1px solid #24538b; border-radius: 5px; background: #0b1a2e url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%2388bcff' stroke-width='1.5'/></svg>\") no-repeat right 12px center; color: #88bcff; font-family: inherit; font-size: 12px; transition: border-color 160ms cubic-bezier(0.2,0.7,0.2,1); } .ds-sort select:hover { border-color: var(--al-blue, #1685ff); } .ds-sort select:focus-visible { outline: 2px solid var(--al-blue, #1685ff); outline-offset: 3px; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The library and homepage work unit. Flat at rest; glows and shifts its border to full blue on hover or focus-within.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-visual\"><div class=\"ds-card-art\">PCB</div></div><div class=\"ds-card-body\"><span class=\"ds-badge\">Hardware Engineering</span><h3>3×3 Macropad</h3><p>A custom nine-key macropad with per-key RGB and programmable layers.</p><span class=\"ds-card-link\">Explore the build <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></span></div></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; max-width: 340px; background: var(--al-surface, #080d16); border: 1px solid var(--al-border, #1b3559); border-radius: 12px; overflow: hidden; font-family: var(--font-sans, Geist, Arial, sans-serif); transition: border-color 180ms cubic-bezier(0.2,0.7,0.2,1), box-shadow 180ms cubic-bezier(0.2,0.7,0.2,1); } .ds-card:hover, .ds-card:focus-within { border-color: var(--al-blue, #1685ff); box-shadow: 0 0 27px #1685ff14; } .ds-card-visual { height: 190px; display: flex; align-items: center; justify-content: center; padding: 18px; background: radial-gradient(ellipse at 50% 80%, #12305f, #080e1b 80%); border-bottom: 1px solid var(--al-separator, #223651); } .ds-card-art { width: 100%; height: 100%; display: grid; place-items: center; border: 1px solid #4c6792; border-radius: 4px; background: #0a1526; color: #5f7ba8; font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 10px; letter-spacing: 0.08em; transform: perspective(900px) rotateY(-5deg) rotateX(3deg); } .ds-card-body { display: flex; flex: 1; flex-direction: column; align-items: start; padding: 24px; } .ds-card-body h3 { margin: 0 0 12px; font-size: 24px; font-weight: 500; line-height: 1.1; letter-spacing: -0.8px; color: var(--al-blue, #1685ff); } .ds-card-body p { margin: 0 0 20px; font-size: 12.5px; line-height: 1.75; color: var(--al-text-card, #b1bfd5); } .ds-card-link { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-top: auto; padding: 16px 0 0; border-top: 1px solid var(--al-separator, #223651); font-size: 12px; font-weight: 500; color: var(--al-blue, #1685ff); } .ds-card-link svg { width: 16px; height: 16px; }"
+    },
+    {
+      "name": "Field Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Names the engineering field — the system's primary taxonomy — so it sits above the card title, not below it.",
+      "html": "<span class=\"ds-badge\">Hardware Engineering</span>",
+      "css": ".ds-badge { display: inline-block; margin-bottom: 13px; padding: 4px 7px; background: var(--al-badge-bg, #0b2342); color: var(--al-badge-text, #80bbff); border: 1px solid var(--al-badge-border, #173d6a); border-radius: 4px; font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Logo Tile",
+      "kind": "nav",
+      "refersTo": "logo-tile",
+      "description": "The ay. mark. A blue-filled square carrying near-black type and an ambient blue glow — the system's Blue-Carries-Black rule in miniature.",
+      "html": "<a class=\"ds-logo\" href=\"#\" aria-label=\"Abhiram Yanamandra — home\">ay.</a>",
+      "css": ".ds-logo { display: grid; place-items: center; width: 42px; height: 42px; background: var(--al-blue, #1685ff); color: #050505; border-radius: 8px; box-shadow: 0 0 26px #1685ff30; font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 20px; font-weight: 650; letter-spacing: -1.5px; text-decoration: none; } .ds-logo:focus-visible { outline: 2px solid var(--al-blue, #1685ff); outline-offset: 3px; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Header links at 13px/450. The contact link is the only item with a rule under it and a trailing arrow.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><a href=\"#\" aria-current=\"page\">Work</a><a href=\"#\">About</a><a href=\"#\">Resume</a><a class=\"ds-nav-contact\" href=\"#\">Let’s talk <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 29px; font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 13px; font-weight: 450; } .ds-nav a { color: var(--al-blue, #1685ff); text-decoration: none; transition: color 160ms cubic-bezier(0.2,0.7,0.2,1); } .ds-nav a:hover { color: var(--al-blue-hover, #afc7ff); } .ds-nav a:focus-visible { outline: 2px solid var(--al-blue, #1685ff); outline-offset: 3px; } .ds-nav-contact { display: flex; align-items: center; gap: 16px; padding: 7px 0; border-bottom: 1px solid var(--al-blue, #1685ff); } .ds-nav-contact svg { width: 13px; height: 13px; }"
+    },
+    {
+      "name": "Note",
+      "kind": "custom",
+      "refersTo": "note",
+      "description": "Signature component. States what a case study does not yet cover — the system's honesty device, and the only element with an asymmetric border.",
+      "html": "<aside class=\"ds-note\"><p>A detailed breakdown of the editor, the technical decisions behind it, and the stack is still to be written. Nothing beyond what the screenshot and description show is claimed here.</p></aside>",
+      "css": ".ds-note { margin: 8px 0 22px; padding: 14px 16px; max-width: 560px; background: #0b1a2e; border: 1px solid #24538b; border-left: 3px solid var(--al-blue, #1685ff); border-radius: 6px; color: #a4b9d8; font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 13px; line-height: 1.65; } .ds-note p { margin: 0; }"
+    },
+    {
+      "name": "Placeholder Tile",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature component. The honest stand-in for a project with no imagery: a recessive Pacifico initial that must never be mistaken for a real artifact.",
+      "html": "<div class=\"ds-placeholder\"><span>No imagery yet</span><b>T</b></div>",
+      "css": ".ds-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 300px; height: 190px; padding: 18px; background: radial-gradient(ellipse at 50% 80%, #12305f, #080e1b 80%); border-bottom: 1px solid var(--al-separator, #223651); color: #5f7ba8; } .ds-placeholder span { font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; } .ds-placeholder b { font-family: var(--font-script, Pacifico, cursive); font-weight: 400; font-size: 44px; line-height: 1; color: #2d5f9e; }"
+    },
+    {
+      "name": "Empty State",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The system's only dashed border. Dashed means nothing is here yet, and that exclusivity is what makes it legible.",
+      "html": "<div class=\"ds-empty\">No projects match this field yet. <a href=\"#\">See all work</a>.</div>",
+      "css": ".ds-empty { padding: 46px 24px; max-width: 520px; text-align: center; border: 1px dashed #24538b; border-radius: 12px; color: var(--al-text-card, #b1bfd5); font-family: var(--font-sans, Geist, Arial, sans-serif); font-size: 14px; line-height: 1.7; } .ds-empty a { color: var(--al-blue, #1685ff); }"
+    },
+    {
+      "name": "Spec Annotations",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Drafting annotations on a selected-work card: crop marks strike out, a dimension line draws from the centre, the true reading lands last.",
+      "html": "<div class=\"ds-plate\"><span class=\"ds-plate-index\">01 / PRESTO</span><div class=\"ds-plate-art\">ARTEFACT</div><span class=\"ds-spec\"><i class=\"ds-spec-tl\"></i><i class=\"ds-spec-tr\"></i><i class=\"ds-spec-bl\"></i><i class=\"ds-spec-br\"></i><span class=\"ds-spec-dim\"></span><span class=\"ds-spec-label\">2940×1154 · Screenshot</span></span></div>",
+      "css": ".ds-plate { position: relative; width: 420px; height: 240px; padding: 44px 25px 25px; background: radial-gradient(ellipse at 50% 75%, #163a75, #080e1b 80%); border: 1px solid var(--al-border, #1b3559); border-radius: 12px; overflow: hidden; font-family: var(--font-sans, Geist, Arial, sans-serif); } .ds-plate-index { position: absolute; left: 20px; top: 16px; color: #80b4ff; font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; } .ds-plate-art { display: grid; place-items: center; height: 100%; border: 1px solid #4c6792; border-radius: 6px; color: #5f7ba8; font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 10px; letter-spacing: .08em; } .ds-spec { position: absolute; inset: 0; pointer-events: none; } .ds-spec i { position: absolute; width: 14px; height: 14px; border: 0 solid var(--al-blue, #1685ff); opacity: 0; transform: scale(.1); transition: opacity 160ms cubic-bezier(.2,.7,.2,1), transform 260ms cubic-bezier(.2,.7,.2,1); } .ds-spec .ds-spec-tl { top: 12px; left: 12px; border-top-width: 1px; border-left-width: 1px; transform-origin: 0 0; } .ds-spec .ds-spec-tr { top: 12px; right: 12px; border-top-width: 1px; border-right-width: 1px; transform-origin: 100% 0; } .ds-spec .ds-spec-bl { bottom: 12px; left: 12px; border-bottom-width: 1px; border-left-width: 1px; transform-origin: 0 100%; } .ds-spec .ds-spec-br { bottom: 12px; right: 12px; border-bottom-width: 1px; border-right-width: 1px; transform-origin: 100% 100%; } .ds-spec-dim { position: absolute; left: 22%; right: 22%; bottom: 20px; height: 1px; background: var(--al-blue, #1685ff); opacity: 0; transform: scaleX(0); transition: opacity 160ms cubic-bezier(.2,.7,.2,1) 60ms, transform 260ms cubic-bezier(.2,.7,.2,1) 60ms; } .ds-spec-dim::before, .ds-spec-dim::after { content: \"\"; position: absolute; top: -4px; width: 1px; height: 9px; background: var(--al-blue, #1685ff); } .ds-spec-dim::before { left: 0; } .ds-spec-dim::after { right: 0; } .ds-spec-label { position: absolute; left: 0; right: 0; bottom: 27px; text-align: center; font-family: var(--font-mono, Geist Mono, ui-monospace, monospace); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: #8dc5ff; opacity: 0; transition: opacity 160ms cubic-bezier(.2,.7,.2,1) 140ms; } .ds-plate:hover .ds-spec i { opacity: .8; transform: none; } .ds-plate:hover .ds-spec-dim, .ds-plate:hover .ds-spec-label { opacity: 1; transform: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Signed Blueprint",
+    "overview": "This is an engineering drawing rendered in blue on black, and then signed by hand across the middle of it. Every surface behaves like a sheet of drafting paper that has been annotated: bracketed mono callouts sit in the margins, counts and field names are set in monospace at annotation scale, and borders are hairlines rather than frames. Against that discipline, one element is unmistakably human — the Pacifico wordmark, tilted −5°, glowing, laid over the whole hero. The tension between the drafted and the drawn is the entire identity. Blue is both the drafting ink and the light source; it is the only chroma in the system.\n\nThe mood is handmade and technical, unembellished. Nothing here is decorative for its own sake: the mono layer carries real information (field counts, image kind, project status), the glow marks things that are live, and the tilted objects are tilted because a hand placed them. The system reads as instrumentation that someone built rather than a template someone filled. That combination is also the argument the portfolio is making — a person who works from circuits to interfaces — so the visual world and the product claim are the same claim.\n\nDepth works on two tracks that never mix. Interface state is communicated with soft blue light, atmospheric and blurred. Physical objects — a portrait, a PCB, a printed sheet, a terminal — are pasted down with a hard, zero-blur offset shadow, as if stuck to the black. A card glowing and a card pasted down mean two different things, and the system never blurs that distinction.",
+    "keyCharacteristics": [
+      "Pure black ground (#000000), never a light surface; the whole system is color-scheme: dark.",
+      "Exactly one chroma: Instrument Blue. Every other value is a blue-leaning neutral.",
+      "A bracketed monospace annotation layer running across every surface at 9–11px.",
+      "One signature typeface, used exactly twice in the entire system.",
+      "Two depth languages with strictly assigned jobs: glow for state, hard offset for objects.",
+      "Tilt belongs to hand-placed objects only; interface chrome stays square to the grid."
+    ],
+    "rules": [
+      {
+        "name": "The Single Ink Rule",
+        "body": "Instrument Blue is the only chroma in the system. There is no success green, no warning amber, no per-field color coding. If a state needs to be distinguished, it is distinguished by weight, fill, border, or annotation — never by introducing a second hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Blue-Is-Live Rule",
+        "body": "Blue means something is active or reachable here. It is never applied as decoration, never used to fill an area for visual interest, and never applied to static text that cannot be acted on. Card titles are blue because the whole card is a link.",
+        "section": "colors"
+      },
+      {
+        "name": "The Blue Carries Black Rule",
+        "body": "Any surface filled with Instrument Blue takes near-black type (#050505), never white. This holds for the logo tile, the active chip, and the primary button, and it is what keeps the accent reading as emitted light rather than painted plastic.",
+        "section": "colors"
+      },
+      {
+        "name": "The Bracket Rule",
+        "body": "Editorial mono labels are wrapped in square brackets with a space inside each bracket: [ Selected engineering work ]. The brackets are the annotation mark of the system — they say this is a note about the page, not content on it. Mono used for data rather than commentary (counts, dimensions, treatment names) is written bare, without brackets.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Signature Rule",
+        "body": "Pacifico appears exactly twice in the entire system: the hero wordmark, and the oversized initial inside the placeholder tile of a project that has no imagery. Both are moments where a human hand stands in for something that isn't there — a logo, or a missing picture. Spending the script anywhere else devalues both.",
+        "section": "typography"
+      },
+      {
+        "name": "The Light Heading Rule",
+        "body": "Headings get lighter as they get larger. Display and Headline sit at 450, Title at 500, and body strong at 500. Nothing in this system is bold. Scale and tracking create hierarchy; weight does not.",
+        "section": "typography"
+      },
+      {
+        "name": "The Single Gutter Rule",
+        "body": "Every route uses the same 34px page gutter and the same 1280px cap. A surface that needs more room narrows its content (680px prose, 400px intro), never its gutter.",
+        "section": "layout"
+      },
+      {
+        "name": "The Hairline Rule",
+        "body": "Sections are separated by a 1px border, not by whitespace alone. The rule is the drafting line; removing it and padding instead breaks the blueprint metaphor.",
+        "section": "layout"
+      },
+      {
+        "name": "The Glow/Paste Rule",
+        "body": "A card never gets an offset shadow; an object never glows. If a new element is interface, it communicates with light. If it is meant to read as a physical artifact, it gets pasted down. Mixing the two makes both meaningless.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Flat-Until-Touched Rule",
+        "body": "Interface surfaces are flat at rest — background tone plus a 1px border, nothing more. Shadow is a response to hover or focus, never a resting decoration.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Tilt Rule",
+        "body": "Only hand-placed objects rotate — the signature, the portrait, imagery inside a card. Interface chrome (headers, cards, chips, inputs, grids) stays square to the grid. A rotated button would be a costume; a rotated photograph is a gesture.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Dashed-Means-Absent Rule",
+        "body": "Dashed borders mean nothing is here yet. The empty library state is the only place the system uses one, and that exclusivity is what makes it legible.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do keep Instrument Blue (#1685ff) as the only chroma. Differentiate state through fill, border weight, type weight, or annotation.",
+      "Do put near-black (#050505) type on any blue fill, and lighten blue on hover rather than darkening it.",
+      "Do wrap editorial mono labels in brackets with inner spaces — [ Like this ] — and leave data-bearing mono bare.",
+      "Do follow The Glow/Paste Rule: interface communicates with light, objects are pasted down with a zero-blur offset.",
+      "Do build new controls to the about-page standard — 44px minimum target, 550 weight, scale(.98) on :active — and raise the 35px library controls to meet it.",
+      "Do use the 34px gutter and the 1280px cap on every route; narrow the content, never the gutter.",
+      "Do separate sections with a 1px hairline rule.",
+      "Do keep headings light (450–500). Create hierarchy with scale and negative tracking.",
+      "Do reserve dashed borders for genuine absence, and reserve Pacifico for the wordmark and the placeholder initial.",
+      "Do keep every control working without JavaScript, as the filter chips and sort form currently do.",
+      "Do let the content model write card action labels (card.action, else Explore <title>). A hardcoded label applied across a grid will eventually describe something that isn't there, and it makes every link on the page share one screen-reader name.",
+      "Do theme the browser's own surfaces from the palette — ::selection is Instrument Blue with near-black type, matching every other blue fill."
+    ],
+    "donts": [
+      "Don't introduce a second accent color — no success green, no warning amber, no per-field color coding. (Confirmed prohibition.)",
+      "Don't fake substance. No decorative placeholder imagery, no generated screenshots, no mock dashboards standing in for projects that have none. A thin project gets the Placeholder Tile and a Note saying what isn't written. (Confirmed prohibition.)",
+      "Don't give a card an offset shadow or an object a glow.",
+      "Don't rotate interface chrome. Tilt belongs to the signature, the portrait, and card imagery.",
+      "Don't use blue on static text that cannot be acted on.",
+      "Don't set anything bold. Nothing in this system exceeds 550 weight except the 650 logo tile.",
+      "Don't add a new breakpoint. Land on 700px / 900px / 520px.",
+      "Don't hardcode new hex literals. The library and case-study stylesheets already carry roughly a dozen (#24538b, #0b1a2e, #88bcff, #6f86ad, #d4e1ff, and others) that bypass the token block in globals.css; they are documented in the frontmatter and should be promoted to CSS custom properties rather than extended.",
+      "Don't use white. The brightest text in the system is #d4e1ff, and it is reserved for emphasis.",
+      "Don't set an arrow as a text glyph (↗) in interface chrome. Links and controls use the drawn ArrowUpRight at 13–16px. The one exception is deliberate: the hero carousel objects carry ↗ as a printed mark on the artefact itself, where it is typography, not an icon.",
+      "Don't add a second focal moment to the homepage. The droplet entrance is the authored sequence; the pointer light and the conducting pulse are supporting state — one responds to the visitor, the other rests between beats, and neither competes for the arrival.",
+      "Don't let an idle effect hold a rAF loop. Both hero effects cost nothing when nothing is happening.",
+      "Don't run an effect where it cannot be seen. Below 900px the conducting pulse is disabled outright rather than drawn behind an opaque carousel object.",
+      "Don't let an annotation state anything that isn't checkable. Spec readings come from the content model — real pixel dimensions, the real image kind. A plausible-looking invented measurement would undermine the one thing this site is selling.",
+      "Don't let a card's frame crop its own artefact. A screenshot clipped by its container reads as a mistake, not as a crop."
+    ]
+  }
+}

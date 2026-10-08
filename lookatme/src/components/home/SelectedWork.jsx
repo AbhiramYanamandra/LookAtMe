@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { profile } from "@/content/profile";
 import { CardBody } from "@/components/project/CardBody";
 import { SupportVisual } from "@/components/project/CardVisuals";
+import { SpecAnnotations, coverSpec } from "@/components/project/SpecAnnotations";
 import { libraryHref } from "@/lib/project-queries";
 
 /** Lead-card visual: the actual screenshot inside a thin framed preview. */
@@ -22,6 +24,7 @@ function ScreenshotVisual({ project, index }) {
         priority
         data-depth=""
       />
+      <SpecAnnotations label={coverSpec(cover)} />
     </div>
   );
 }
@@ -30,7 +33,7 @@ function ScreenshotVisual({ project, index }) {
  * Selected Engineering Work: one lead card (featured rank 1) and the
  * supporting cards (following ranks), followed by the browse-by-field strip.
  */
-export function SelectedWork({ featured, fields }) {
+export function SelectedWork({ featured, fields, total }) {
   const [lead, ...supporting] = featured;
 
   return (
@@ -58,7 +61,7 @@ export function SelectedWork({ featured, fields }) {
           </article>
           {supporting.map((project) => (
             <article key={project.slug} className="al-project-card al-support-card" data-reveal="tilt">
-              <SupportVisual project={project} />
+              <SupportVisual project={project} annotated />
               <CardBody project={project} titleLines={project.card.titleLines} />
             </article>
           ))}
@@ -68,13 +71,19 @@ export function SelectedWork({ featured, fields }) {
       <div className="al-field-discovery" data-reveal="sequence">
         <span>{profile.work.discovery}</span>
         <nav className="al-field-actions" aria-label="Browse projects by field">
+          {/* Each field states its own size, the way the library chips do:
+              the taxonomy tells you how much is behind it before you go. */}
           {fields.map((field, index) => (
             <Link key={field.id} href={libraryHref({ field: field.id })} style={{ "--seq": index }}>
-              {field.label} ↗
+              {field.label}
+              <span className="al-field-count">{field.count}</span>
+              <ArrowUpRight aria-hidden="true" />
             </Link>
           ))}
           <Link href="/projects" style={{ "--seq": fields.length }}>
-            All projects ↗
+            All projects
+            {typeof total === "number" && <span className="al-field-count">{total}</span>}
+            <ArrowUpRight aria-hidden="true" />
           </Link>
         </nav>
       </div>

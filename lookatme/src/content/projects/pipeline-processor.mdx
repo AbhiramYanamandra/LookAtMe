@@ -3,14 +3,15 @@ title: Five-stage processor
 summary: A pipelined MIPS-style processor, extended to support Branch Not Equal.
 badge: Digital systems
 fields: [hardware]
-technologies: []
+technologies: [VHDL, Vivado, Basys-3, Artix-7]
 cover:
   src: /images/processor.png
   alt: Diagram of a five-stage pipelined MIPS datapath with IF/ID, ID/EX, EX/MEM, and MEM/WB pipeline registers
   fit: contain
   kind: diagram
   caption: Reference diagram of the standard five-stage pipelined datapath with control signals. It explains the architecture the project follows; it is not the project’s own schematic or a simulation screenshot.
-order: 3
+team: Course project (COMP3211)
+order: 5
 featured: 3
 hero:
   order: 3
@@ -38,6 +39,20 @@ The base design was extended to support the **Branch Not Equal (BNE)** instructi
 
 The datapath diagram at the top of this page is the **standard textbook five-stage pipeline** with its control signals. It is shown to explain the architecture the project follows; it is not the project’s own schematic or a simulation screenshot. The simplified five-box illustration on the homepage card is likewise an explanatory graphic, not implementation evidence.
 
+## Hazard handling
+
+A pipeline is only correct once it handles instructions that depend on each other.
+
+**Forwarding** logic detects source/destination dependencies and routes results from MEM and WB directly back into EX. In the documented simulation, a dependent add consumes the forwarded value — `8` — without stalling for write-back.
+
+**Flushing** handles control hazards: branch and tag-mismatch logic replaces wrong-path instructions with NOPs, which is what prevents invalid writes reaching tally memory when a branch resolves the other way.
+
+## On hardware
+
+The design is written in **VHDL**, synthesised in **Vivado**, and implemented on a **Basys-3 (Artix-7)** board, driven interactively through switches, buttons and the seven-segment display.
+
+It is small: **334 LUTs (1.61%)** and **393 flip-flops (0.94%)**, with I/O the binding constraint at **49 pins (46.23%)** — a processor whose cost is dominated by talking to the outside world rather than by computing.
+
 <Note>
-  The hardware description language, the simulation or FPGA target, the verification approach, and any measured results are not yet documented here.
+  A team project. The processor subgroup and the simulation-analysis section are the personal contribution, distinct from the decoder and memory subgroup work. The implementation is a custom 16-bit design following the classic five-stage structure rather than an implementation of the MIPS instruction set.
 </Note>

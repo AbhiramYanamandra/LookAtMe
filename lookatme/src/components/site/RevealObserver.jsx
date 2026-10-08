@@ -45,8 +45,12 @@ export function RevealObserver() {
       observed = pending.filter((el) => {
         const rect = el.getBoundingClientRect();
         const inView = rect.bottom > 0 && rect.top < window.innerHeight;
-        if (inView) show(el, 0, true);
-        return !inView;
+        // A page's authored entrance (`data-reveal-entrance`) still plays.
+        if (inView && !el.hasAttribute("data-reveal-entrance")) {
+          show(el, 0, true);
+          return false;
+        }
+        return true;
       });
     }
 

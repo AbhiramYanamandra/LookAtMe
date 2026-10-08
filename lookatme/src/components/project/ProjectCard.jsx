@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CardBody } from "./CardBody";
 import { BoardVisual } from "./CardVisuals";
+import { SpecAnnotations, coverSpec } from "./SpecAnnotations";
 import { formatProjectDate } from "@/lib/format";
 
 /** Library card: contained cover (or a deliberate fallback) plus the shared body. */
@@ -13,6 +14,7 @@ export function ProjectCard({ project }) {
       {cover && project.card.visual === "board" ? (
         <div className="pl-card-visual pl-card-visual--board">
           <BoardVisual project={project} />
+          <SpecAnnotations label={coverSpec(cover)} />
         </div>
       ) : cover ? (
         <div className="pl-card-visual">
@@ -25,14 +27,20 @@ export function ProjectCard({ project }) {
             data-fit={cover.fit}
             style={{ objectPosition: cover.position }}
           />
+          <SpecAnnotations label={coverSpec(cover)} />
         </div>
       ) : (
-        <div className="pl-card-visual pl-card-visual--placeholder" aria-hidden="true">
-          <b>{project.title.charAt(0)}</b>
+        <div className="pl-card-visual pl-card-visual--placeholder">
+          <b aria-hidden="true">{project.title.charAt(0)}</b>
+          {/* Not aria-hidden: this is the library's only absence signal, and
+              hiding it made the honesty commitment sighted-only. */}
           <span>No image yet</span>
         </div>
       )}
-      <CardBody project={project} action="Read the case study">
+      {/* No hardcoded action: most published projects have a stub body, so a
+          blanket "Read the case study" promises a write-up that isn't there.
+          The content model decides — `card.action`, else `Explore <title>`. */}
+      <CardBody project={project}>
         {meta.length > 0 && (
           <div className="pl-card-meta">
             {meta.map((item) => (

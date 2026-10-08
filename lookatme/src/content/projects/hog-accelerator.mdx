@@ -1,0 +1,49 @@
+---
+title: FPGA HOG accelerator
+summary: An 8-bin HOG descriptor moved onto an FPGA with Vitis HLS — fixed-point, batched, and restructured until 10,000 images took 32.4 ms.
+badge: FPGA / HLS
+fields: [fpga, ml]
+technologies: [C++, Vitis HLS, FPGA, AXI, Python]
+team: Course project (COMP4601)
+order: 2
+draft: false
+---
+
+## Overview
+
+Histogram of Oriented Gradients is a classical feature descriptor: cheap in concept, expensive in practice when you need it ten thousand times. This project implements an **8-bin HOG descriptor for 32×32 images**, producing a **288-element feature vector**, and then accelerates it on an FPGA with Vitis HLS against a **10,000-image benchmark**.
+
+The interesting part is not the descriptor. It is the sequence of decisions that took it from working to fast, and the one that was measured and thrown away.
+
+## Fixed-point, without silently changing the answer
+
+Floating point is the default and the wrong default here. Key computation was converted to `ap_fixed`, which cuts both resource usage and latency — but only counts if the output is still the same output.
+
+Numerical equivalence was validated against the floating-point reference with a **maximum absolute difference of ~3.10 × 10⁻⁶**. That regression signature is the evidence that the optimisation is free rather than quietly lossy.
+
+## Removing the overhead that wasn't the algorithm
+
+Two structural changes mattered more than any arithmetic tuning:
+
+- **Batching.** All 10,000 images were moved into a single kernel launch instead of ten thousand, removing repeated host-launch overhead entirely.
+- **Width matching.** Memory copies were matched to the **512-bit AXI** interface width, so transfers stopped wasting most of the bus.
+
+Together these brought board time to about **20.81 µs per image** at that stage of optimisation.
+
+## Overlapping the pipeline
+
+The six HOG stages were then re-architected with `dataflow` so they execute concurrently rather than in sequence. Concurrency was verified with co-simulation **under randomly injected stalls** — the condition where a dataflow design either holds up or deadlocks. That restructuring carried the design from roughly 33× to 81× over the course of the work.
+
+## The optimisation that was reverted
+
+A three-wide fixed-point square-root was implemented to parallelise that stage. It worked, and **LUT utilisation rose from 51% to 92%** — so it was measured, costed, and reverted.
+
+Knowing the number before accepting the change is the point. A design at 92% LUT has no room left for anything that comes after it.
+
+## Result
+
+The final accelerator processed the **10,000-image benchmark in approximately 32.4 ms**, a throughput of roughly **308,000 images per second**.
+
+<Note>
+  This was a team project. The HOG structure and data path were co-developed; the fixed-point conversion, batching and AXI width work, dataflow restructuring and the square-root cost analysis are supported as personal contributions. An end-to-end speedup figure of ~129.7× was reported in the final presentation, but the baseline it is measured against is not well specified here, so the runtime figure above is the one worth quoting.
+</Note>

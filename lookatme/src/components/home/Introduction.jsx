@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { profile } from "@/content/profile";
 import { LineReveal } from "@/components/site/LineReveal";
 
@@ -29,12 +30,17 @@ export function Introduction() {
           I’m <strong>{profile.name}</strong>. {profile.intro.lead}
         </p>
         <div className="al-intro-links">
-          <Link href="/about">More about me ↗</Link>
+          <Link href="/background">
+            More about me
+            <ArrowUpRight aria-hidden="true" />
+          </Link>
           <a href={profile.github} target="_blank" rel="noopener noreferrer">
-            GitHub ↗
+            GitHub
+            <ArrowUpRight aria-hidden="true" />
           </a>
           <a href={profile.resume} target="_blank" rel="noopener noreferrer">
-            View resume ↗
+            View resume
+            <ArrowUpRight aria-hidden="true" />
           </a>
         </div>
       </div>

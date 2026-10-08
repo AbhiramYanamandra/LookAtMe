@@ -191,12 +191,12 @@ button:active,
   }
 
   /* Default: fade up. */
-  html.js [data-reveal]:not(.is-revealed):not(.al-project-card):not(.al-portrait):not([data-reveal="draw"]) {
+  html.js [data-reveal]:not(.is-revealed):not(.al-project-card):not(.al-portrait):not([data-reveal="draw"]):not([data-reveal="mask"]) {
     opacity: 0;
     transform: translateY(var(--reveal-distance));
     animation: al-reveal-safety 1ms linear 3000ms forwards;
   }
-  html.js [data-reveal]:not(.al-project-card):not(.pl-overview-card):not(.al-portrait) {
+  html.js [data-reveal]:not(.al-project-card):not(.pl-overview-card):not(.al-portrait):not([data-reveal="mask"]) {
     transition:
       opacity var(--motion-reveal) var(--ease-out) var(--d),
       transform var(--motion-reveal) var(--ease-out) var(--d);
@@ -285,7 +285,7 @@ button:active,
     --lag: 0px;
   }
   .al-image-visual img,
-  .al-diagram-visual span {
+  .al-stage-stack span {
     transform: translateY(var(--lag, 0px));
   }
 
@@ -374,6 +374,12 @@ html.js [data-reveal].is-instant::before {
   }
   html.al-entrance-playing .al-wordmark {
     text-shadow: none;
+  }
+  /* The droplet owns the hero until it settles; the pointer light must not
+     compete with the one authored moment on the page. */
+  html.al-entrance-pending .al-hero-light,
+  html.al-entrance-playing .al-hero-light {
+    opacity: 0;
   }
   html.al-entrance-settled .al-wordmark {
     animation: al-glow-in 260ms var(--ease-out) both;

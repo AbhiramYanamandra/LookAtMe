@@ -16,10 +16,29 @@ export const DEFAULT_SORT = "recommended";
 export const ALL_FIELDS = "all";
 
 const sortIds = new Set(SORT_OPTIONS.map((option) => option.id));
+const DATE_SORTS = new Set(["newest", "oldest"]);
 
-/** Normalise a raw `?sort=` value to a supported sort id. */
-export function resolveSort(value) {
-  return typeof value === "string" && sortIds.has(value) ? value : DEFAULT_SORT;
+/**
+ * The sorts a given collection can actually perform.
+ *
+ * Date sorts are withheld when no project carries a date: with nothing to
+ * order by they return the recommended order unchanged, while the status
+ * line reports "sorted by newest" — the interface confirming a change that
+ * never happened. An option that cannot do anything is not offered.
+ */
+export function availableSorts(projects = []) {
+  const hasDates = projects.some((project) => project.date);
+  return hasDates ? SORT_OPTIONS : SORT_OPTIONS.filter((option) => !DATE_SORTS.has(option.id));
+}
+
+/**
+ * Normalise a raw `?sort=` value to a supported sort id. Pass `projects` to
+ * also reject a sort this collection cannot perform, so a stale
+ * `?sort=newest` link falls back instead of lying about the order.
+ */
+export function resolveSort(value, projects) {
+  const ids = projects ? new Set(availableSorts(projects).map((option) => option.id)) : sortIds;
+  return typeof value === "string" && ids.has(value) ? value : DEFAULT_SORT;
 }
 
 /**

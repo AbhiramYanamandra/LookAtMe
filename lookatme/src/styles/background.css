@@ -1,0 +1,428 @@
+.ab-page { max-width: 1280px; margin: 0 auto; padding: 0 34px; }
+.ab-hero { display: grid; grid-template-columns: 1.25fr 0.85fr; align-items: center; gap: 80px; padding: 72px 0 64px; }
+.ab-intro > .al-mono, .ab-section-heading > .al-mono, .ab-connect .al-mono { display: block; color: var(--al-blue-soft); margin-bottom: 22px; }
+.ab-intro h1 { font-size: clamp(46px, 5.5vw, 76px); font-weight: 450; line-height: 1.04; letter-spacing: -0.055em; max-width: 620px; text-wrap: balance; }
+.ab-name { margin-top: 30px; font-size: 21px; color: #e3edff; }
+.ab-description { max-width: 490px; margin-top: 14px; color: var(--al-text-intro); font-size: 16px; line-height: 1.8; }
+.ab-links { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 30px; font-size: 13px; }
+.ab-links a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
+.ab-links svg { width: 15px; height: 15px; }
+.ab-links .ab-primary { background: var(--al-blue); color: #000; border-radius: 6px; padding: 12px 18px; font-weight: 550; }
+.ab-links .ab-primary:hover { background: var(--al-blue-hover); }
+.ab-links a:active { scale: .98; }
+.ab-portrait { margin: 0 8px 0 0; transform: rotate(-3deg); }
+.ab-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 43% 50%; border-radius: 10px; box-shadow: 8px 8px 0 var(--al-blue); }
+.ab-portrait figcaption { margin-top: 24px; color: var(--al-text-muted); font-size: 10px; }
+.ab-fields { border-top: 1px solid var(--al-border-soft); padding: 64px 0; }
+.ab-section-heading h2, .ab-connect h2 { font-size: clamp(30px, 3.5vw, 46px); font-weight: 450; line-height: 1.12; letter-spacing: -0.04em; }
+.ab-field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(212px, 1fr)); gap: 12px; margin-top: 32px; align-items: start; }
+.ab-field { display: flex; flex-direction: column; padding: 16px 16px 14px; background: var(--al-surface); border: 1px solid var(--al-border-soft); border-radius: 10px; }
+.ab-field > .al-mono { color: var(--al-text-muted); font-size: 10px; }
+.ab-field h3 { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin: 10px 0 8px; font-size: 15px; font-weight: 500; line-height: 1.3; letter-spacing: -0.01em; }
+.ab-field h3 svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ab-field p { color: var(--al-text-muted); font-size: 12px; line-height: 1.6; margin-bottom: 0; }
+.ab-field:hover { border-color: var(--al-blue); }
+.ab-connect { border-top: 1px solid var(--al-border-soft); padding: 60px 0 80px; display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+.ab-connect .ab-links { margin-top: 0; }
+@media (max-width: 900px) {
+  .ab-hero { gap: 40px; padding: 60px 0 80px; }
+  .ab-field-grid { gap: 14px; }
+  .ab-field { padding: 22px; }
+  .ab-connect { align-items: start; flex-direction: column; }
+}
+@media (max-width: 700px) {
+  .ab-page { padding: 0 22px; }
+  .ab-hero { grid-template-columns: 1fr; padding: 42px 0 64px; gap: 46px; }
+  .ab-intro h1 { max-width: 520px; }
+  .ab-name { font-size: 19px; }
+  .ab-description { font-size: 15px; }
+  .ab-portrait { width: min(80%, 330px); justify-self: center; }
+  .ab-field-grid { grid-template-columns: 1fr; }
+  .ab-field h3 { margin-top: 8px; }
+  .ab-fields { padding: 42px 0; }
+  .ab-connect { padding: 42px 0 54px; }
+}
+
+/* --- Experience timeline ------------------------------------------------
+   A dated record, newest first. Weight follows evidence: an engineering role
+   carries its stack and links into the full account; a service role is a
+   dated line and stops there. The rule is the project library's rule —
+   nothing is padded to match its neighbour. */
+.ab-experience { border-top: 1px solid var(--al-border-soft); padding: 64px 0; }
+.xp-list { list-style: none; margin: 36px 0 0; padding: 0; }
+.xp-role {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 24px;
+  padding: 26px 0;
+  border-top: 1px solid var(--al-border-soft);
+}
+.xp-role:first-child { border-top: 0; padding-top: 0; }
+/* The date column is annotation, so it sits in the margin like one. */
+.xp-when .al-mono { color: var(--al-text-muted); font-size: 10px; white-space: nowrap; }
+.xp-what h3 { font-size: 21px; font-weight: 450; line-height: 1.25; letter-spacing: -0.02em; }
+.xp-what h3 a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--al-blue);
+  transition: color var(--motion-hover) var(--ease-out);
+}
+.xp-what h3 a:hover { color: var(--al-blue-hover); }
+.xp-what h3 svg { width: 15px; height: 15px; flex-shrink: 0; }
+.xp-title { margin-top: 6px; font-size: 13px; color: var(--al-text-card); }
+.xp-where { color: var(--al-text-muted); }
+.xp-summary { margin-top: 12px; font-size: 14px; line-height: 1.7; color: var(--al-text-intro); max-width: 62ch; }
+.xp-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+.xp-stack li {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--al-badge-text);
+  background: var(--al-badge-bg);
+  border: 1px solid var(--al-badge-border);
+  border-radius: 4px;
+  padding: 4px 7px;
+}
+/* A service role is recorded, not argued. It gets the line and no more. */
+.xp-role--service .xp-what h3 { font-size: 17px; color: var(--al-text-card); }
+.xp-role--service .xp-summary { font-size: 13px; color: var(--al-text-muted); }
+
+@media (max-width: 700px) {
+  .ab-experience { padding: 46px 0; }
+  .xp-role { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+  .xp-summary { font-size: 13px; }
+}
+
+/* --- The record, drawn to scale ----------------------------------------
+   Each role is a dimension line on a yearly axis: end ticks, the
+   organisation above the line, its measured length below. It is the
+   drafting vocabulary of the homepage's spec annotations at full strength,
+   and the one place on this page that is drawn rather than listed. Weight
+   still follows evidence — a service role is a hairline, not a rule. */
+.xp-span { margin: 40px 0 8px; }
+.xp-span-plot {
+  position: relative;
+  padding: 6px 0 34px;
+  border-bottom: 1px solid var(--al-separator);
+}
+.xp-span-year {
+  position: absolute;
+  top: 0;
+  bottom: -6px;
+  left: var(--x);
+  border-left: 1px solid var(--al-border-soft);
+  pointer-events: none;
+}
+.xp-span-year .al-mono {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  translate: -50% 0;
+  padding: 0 4px;
+  background: var(--al-black);
+  color: var(--al-text-faint);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.xp-span-lanes { position: relative; list-style: none; margin: 0; padding: 0; }
+.xp-lane { position: relative; height: 78px; }
+.xp-bar {
+  position: absolute;
+  inset: 0 auto 0 var(--from);
+  width: var(--width);
+  color: inherit;
+}
+.xp-bar-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--al-blue);
+  transform-origin: left center;
+  transition: background-color var(--motion-hover) var(--ease-out), box-shadow var(--motion-hover) var(--ease-out);
+}
+/* End ticks: the line is measured, not just drawn. */
+.xp-bar-line::before,
+.xp-bar-line::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  width: 1px;
+  height: 16px;
+  background: inherit;
+}
+.xp-bar-line::before { left: 0; }
+.xp-bar-line::after { right: 0; }
+.xp-bar-label,
+.xp-bar-reading {
+  position: absolute;
+  white-space: nowrap;
+  /* Lifted off the year grid, so a gridline never strikes through a name. */
+  padding: 0 4px;
+  margin: 0 -4px;
+  background: var(--al-black);
+}
+.xp-bar-label {
+  bottom: calc(50% + 10px);
+  font-size: 19px;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--al-blue);
+  transition: color var(--motion-hover) var(--ease-out);
+}
+.xp-bar-reading {
+  top: calc(50% + 11px);
+  color: var(--al-text-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.xp-bar[data-anchor="start"] :is(.xp-bar-label, .xp-bar-reading) { left: 0; }
+.xp-bar[data-anchor="end"] :is(.xp-bar-label, .xp-bar-reading) { right: 0; }
+a.xp-bar:hover .xp-bar-label { color: var(--al-blue-hover); }
+a.xp-bar:hover .xp-bar-line { background: var(--al-blue-hover); box-shadow: 0 0 14px #1685ff80; }
+
+/* A service role is on the record at hairline weight. */
+.xp-lane--service .xp-bar-line { height: 1px; margin-top: 0; background: var(--al-text-faint); }
+.xp-lane--service .xp-bar-label { font-size: 15px; color: var(--al-text-card); }
+
+.xp-when .xp-duration { display: block; margin-top: 6px; color: var(--al-text-faint); font-size: 10px; }
+
+/* The lines draw in the order the work happened; names land once each
+   line has reached its end. Reduced motion gets the finished drawing. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .xp-span .xp-bar-line {
+    transition:
+      transform 720ms var(--ease-out) calc(160ms + var(--i, 0) * 150ms),
+      background-color var(--motion-hover) var(--ease-out),
+      box-shadow var(--motion-hover) var(--ease-out);
+  }
+  html.js .xp-span :is(.xp-bar-label, .xp-bar-reading) {
+    transition:
+      opacity 320ms var(--ease-out) calc(520ms + var(--i, 0) * 150ms),
+      translate 320ms var(--ease-out) calc(520ms + var(--i, 0) * 150ms),
+      color var(--motion-hover) var(--ease-out);
+  }
+  html.js .xp-span:not(.is-revealed) .xp-bar-line {
+    transform: scaleX(0);
+    animation: al-reveal-safety 1ms linear 3000ms forwards;
+  }
+  html.js .xp-span:not(.is-revealed) :is(.xp-bar-label, .xp-bar-reading) {
+    opacity: 0;
+    translate: 0 4px;
+    animation: al-reveal-safety-child 1ms linear 3000ms forwards;
+  }
+}
+
+@media (max-width: 700px) {
+  .xp-span { margin-top: 30px; }
+  .xp-lane { height: 64px; }
+  .xp-bar-label { font-size: 14px; }
+  .xp-lane--service .xp-bar-label { font-size: 13px; }
+  .xp-span-year .al-mono { font-size: 9px; padding: 0 2px; }
+  .xp-when .xp-duration { display: inline; margin: 0 0 0 10px; }
+}
+
+/* Case-study facts: let a long "worked with" list span both columns. */
+.cs-facts-wide { grid-column: 1 / -1; }
+
+/* --- Education ----------------------------------------------------------
+   Set in the experience timeline's language so the record reads continuously. */
+.ab-education { border-top: 1px solid var(--al-border-soft); padding: 64px 0; }
+.xp-highlight {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 14px;
+}
+.xp-highlight .al-mono { color: var(--al-text-muted); font-size: 10px; }
+.xp-highlight strong {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--al-badge-text);
+  background: var(--al-badge-bg);
+  border: 1px solid var(--al-badge-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.xp-highlight a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  color: var(--al-blue);
+  transition: color var(--motion-hover) var(--ease-out);
+}
+.xp-highlight a:hover { color: var(--al-blue-hover); }
+.xp-highlight a svg { width: 14px; height: 14px; }
+
+@media (max-width: 700px) {
+  .ab-education { padding: 46px 0; }
+  /* Nine stacked field tiles ran to 2086px. Two columns, labels only. */
+  .ab-field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ab-field { padding: 13px; }
+  .ab-field p { display: none; }
+}
+
+/* Coursework: a data table without the table. The mark is the scannable
+   column, so it is set in mono and right-aligned into its own track; the
+   course code sits in the margin like the dates in the timeline above. */
+.xp-courses { margin-top: 26px; max-width: 620px; }
+.xp-courses-label {
+  display: block;
+  color: var(--al-text-muted);
+  font-size: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--al-border-soft);
+}
+.xp-courses ul { list-style: none; margin: 0; padding: 0; }
+.xp-courses li {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid #14213a;
+}
+.xp-courses li:last-child { border-bottom: 0; }
+.xp-course-code { color: var(--al-text-faint); font-size: 10px; }
+.xp-course-title { font-size: 13px; color: var(--al-text-card); }
+.xp-course-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--al-blue-soft);
+  font-variant-numeric: tabular-nums;
+}
+/* The grade letters are the quiet half of the reading. */
+.xp-course-mark i {
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--al-text-faint);
+}
+
+@media (max-width: 700px) {
+  .xp-courses li { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; }
+  .xp-course-code { grid-column: 1 / -1; }
+}
+
+/* --- Motion ---------------------------------------------------------------
+   One authored entrance (the hero), then quieter supporting reveals that
+   reuse the homepage's vocabulary: a mask that uncovers a print, headings
+   that rise line by line, lists that arrive as lists. Everything here is
+   visible by default and only hidden while JS runs with motion allowed. */
+.ab-portrait-frame { display: block; }
+
+/* Field tiles are plates on the drawing: crop marks strike out from the
+   corners on hover or focus, the same gesture as the homepage work cards. */
+.ab-field { position: relative; }
+.ab-field::after {
+  --c: var(--al-blue);
+  content: "";
+  position: absolute;
+  inset: -7px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / 10px 1px,
+    linear-gradient(var(--c), var(--c)) top left / 1px 10px,
+    linear-gradient(var(--c), var(--c)) top right / 10px 1px,
+    linear-gradient(var(--c), var(--c)) top right / 1px 10px,
+    linear-gradient(var(--c), var(--c)) bottom left / 10px 1px,
+    linear-gradient(var(--c), var(--c)) bottom left / 1px 10px,
+    linear-gradient(var(--c), var(--c)) bottom right / 10px 1px,
+    linear-gradient(var(--c), var(--c)) bottom right / 1px 10px;
+  background-repeat: no-repeat;
+  opacity: 0;
+  scale: 0.97;
+  transition: opacity var(--motion-hover) var(--ease-out), scale 260ms var(--ease-out);
+}
+.ab-field:is(:hover, :focus-visible)::after { opacity: 1; scale: 1; }
+.ab-field h3 svg { transition: translate var(--motion-hover) var(--ease-out); }
+.ab-field:is(:hover, :focus-visible) h3 svg { translate: 2px -2px; }
+.ab-field:active { scale: .98; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero copy: label, headline line by line, name, lead, then the actions. */
+  html.js .ab-intro[data-reveal] :is(.ab-name, .ab-description, .ab-links) {
+    transition:
+      opacity 360ms var(--ease-out) var(--child-delay, 0ms),
+      translate 520ms var(--ease-out) var(--child-delay, 0ms);
+  }
+  html.js .ab-intro[data-reveal]:not(.is-revealed) :is(.ab-name, .ab-description, .ab-links) {
+    opacity: 0;
+    translate: 0 10px;
+    animation: al-reveal-safety-child 1ms linear 3000ms forwards;
+  }
+  html.js .ab-intro[data-reveal] .lr-word {
+    --child-delay: calc(var(--d) + 80ms + var(--line, 0) * 110ms);
+    transition-duration: 520ms;
+  }
+  html.js .ab-intro[data-reveal]:not(.is-revealed) .lr-word { translate: 0 0.6em; }
+  html.js .ab-intro[data-reveal] .ab-name { --child-delay: calc(var(--d) + 380ms); }
+  html.js .ab-intro[data-reveal] .ab-description { --child-delay: calc(var(--d) + 450ms); }
+  html.js .ab-intro[data-reveal] .ab-links { --child-delay: calc(var(--d) + 540ms); }
+
+  /* Portrait: a mask rises off the print while the photograph settles from
+     a slight push-in. Negative insets keep the blue offset uncut at rest. */
+  html.js [data-reveal="mask"] {
+    clip-path: inset(-24px -24px -24px -24px);
+    transition: clip-path 780ms cubic-bezier(0.16, 1, 0.3, 1) var(--d);
+  }
+  html.js [data-reveal="mask"] img {
+    transition: scale 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--d);
+  }
+  html.js [data-reveal="mask"]:not(.is-revealed) {
+    clip-path: inset(100% -24px -24px -24px);
+    animation: ab-reveal-safety-mask 1ms linear 3000ms forwards;
+  }
+  html.js [data-reveal="mask"]:not(.is-revealed) img { scale: 1.08; }
+  html.js .ab-portrait figcaption { transition: opacity 400ms var(--ease-out) 620ms; }
+  html.js .ab-portrait:has([data-reveal="mask"]:not(.is-revealed)) figcaption { opacity: 0; }
+
+  /* Section headings: label first, then the heading rises into place. */
+  html.js .ab-section-heading[data-reveal="heading"]:not(.is-revealed) { opacity: 1; transform: none; }
+  html.js .ab-section-heading[data-reveal] > * {
+    transition:
+      opacity var(--motion-reveal) var(--ease-out) var(--child-delay, 0ms),
+      translate 520ms var(--ease-out) var(--child-delay, 0ms);
+  }
+  html.js .ab-section-heading[data-reveal] > h2 { --child-delay: calc(var(--d) + 90ms); }
+  html.js .ab-section-heading[data-reveal]:not(.is-revealed) > * {
+    opacity: 0;
+    translate: 0 var(--reveal-lift);
+    animation: al-reveal-safety-child 1ms linear 3000ms forwards;
+  }
+  html.js .ab-section-heading[data-reveal]:not(.is-revealed) > .al-mono { translate: 0 6px; }
+
+  /* Coursework arrives as a list, top mark first; total stagger capped. */
+  html.js .ab-education [data-reveal] .xp-courses li {
+    transition:
+      opacity 300ms var(--ease-out) calc(var(--d) + 200ms + min(var(--n, 0), 6) * 55ms),
+      translate 300ms var(--ease-out) calc(var(--d) + 200ms + min(var(--n, 0), 6) * 55ms);
+  }
+  html.js .ab-education [data-reveal]:not(.is-revealed) .xp-courses li {
+    opacity: 0;
+    translate: 0 6px;
+    animation: al-reveal-safety-child 1ms linear 3000ms forwards;
+  }
+}
+@keyframes ab-reveal-safety-mask {
+  to { clip-path: inset(-24px -24px -24px -24px); }
+}

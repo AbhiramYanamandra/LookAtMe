@@ -5,7 +5,7 @@ import { siteUrl, siteUrlConfigured } from "@/lib/site";
 import "./globals.css";
 import "@/styles/home.css";
 import "@/styles/projects.css";
-import "@/styles/about.css";
+import "@/styles/background.css";
 import "@/styles/motion.css";
 import { ENTRANCE_STORAGE_KEY } from "@/lib/motion";
 import { PageTransition } from "@/components/site/PageTransition";
