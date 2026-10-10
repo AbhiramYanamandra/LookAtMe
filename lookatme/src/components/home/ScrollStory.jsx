@@ -5,7 +5,7 @@ import { depthOffset, heroScrollState } from "@/lib/motion";
 
 /**
  * Scroll-linked movement on the homepage (reversible, no entrances here):
- *  - leaving the hero, the carousel drifts upward and fades near the edge;
+ *  - leaving the hero, the photo lags the page and the project tiles fade;
  *  - imagery inside the selected-work cards sits a little deeper than its
  *    frame, counter-moving by a few pixels as the card crosses the viewport.
  * Everything is written as CSS custom properties from one rAF-throttled
@@ -14,16 +14,17 @@ import { depthOffset, heroScrollState } from "@/lib/motion";
 export function ScrollStory() {
   useEffect(() => {
     const hero = document.querySelector(".al-hero");
-    const orbit = hero?.querySelector(".al-orbit");
+    const photo = hero?.querySelector(".al-hero-photo");
+    const tiles = hero?.querySelector(".al-tiles");
     const depthTargets = Array.from(document.querySelectorAll("[data-depth]"));
-    if (!hero || !orbit) return undefined;
+    if (!hero) return undefined;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
 
     const rest = () => {
-      orbit.style.removeProperty("--hero-shift");
-      orbit.style.removeProperty("--hero-fade");
+      photo?.style.removeProperty("--hero-shift");
+      tiles?.style.removeProperty("--hero-fade");
       depthTargets.forEach((el) => el.style.removeProperty("--depth"));
     };
 
@@ -35,8 +36,9 @@ export function ScrollStory() {
       }
       const compact = window.innerWidth <= 700;
       const { shift, fade } = heroScrollState({ scrollY: window.scrollY, heroHeight: hero.offsetHeight, compact });
-      orbit.style.setProperty("--hero-shift", `${shift.toFixed(1)}px`);
-      orbit.style.setProperty("--hero-fade", fade.toFixed(3));
+      // The photo lags the page a little (a slower layer); tiles fade as the hero leaves.
+      photo?.style.setProperty("--hero-shift", `${(-shift).toFixed(1)}px`);
+      tiles?.style.setProperty("--hero-fade", fade.toFixed(3));
 
       const viewport = window.innerHeight;
       const amplitude = compact ? 3 : 6;

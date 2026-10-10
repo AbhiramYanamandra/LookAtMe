@@ -18,8 +18,7 @@ import { FIELD_IDS } from "../content/fields.js";
 export const CONTENT_DIR = path.join(process.cwd(), "src", "content", "projects");
 export const PUBLIC_DIR = path.join(process.cwd(), "public");
 
-export const HERO_TREATMENTS = ["board", "screen", "paper", "print", "terminal", "frame"];
-export const CARD_VISUALS = ["image", "screenshot", "board", "stages"];
+export const CARD_VISUALS = ["image", "screenshot", "board", "stages", "figure", "signal", "silicon", "detect", "schema", "lcd", "sorter", "cipher", "ttt", "guess"];
 export const IMAGE_FITS = ["cover", "contain"];
 export const STATUSES = ["complete", "in-progress", "paused", "archived"];
 
@@ -183,31 +182,6 @@ function normaliseProject(file, raw, body, publicDir) {
     problems.push(`${where}: featured must be an integer rank`);
   }
 
-  let hero = null;
-  if (raw.hero !== undefined) {
-    if (!isPlainObject(raw.hero) || !Number.isInteger(raw.hero.order)) {
-      problems.push(`${where}: hero needs an integer order`);
-    } else {
-      const treatment = raw.hero.treatment ?? "frame";
-      if (!HERO_TREATMENTS.includes(treatment)) {
-        problems.push(`${where}: hero.treatment must be one of ${HERO_TREATMENTS.join(", ")}`);
-      }
-      const needsImage = ["board", "screen", "paper", "print", "frame"].includes(treatment);
-      if (needsImage && !cover) {
-        problems.push(`${where}: hero.treatment "${treatment}" needs a cover image`);
-      }
-      hero = {
-        order: raw.hero.order,
-        treatment,
-        eyebrow: raw.hero.eyebrow ?? null,
-        headline: raw.hero.headline ?? null,
-        tagline: raw.hero.tagline ?? null,
-        footnote: raw.hero.footnote ?? null,
-        lines: normaliseStringList(raw.hero.lines, problems, `${where}: hero.lines`),
-      };
-    }
-  }
-
   let card = { visual: "image", action: null, titleLines: null };
   if (raw.card !== undefined) {
     if (!isPlainObject(raw.card)) {
@@ -225,6 +199,16 @@ function normaliseProject(file, raw, body, publicDir) {
       };
     }
   }
+
+  let spectrum = null;
+  if (raw.spectrum !== undefined) {
+    if (typeof raw.spectrum !== "number" || raw.spectrum < 0 || raw.spectrum > 1) {
+      problems.push(`${where}: spectrum must be a number from 0 (hardware) to 1 (software)`);
+    } else {
+      spectrum = raw.spectrum;
+    }
+  }
+  const metric = typeof raw.metric === "string" && raw.metric.trim() ? raw.metric.trim() : null;
 
   const draft = raw.draft === true;
   if (raw.draft !== undefined && typeof raw.draft !== "boolean") {
@@ -248,8 +232,9 @@ function normaliseProject(file, raw, body, publicDir) {
     links,
     featured: Number.isInteger(raw.featured) ? raw.featured : null,
     order: Number.isInteger(raw.order) ? raw.order : Number.MAX_SAFE_INTEGER,
-    hero,
     card,
+    spectrum,
+    metric,
     draft,
     body,
   };
@@ -292,19 +277,12 @@ export function loadAllProjects({ contentDir = CONTENT_DIR, publicDir = PUBLIC_D
 
   const published = projects.filter((project) => !project.draft);
   const featuredRanks = new Map();
-  const heroOrders = new Map();
   for (const project of published) {
     if (project.featured !== null) {
       if (featuredRanks.has(project.featured)) {
         problems.push(`${project.file}: featured rank ${project.featured} is also used by ${featuredRanks.get(project.featured)}`);
       }
       featuredRanks.set(project.featured, project.file);
-    }
-    if (project.hero) {
-      if (heroOrders.has(project.hero.order)) {
-        problems.push(`${project.file}: hero.order ${project.hero.order} is also used by ${heroOrders.get(project.hero.order)}`);
-      }
-      heroOrders.set(project.hero.order, project.file);
     }
   }
 

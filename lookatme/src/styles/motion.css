@@ -31,9 +31,6 @@ button:active,
 .cs-back:active {
   scale: 0.98;
 }
-.al-control:active {
-  scale: 0.94;
-}
 
 /* Navigation links: a thin blue underline draws across. */
 .al-nav a:not(.al-nav-contact) {
@@ -61,18 +58,10 @@ button:active,
 }
 
 /* Arrows travel 2–3px in their pointing direction. */
-.al-card-link svg,
-.al-nav-contact svg,
-.cs-links svg,
-.pl-overview-title svg,
-.al-bottom-left svg,
-.cs-back svg {
+.al-card-link svg,.al-nav-contact svg,.cs-links svg,.al-bottom-left svg,.cs-back svg{
   transition: translate var(--motion-hover) var(--ease-out);
 }
-.al-card-link:hover svg,
-.al-nav-contact:hover svg,
-.cs-links a:hover svg,
-.pl-overview-title a:hover svg {
+.al-card-link:hover svg,.al-nav-contact:hover svg,.cs-links a:hover svg{
   translate: 2px -2px;
 }
 .al-bottom-left a:hover svg {
@@ -87,15 +76,10 @@ button:active,
 .pl-filters a:hover:not([aria-current="true"]),
 .pl-sort select:hover,
 .pl-sort button:hover {
-  background: #0f2240;
-  border-color: #3a76c4;
+  background: #392516;
+  border-color: #b68548;
 }
-.al-control {
-  transition:
-    background-color var(--motion-hover) var(--ease-out),
-    border-color var(--motion-hover) var(--ease-out),
-    scale var(--motion-press) var(--ease-out);
-}
+
 .is-navigating {
   color: var(--al-blue-hover);
 }
@@ -114,8 +98,7 @@ button:active,
   inherits: true;
   initial-value: 0px;
 }
-.al-project-card,
-.pl-overview-card {
+.al-project-card{
   transition:
     border-color var(--motion-hover) var(--ease-out),
     box-shadow var(--motion-hover) var(--ease-out),
@@ -129,16 +112,12 @@ button:active,
   transition: scale var(--motion-hover) var(--ease-out);
 }
 @media (hover: hover) {
-  .al-project-card:hover,
-  .pl-overview-card:hover {
+  .al-project-card:hover{
     translate: 0 -2px;
-    border-color: #3f86e0;
-    box-shadow: 0 0 22px #1685ff12, 0 8px 24px #0006;
+    border-color: #d0964f;
+    box-shadow: 0 0 22px #e8942d12, 0 8px 24px #0006;
   }
-  .al-project-card:hover .al-card-visual img,
-  .al-project-card:hover .al-image-visual img,
-  .al-project-card:hover .pl-card-visual img,
-  .al-project-card:hover .al-mini-board {
+  .al-project-card:hover .pl-card-visual img,.al-project-card:hover .al-mini-board{
     scale: 1.01;
   }
   .al-project-card:hover .al-card-link svg {
@@ -152,17 +131,12 @@ button:active,
 
 /* --- Scroll-linked movement (ScrollStory.jsx; reversible) --------------- */
 /* Leaving the hero, the carousel drifts up and fades near the edge. */
-.al-orbit {
-  translate: 0 var(--hero-shift, 0px);
-  opacity: var(--hero-fade, 1);
-}
+
 /* Card imagery sits a little deeper than its frame. */
 [data-depth] {
   translate: 0 var(--depth, 0px);
 }
-.al-object {
-  opacity: var(--al-carousel-visibility, 1);
-}
+
 .al-nav a[aria-current="page"]::after {
   transform: scaleX(1);
 }
@@ -191,12 +165,12 @@ button:active,
   }
 
   /* Default: fade up. */
-  html.js [data-reveal]:not(.is-revealed):not(.al-project-card):not(.al-portrait):not([data-reveal="draw"]):not([data-reveal="mask"]) {
+  html.js [data-reveal]:not(.is-revealed):not(.al-project-card):not(.al-portrait):not([data-reveal="draw"]):not([data-reveal="mask"]):not([data-reveal="plate"]) {
     opacity: 0;
     transform: translateY(var(--reveal-distance));
     animation: al-reveal-safety 1ms linear 3000ms forwards;
   }
-  html.js [data-reveal]:not(.al-project-card):not(.pl-overview-card):not(.al-portrait):not([data-reveal="mask"]) {
+  html.js [data-reveal]:not(.al-project-card):not(.pl-overview-card):not(.al-portrait):not([data-reveal="mask"]):not([data-reveal="plate"]) {
     transition:
       opacity var(--motion-reveal) var(--ease-out) var(--d),
       transform var(--motion-reveal) var(--ease-out) var(--d);
@@ -284,10 +258,6 @@ button:active,
   html.js .al-project-card[data-reveal].is-revealed {
     --lag: 0px;
   }
-  .al-image-visual img,
-  .al-stage-stack span {
-    transform: translateY(var(--lag, 0px));
-  }
 
   /* Field links appear in a quick sequence. */
   html.js [data-reveal="sequence"]:not(.is-revealed) {
@@ -368,10 +338,7 @@ html.js [data-reveal].is-instant::before {
     clip-path: polygon(0 0, 0 0, 0 0);
     animation: al-wordmark-unhide 1ms linear 2500ms forwards;
   }
-  html.al-entrance-pending .al-object {
-    opacity: 0;
-    animation: al-object-in 1ms linear 2500ms forwards;
-  }
+
   html.al-entrance-playing .al-wordmark {
     text-shadow: none;
   }
@@ -400,7 +367,7 @@ html.js [data-reveal].is-instant::before {
 }
 @keyframes al-glow-in {
   from {
-    text-shadow: 0 0 35px #1685ff00, 0 0 100px #0879ff00;
+    text-shadow: 0 0 35px #e8942d00, 0 0 100px #e68d2100;
   }
   to {
     text-shadow: var(--al-glow-wordmark);
@@ -420,7 +387,7 @@ html.js [data-reveal].is-instant::before {
 .al-droplet {
   border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
   background: var(--al-blue);
-  box-shadow: 0 0 10px #1685ff66;
+  box-shadow: 0 0 10px #e8942d66;
 }
 .al-splash {
   width: 4px;
@@ -459,4 +426,144 @@ html.js [data-reveal].is-instant::before {
 .pl-cell.is-leaving {
   position: absolute;
   pointer-events: none;
+}
+
+/* --- First-load intro: boot sequence, then the lamp comes on ------------- */
+/* html.al-intro is set by the bootstrap script before first paint (home page,
+   first visit this tab, no reduced motion) and cleared by HeroIntro when it
+   finishes or is skipped. Phase classes (al-intro-light, -name, -role) are
+   added as the intro reaches each beat. */
+.al-boot {
+  display: none;
+}
+.al-hero-lamp {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: calc(76px + var(--ph) * 0.42);
+  width: min(980px, 130cqw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 0.24;
+  background: radial-gradient(closest-side, #f0a64b66, #e8942d26 46%, transparent 74%);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.al-intro .al-boot {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--al-black);
+    /* Safety: if the script never takes over, clear the screen anyway. */
+    animation: al-boot-out 700ms var(--ease-out) 6500ms forwards;
+  }
+  .al-boot pre {
+    margin: 0;
+    min-width: min(30ch, 84vw);
+    font: 16px / 1.8 var(--font-mono);
+    letter-spacing: 0.02em;
+    color: var(--al-cream);
+  }
+  .al-boot-ok {
+    color: var(--al-blue);
+    font-weight: 500;
+    animation: al-ok-flash 420ms var(--ease-out);
+  }
+  .al-boot-caret {
+    display: inline-block;
+    width: 8px;
+    height: 1.05em;
+    vertical-align: -0.18em;
+    background: var(--al-blue);
+    animation: al-caret 900ms steps(1) infinite;
+  }
+  html.al-intro-light .al-boot {
+    animation: al-boot-out 800ms var(--ease-out) forwards;
+  }
+
+  /* Held back until their beat. */
+  html.al-intro .al-header,
+  html.al-intro .al-role,
+  html.al-intro .al-hero-bottom,
+  html.al-intro .al-tiles {
+    opacity: 0;
+  }
+  html.al-intro .al-hero-photo {
+    opacity: 0;
+    filter: brightness(0.2);
+    animation: none;
+  }
+  html.al-intro .al-hero-lamp {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+
+  /* The lamp comes on and the photo develops. */
+  html.al-intro-light .al-hero-photo {
+    opacity: 1;
+    filter: none;
+    transition:
+      opacity 1500ms var(--ease-out),
+      filter 1900ms var(--ease-out);
+  }
+  html.al-intro-light .al-hero-lamp {
+    animation: al-lamp 2300ms var(--ease-out) forwards;
+  }
+  html.al-intro-name .al-header {
+    opacity: 1;
+    transition: opacity 700ms var(--ease-out);
+  }
+  html.al-intro-name .al-tiles {
+    opacity: 1;
+  }
+  html.al-intro-role .al-role,
+  html.al-intro-role .al-hero-bottom {
+    opacity: 1;
+    transition: opacity 600ms var(--ease-out);
+  }
+
+  /* Safety timers: never leave the page hidden if the intro script fails. */
+  html.al-intro .al-header,
+  html.al-intro .al-role,
+  html.al-intro .al-hero-bottom,
+  html.al-intro .al-tiles,
+  html.al-intro .al-hero-photo {
+    animation: al-intro-unhide 1ms linear 7000ms forwards;
+  }
+}
+@keyframes al-boot-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.03);
+  }
+}
+@keyframes al-lamp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0.24;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+@keyframes al-ok-flash {
+  from {
+    opacity: 0;
+    text-shadow: 0 0 12px var(--al-blue);
+  }
+}
+@keyframes al-intro-unhide {
+  to {
+    opacity: 1;
+    filter: none;
+  }
 }

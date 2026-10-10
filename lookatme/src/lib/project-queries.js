@@ -1,6 +1,6 @@
 /**
  * Pure helpers for browsing the project collection: filtering, sorting,
- * counts, featured selection, and hero selection. No file-system access,
+ * counts, and featured selection. No file-system access,
  * so they can run in the browser, in tests, or on the server.
  */
 import { FIELDS } from "../content/fields.js";
@@ -110,13 +110,6 @@ export function featuredProjects(projects) {
     .sort((a, b) => a.featured - b.featured || compareRank(a, b));
 }
 
-/** Hero carousel objects: projects with a `hero` block, in hero order. */
-export function heroProjects(projects) {
-  return projects
-    .filter((project) => project.hero)
-    .sort((a, b) => a.hero.order - b.hero.order || compareRank(a, b));
-}
-
 /** Projects sharing at least one field, for the "more work" strip. */
 export function relatedProjects(project, projects, limit = 3) {
   const others = projects.filter((candidate) => candidate.slug !== project.slug);
@@ -128,8 +121,9 @@ export function relatedProjects(project, projects, limit = 3) {
 }
 
 /** Build a `/projects` URL for the given browsing state, omitting defaults. */
-export function libraryHref({ field, sort } = {}) {
+export function libraryHref({ field, sort, view } = {}) {
   const params = new URLSearchParams();
+  if (view === "list") params.set("view", "list");
   const resolvedField = resolveField(field);
   const resolvedSort = resolveSort(sort);
   if (resolvedField !== ALL_FIELDS) params.set("field", resolvedField);

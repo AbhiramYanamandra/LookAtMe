@@ -25,7 +25,9 @@ test("entrance plays once per tab session and never with reduced motion", () => 
 test("entrance leaves time for lettering before the carousel returns", () => {
   const end = Math.max(...Object.values(ENTRANCE).map(([, to]) => to));
   assert.equal(end, MOTION.entrance);
-  assert.ok(end <= 1100, `ends at ${end}`);
+  // The name settles by 760ms; the tiles then arrive one after another until 1500ms.
+  assert.ok(ENTRANCE.settle[1] <= 800);
+  assert.ok(end <= 1600, `ends at ${end}`);
   assert.ok(ENTRANCE.carousel[0] >= ENTRANCE.flow[0] + 300);
   assert.ok(ENTRANCE.impact[0] >= ENTRANCE.fall[1] - 1, "impact starts when the fall ends");
   assert.ok(ENTRANCE.flow[0] >= ENTRANCE.impact[0], "lettering flows only after the droplet lands");

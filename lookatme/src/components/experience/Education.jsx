@@ -23,7 +23,7 @@ export function Education() {
       </div>
 
       <div className="xp-list">
-        <div className="xp-role" data-reveal>
+        <div className="xp-role" data-reveal data-circuit="role" data-circuit-label={education.institution.toUpperCase()}>
           <div className="xp-when">
             <span className="al-mono">{education.period}</span>
           </div>
@@ -55,7 +55,7 @@ export function Education() {
                 <span className="al-mono xp-courses-label">{education.courseworkLabel}</span>
                 <ul>
                   {education.coursework.map((course, index) => (
-                    <li key={course.code} style={{ "--n": index }}>
+                    <li key={course.code} style={{ "--n": index }} data-circuit="course">
                       <span className="al-mono xp-course-code">{course.code}</span>
                       <span className="xp-course-title">{course.title}</span>
                       <span className="xp-course-mark">

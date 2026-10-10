@@ -12,7 +12,7 @@ export const MOTION = {
   page: 260,
   stagger: 40,
   staggerCap: 80,
-  entrance: 1080,
+  entrance: 1500,
 };
 
 export const EASE_OUT = "cubic-bezier(0.2, 0.7, 0.2, 1)";
@@ -103,7 +103,7 @@ export const ENTRANCE = {
   splash: [255, 450],
   flow: [280, 760],
   settle: [700, 760],
-  carousel: [640, 1080],
+  carousel: [700, 1500],
 };
 
 /** Reading progress through an article, 0 → 1. */
@@ -136,4 +136,15 @@ export function heroScrollState({ scrollY, heroHeight, compact = false }) {
 export function depthOffset(progress, amplitude = 6) {
   const p = Math.max(0, Math.min(1, progress));
   return (0.5 - p) * 2 * amplitude;
+}
+
+/**
+ * Progress (0 → 1) through a pinned scroll section. The section is `height`
+ * tall and its sticky stage holds for `height - viewport` pixels of
+ * scrolling; `scrollY` is measured from the section's top.
+ */
+export function storyProgress({ scrollY, height, viewport }) {
+  const travel = height - viewport;
+  if (travel <= 0) return 0;
+  return Math.max(0, Math.min(1, scrollY / travel));
 }

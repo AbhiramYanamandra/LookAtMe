@@ -31,7 +31,7 @@ const MIN_WIDTH = 900;
 // gradient sweep, which is the thing this must not look like.
 const TAIL = 0.1;
 // The bloom is forgiving, but the white-hot core has to stay crisp against
-// solid blue lettering, so this sits well above a pure-glow resolution.
+// solid amber lettering, so this sits well above a pure-glow resolution.
 const RENDER_SCALE = 0.85;
 
 /** Writing-order samples at even spacing, with cumulative arc length. */
@@ -165,22 +165,22 @@ export function WordmarkTrace({ reviewEnabled = false }) {
         const [hx, hy] = points[headIndex];
         const radius = 0.15 * fontSize;
         const glow = ctx.createRadialGradient(hx, hy, 0, hx, hy, radius);
-        glow.addColorStop(0, `rgba(226,239,255,${(0.6 * envelope).toFixed(3)})`);
-        glow.addColorStop(0.3, `rgba(130,184,255,${(0.28 * envelope).toFixed(3)})`);
-        glow.addColorStop(1, "rgba(22,133,255,0)");
+        glow.addColorStop(0, `rgba(252, 242, 229,${(0.6 * envelope).toFixed(3)})`);
+        glow.addColorStop(0.3, `rgba(242, 197, 142,${(0.28 * envelope).toFixed(3)})`);
+        glow.addColorStop(1, "rgba(232, 148, 45,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(hx, hy, radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Three passes: atmosphere, the conducting blue, then a white-hot core.
-      // The letters are already solid #1685ff, so only something close to
-      // white reads as current inside the stroke rather than more blue on blue.
+      // Three passes: atmosphere, the conducting amber, then a white-hot core.
+      // The letters are already solid amber, so only something close to white
+      // reads as current inside the stroke rather than more amber on amber.
       const passes = [
-        { width: 0.24 * fontSize, alpha: 0.1, exp: 2, from: [0x16, 0x85, 0xff], to: [0x5a, 0xa6, 0xff] },
-        { width: 0.085 * fontSize, alpha: 0.42, exp: 2.4, from: [0x4c, 0x9d, 0xff], to: [0xbe, 0xdc, 0xff] },
-        { width: 0.036 * fontSize, alpha: 1, exp: 2.6, from: [0xdc, 0xeb, 0xff], to: [0xff, 0xff, 0xff] },
+        { width: 0.24 * fontSize, alpha: 0.1, exp: 2, from: [0xe8, 0x94, 0x2d], to: [0xf4, 0xb4, 0x60] },
+        { width: 0.085 * fontSize, alpha: 0.42, exp: 2.4, from: [0xf0, 0xa6, 0x4b], to: [0xff, 0xe0, 0xb0] },
+        { width: 0.036 * fontSize, alpha: 1, exp: 2.6, from: [0xff, 0xf0, 0xd8], to: [0xff, 0xff, 0xff] },
       ];
 
       for (const pass of passes) {
@@ -223,6 +223,7 @@ export function WordmarkTrace({ reviewEnabled = false }) {
       !visible ||
       document.hidden ||
       hero.clientWidth < MIN_WIDTH ||
+      document.documentElement.classList.contains("al-intro") ||
       document.documentElement.classList.contains("al-entrance-pending") ||
       document.documentElement.classList.contains("al-entrance-playing");
 

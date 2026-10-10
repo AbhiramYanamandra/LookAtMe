@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /.next-review/
+/.next-check/
 /out/
 
 # production
@@ -51,3 +52,8 @@ next-env.d.ts
 /26t2_statement_final.pdf
 /Jobplicator_Career_Evidence_Database_v1.0.json
 /Jobplicator_Career_Evidence_Database_v1.0.xlsx
+
+# source CAD for the macropad 3D model; the built public/models/macropad.glb is what ships
+# (scripts/build-macropad-model.sh rebuilds it from Macropad-mk2.step)
+/Macropad-mk2.zip
+/Macropad-mk2.step

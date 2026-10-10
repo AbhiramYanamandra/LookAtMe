@@ -3,6 +3,8 @@ import { fieldLabel } from "@/content/fields";
 import { formatProjectDate } from "@/lib/format";
 import { libraryHref } from "@/lib/project-queries";
 import { statusLabel } from "./ProjectCard";
+import { techIcon } from "@/lib/tech-icons";
+import { SkillIcon } from "@/components/home/SkillIcon";
 
 /** Quick facts: only the facts that are actually known are rendered. */
 export function QuickFacts({ project }) {
@@ -28,7 +30,10 @@ export function QuickFacts({ project }) {
       value: (
         <span className="cs-chips">
           {project.technologies.map((tech) => (
-            <span key={tech}>{tech}</span>
+            <span key={tech}>
+              <SkillIcon name={techIcon(tech) ?? "code"} size={14} />
+              {tech}
+            </span>
           ))}
         </span>
       ),

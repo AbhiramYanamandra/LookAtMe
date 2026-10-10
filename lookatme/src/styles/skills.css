@@ -1,0 +1,104 @@
+/* --- Sliding skills marquee ---------------------------------------- */
+.al-skills {
+  padding: 56px 0 72px;
+  border-top: 1px solid var(--al-border-soft);
+}
+.al-skills-head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+.al-skills-head h2 {
+  margin: 0;
+  font-size: clamp(30px, 4.4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--al-cream);
+}
+.al-skills-rows {
+  display: grid;
+  gap: 14px;
+  /* Chips fade out at both edges instead of being cut off. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  overflow: hidden;
+}
+.al-skills-row {
+  display: flex;
+  width: max-content;
+  animation: al-marquee-left var(--row-speed, 60s) linear infinite;
+}
+.al-skills-row[data-direction="right"] {
+  animation-name: al-marquee-right;
+}
+.al-skills-rows:hover .al-skills-row,
+.al-skills-rows:focus-within .al-skills-row {
+  animation-play-state: paused;
+}
+.al-skills-track {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0 6px;
+  list-style: none;
+}
+@keyframes al-marquee-left {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes al-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.al-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 20px;
+  border: 1px solid var(--al-border-soft);
+  border-radius: 10px;
+  background: var(--al-surface);
+  color: var(--al-cream);
+  font-size: 16px;
+  white-space: nowrap;
+  transition:
+    border-color 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+.al-chip:hover {
+  border-color: var(--al-blue);
+  transform: translateY(-2px);
+}
+.al-chip svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-skills-rows {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .al-skills-row {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+  }
+  .al-skills-track[aria-hidden="true"] {
+    display: none;
+  }
+  .al-skills-track {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 700px) {
+  .al-chip {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}

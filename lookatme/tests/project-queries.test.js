@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import {
   featuredProjects,
   filterByField,
-  heroProjects,
   libraryHref,
   populatedFields,
   relatedProjects,
@@ -73,9 +72,8 @@ test("only populated fields are offered, with counts", () => {
   );
 });
 
-test("featured and hero selections use their own ranks, independent of library order", () => {
+test("featured selection uses its own rank, independent of library order", () => {
   assert.deepEqual(featuredProjects(projects).map((p) => p.slug), ["a", "b"]);
-  assert.deepEqual(heroProjects(projects).map((p) => p.slug), ["c", "a"]);
 });
 
 test("related projects prefer shared fields and never include the project itself", () => {

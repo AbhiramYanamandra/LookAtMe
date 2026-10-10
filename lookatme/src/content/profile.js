@@ -20,10 +20,30 @@ export const profile = {
   siteDescription:
     "Portfolio of Abhiram Yanamandra. Web applications, hardware, and digital systems — from circuits to interfaces.",
   hero: {
-    sideLeft: "software.",
-    sideRight: "& hardware.",
-    tagline: "Ideas in motion. Engineering in practice.",
     identity: "Abhiram Yanamandra / Portfolio",
+    photo: {
+      src: "/images/hero2.jpeg",
+      alt: "Abhiram mid-laugh at night, holding a box of loaded fries and pointing at himself",
+      width: 3648,
+      height: 2736,
+    },
+    // Each role is typed in turn; its project tile comes forward while it shows.
+    roles: [
+      { label: "hardware engineer", slug: "macropad" },
+      { label: "software engineer", slug: "presto" },
+      { label: "ML engineer", slug: "photonic-correction" },
+    ],
+    staticRoles: "Hardware, software and ML engineer",
+    // First-load boot sequence, typed on black before the page lights up.
+    intro: {
+      lines: [
+        { kind: "command", text: "booting abhiram.sh" },
+        { kind: "check", text: "hardware" },
+        { kind: "check", text: "software" },
+        { kind: "check", text: "ml" },
+        { kind: "command", text: "hello." },
+      ],
+    },
   },
   // The completion month is unresolved (Aug vs Dec 2026), so the period is
   // deliberately stated to the year only. WAM and individual course marks are
@@ -66,6 +86,72 @@ export const profile = {
     heading: "A few things I’ve built.",
     aside: ["Different fields.", "Shared curiosity."],
     discovery: "Find work in your field",
+  },
+  story: {
+    label: "[ Selected work ]",
+    heading: "Three things I’ve built.",
+    hint: "Scroll. Then touch things.",
+    model: {
+      src: "/models/macropad.glb",
+      alt: "3D model of the macropad PCB assembly: nine switch sockets, an OLED display and a pin header",
+      // Positions are in metres in the model's own space (centred on the board).
+      hotspots: [
+        { label: "SSD1306 OLED", position: "-0.00918m 0.0007m -0.02756m" },
+        { label: "3×3 MX switch matrix", position: "-0.0001m 0.0059m 0.00699m" },
+        { label: "5-pin header", position: "0.02142m 0.004m -0.02391m" },
+        // On the underside of the board: flip the model over to see it.
+        { label: "XIAO RP2040 (underside)", position: "-0.00034m -0.00919m -0.02915m", normal: "0m -1m 0m" },
+      ],
+    },
+    presto: { poster: "/images/presto.png" },
+    chapters: [
+      {
+        slug: "macropad",
+        kicker: "Hardware",
+        headline: "A keyboard I designed, from schematic to board.",
+        cta: "Explore the build",
+        facts: [
+          { value: "3×3", label: "mechanical switch matrix with a diode on every key" },
+          { value: "RP2040", label: "XIAO controller driving an SSD1306 OLED over I²C" },
+          { value: "Gerbers", label: "taken all the way to a manufacturable package" },
+        ],
+      },
+      {
+        slug: "presto",
+        kicker: "Software",
+        headline: "A presentation builder that runs in the browser.",
+        cta: "Read the case study",
+        facts: [
+          { value: "React + TS", label: "single-page app on Vite, with drag and resize editing" },
+          { value: "1 min", label: "throttled revision snapshots you can restore" },
+          { value: "Cypress", label: "end-to-end tested and deployed on Vercel" },
+        ],
+      },
+      {
+        slug: "photonic-correction",
+        kicker: "Research · ML",
+        headline: "Fixing noisy photonic maths in the numbers, not the hardware.",
+        cta: "Read the thesis",
+        facts: [
+          { value: "95.5%", label: "mean absolute error reduction against the baseline (low-bit decomposed correction)" },
+          { value: "11.24×", label: "ImageNet noise tolerance (AlexNet and ResNet18 average)" },
+          { value: "6", label: "correction schemes compared under one noise model" },
+        ],
+      },
+    ],
+  },
+  skills: {
+    label: "[ Hardware, software and ML ]",
+    heading: "Things I build with.",
+  },
+  terminal: {
+    label: "[ Poke around ]",
+    heading: "Ask the terminal.",
+    body: "Hardware, software and what I get up to off the keyboard. Type a command, or tap one below.",
+    greeting: [
+      "Welcome. You found the interactive bit.",
+      "Try projects, skills or interests, or type help for everything.",
+    ],
   },
   footer: {
     invitation: "Let’s build something.",

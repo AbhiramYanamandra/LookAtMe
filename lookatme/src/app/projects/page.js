@@ -4,13 +4,17 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { AnimatedGrid } from "@/components/project/AnimatedGrid";
 import { FilterChips } from "@/components/project/FilterChips";
-import { LibraryOverview } from "@/components/project/LibraryOverview";
+import { LibraryHero } from "@/components/project/LibraryHero";
+import { ShowcaseSection, SHOWCASE_SLUGS } from "@/components/project/ShowcaseSection";
+import { ListView } from "@/components/project/ListView";
 import { SortControl } from "@/components/project/SortControl";
 import { RememberLibraryState } from "@/components/project/LibraryState";
 import { getPublishedProjects, toSummary } from "@/lib/projects";
 import { ALL_FIELDS, availableSorts, filterByField, populatedFields, resolveField, resolveSort, sortProjects } from "@/lib/project-queries";
 import { fieldLabel, getField } from "@/content/fields";
 import { profile } from "@/content/profile";
+import { libraryHref } from "@/lib/project-queries";
+import { LayoutGrid, List } from "lucide-react";
 
 export const metadata = {
   title: "Projects",
@@ -31,8 +35,13 @@ export default async function ProjectsPage({ searchParams }) {
   const sort = resolveSort(first(params?.sort), projects);
   const sortOptions = availableSorts(projects);
   const fields = populatedFields(projects);
-  const results = sortProjects(filterByField(projects, field), sort);
+  const view = first(params?.view) === "list" ? "list" : "grid";
+  const matches = sortProjects(filterByField(projects, field), sort);
   const isFiltered = field !== ALL_FIELDS || sort !== "recommended";
+  // The three lead projects get their own showcase above the grid, unless the
+  // visitor is filtering or sorting: then every match belongs in the results.
+  const showShowcase = view === "grid" && !isFiltered;
+  const results = showShowcase ? matches.filter((project) => !SHOWCASE_SLUGS.includes(project.slug)) : matches;
   const activeField = field === ALL_FIELDS ? null : getField(field);
   // A field with no published projects is still a reachable URL. Give it a
   // chip so the toolbar shows which filter is on; without it the empty grid
@@ -49,27 +58,30 @@ export default async function ProjectsPage({ searchParams }) {
         <Suspense fallback={null}>
           <RememberLibraryState />
         </Suspense>
-        <div className="pl-intro">
-          <div>
-            <span className="al-mono">[ Project library ]</span>
-            <h1>Everything I’ve built.</h1>
-            <p>
-              Web applications, hardware, and digital systems, filed by the engineering field the work belongs to.
-              Start with the overview, or <a href="#browse">jump to the full list</a> and filter by field.
-            </p>
+        <LibraryHero projects={projects} fields={fields} />
+
+        {showShowcase && <ShowcaseSection projects={projects} />}
+
+        <div className="pl-sticky">
+          <div className="pl-toolbar" id="browse">
+            <FilterChips fields={chipFields} total={projects.length} field={field} sort={sort} view={view} />
+            <div className="pl-toolbar-end">
+              <SortControl field={field} sort={sort} view={view} options={sortOptions} />
+              <nav className="pl-view" aria-label="View">
+                <Link href={libraryHref({ field, sort })} scroll={false} aria-current={view === "grid" ? "true" : undefined} aria-label="Grid view">
+                  <LayoutGrid aria-hidden="true" />
+                </Link>
+                <Link href={libraryHref({ field, sort, view: "list" })} scroll={false} aria-current={view === "list" ? "true" : undefined} aria-label="List view">
+                  <List aria-hidden="true" />
+                </Link>
+              </nav>
+            </div>
           </div>
-        </div>
-
-        <LibraryOverview projects={projects} fields={fields} />
-
-        <div className="pl-toolbar" id="browse">
-          <FilterChips fields={chipFields} total={projects.length} field={field} sort={sort} />
-          <SortControl field={field} sort={sort} options={sortOptions} />
         </div>
 
         <div className="pl-status" role="status" aria-live="polite">
           <span>
-            Showing <strong>{results.length}</strong> of {projects.length} projects
+            {showShowcase ? <>The other <strong>{results.length}</strong> of {projects.length} projects</> : <>Showing <strong>{results.length}</strong> of {projects.length} projects</>}
             {activeField ? (
               <>
                 {" "}
@@ -85,16 +97,24 @@ export default async function ProjectsPage({ searchParams }) {
           )}
         </div>
 
-        <AnimatedGrid projects={results}>
-          <div className="pl-empty">
-            <p>No published projects in {fieldLabel(field)} yet.</p>
-            <p>
-              <Link href="/projects" scroll={false}>
-                Show all projects
-              </Link>
-            </p>
-          </div>
-        </AnimatedGrid>
+        {view === "list" ? (
+          <ListView projects={results}>
+            <div className="pl-empty">
+              <p>No published projects in {fieldLabel(field)} yet.</p>
+            </div>
+          </ListView>
+        ) : (
+          <AnimatedGrid projects={results}>
+            <div className="pl-empty">
+              <p>No published projects in {fieldLabel(field)} yet.</p>
+              <p>
+                <Link href="/projects" scroll={false}>
+                  Show all projects
+                </Link>
+              </p>
+            </div>
+          </AnimatedGrid>
+        )}
       </main>
       <div className="pl-page">
         <SiteFooter />

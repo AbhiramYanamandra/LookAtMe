@@ -7,6 +7,8 @@ import { CaseStudyBody } from "@/components/project/CaseStudyContent";
 import { ReadingProgress } from "@/components/project/ReadingProgress";
 import { getPublishedExperience, getPublishedRole } from "@/lib/experience";
 import { formatRoleSpan } from "@/lib/format";
+import { techIcon } from "@/lib/tech-icons";
+import { SkillIcon } from "@/components/home/SkillIcon";
 import { profile } from "@/content/profile";
 
 /** Only roles with a write-up get a page; a dated line has nothing to read. */
@@ -71,7 +73,16 @@ export default async function ExperiencePage({ params }) {
               {role.technologies.length > 0 && (
                 <div className="cs-facts-wide">
                   <dt>Worked with</dt>
-                  <dd>{role.technologies.join(", ")}</dd>
+                  <dd>
+                    <span className="cs-chips">
+                      {role.technologies.map((tech) => (
+                        <span key={tech}>
+                          <SkillIcon name={techIcon(tech) ?? "code"} size={14} />
+                          {tech}
+                        </span>
+                      ))}
+                    </span>
+                  </dd>
                 </div>
               )}
             </dl>

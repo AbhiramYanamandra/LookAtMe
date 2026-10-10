@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { EASE_OUT, ENTRANCE, ENTRANCE_STORAGE_KEY, MOTION, easeInOutCubic, smoothStep, dropletKeyframes, shouldPlayEntrance } from "@/lib/motion";
 import { setSpread } from "@/lib/hero-entrance-state";
+import { getPhase, subscribePhase } from "@/lib/intro-state";
+import { atLeast } from "@/lib/intro";
 import { BRUSH_SWELL_RADIUS, WORDMARK, brushStamps, toPixels, wordmarkFrame } from "@/lib/wordmark";
 
 /**
@@ -47,7 +49,9 @@ export function HeroEntrance({ reviewEnabled = false }) {
     let freezeAt = null;
     let force = false;
     if (reviewEnabled) {
-      const value = new URLSearchParams(window.location.search).get("entrance");
+      const params = new URLSearchParams(window.location.search);
+      const value = params.get("entrance");
+      if (params.has("intro")) force = true;
       if (value !== null) {
         force = true;
         const ms = Number.parseFloat(value);
@@ -182,13 +186,19 @@ export function HeroEntrance({ reviewEnabled = false }) {
 
     const [flowStart, flowEnd] = ENTRANCE.flow;
     const [spreadStart, spreadEnd] = ENTRANCE.carousel;
-    const start = performance.now();
+    // With the first-load intro running, everything is built and held until
+    // the intro reaches its "name" beat; otherwise it starts straight away.
+    const waitForIntro = root.classList.contains("al-intro") && freezeAt === null;
+    let begun = !waitForIntro;
+    let start = performance.now();
+    let unsubscribe = () => {};
     let raf = 0;
     let done = false;
     let glowTimer = 0;
     const previousRadii = new Array(stamps.length).fill("0");
 
     const teardown = () => {
+      unsubscribe();
       cancelAnimationFrame(raf);
       animations.forEach((animation) => animation.cancel());
       nodes.forEach((el) => el.remove());
@@ -217,7 +227,6 @@ export function HeroEntrance({ reviewEnabled = false }) {
     const onReducedChange = (event) => {
       if (event.matches) cleanup();
     };
-
     const frameAt = (t) => {
       // Constant-speed travel with a soft brush tip. Each circle grows rather
       // than switching on at full radius; both branches finish together.
@@ -240,9 +249,28 @@ export function HeroEntrance({ reviewEnabled = false }) {
       setSpread(1 - easeInOutCubic(spreadT));
     };
 
+    const begin = () => {
+      if (begun || done) return;
+      begun = true;
+      start = performance.now();
+      animations.forEach((animation) => {
+        animation.currentTime = 0;
+        animation.play();
+      });
+    };
+
     let first = true;
     const tick = (now) => {
       if (done) return;
+      if (!begun) {
+        // Held for the intro. Reaching "done" first means it was skipped.
+        if (atLeast(getPhase(), "done")) {
+          cleanup();
+          return;
+        }
+        raf = requestAnimationFrame(tick);
+        return;
+      }
       const t = freezeAt ?? now - start;
       // The carousel subscribes in its own effect; force the first redraw so
       // objects never paint at their settled positions before being pushed.
@@ -262,6 +290,19 @@ export function HeroEntrance({ reviewEnabled = false }) {
       animations.forEach((animation) => {
         animation.pause();
         animation.currentTime = freezeAt;
+      });
+    } else if (waitForIntro) {
+      animations.forEach((animation) => animation.pause());
+      if (atLeast(getPhase(), "name")) begin();
+      // A skip jumps the phase straight to "done" before the name has
+      // finished: show the settled name at once. (After a natural finish the
+      // entrance has already torn itself down and this is a no-op.)
+      unsubscribe = subscribePhase((phase) => {
+        if (phase === "done") {
+          if (!done) cleanup();
+          return;
+        }
+        if (atLeast(phase, "name")) begin();
       });
     }
     raf = requestAnimationFrame(tick);

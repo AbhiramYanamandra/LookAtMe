@@ -3,6 +3,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EASE_OUT, MOTION } from "@/lib/motion";
 import { ProjectCard } from "./ProjectCard";
+import { TraceFilter } from "./CardDrawing";
+import { useLightTable } from "./useLightTable";
 
 /**
  * Library grid with animated filtering and sorting.
@@ -18,6 +20,10 @@ import { ProjectCard } from "./ProjectCard";
  * animations are cancelled, so a change made mid-animation retargets from
  * where cards actually are. Reduced motion skips all of it.
  */
+/** Bento tile sizes by position; lists of three or fewer stay even. */
+const BENTO = ["wide", "sm", "sm", "med", "med", "med", "sm", "sm", "wide", "sm", "sm"];
+const sizeFor = (index, count) => (count <= 3 ? "med" : BENTO[index % BENTO.length]);
+
 export function AnimatedGrid({ projects, children }) {
   const gridRef = useRef(null);
   const [displayed, setDisplayed] = useState(() => projects.map((project) => ({ project, leaving: false })));
@@ -132,15 +138,67 @@ export function AnimatedGrid({ projects, children }) {
   );
 
   const liveCount = displayed.filter((item) => !item.leaving).length;
+  useLightTable(gridRef, displayed);
+
+  // Spotlight and tilt follow the pointer over a card; visuals animate only
+  // while near the viewport.
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return undefined;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMove = (event) => {
+      if (!fine.matches || event.pointerType !== "mouse") return;
+      const card = event.target.closest?.(".pl-card");
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+      card.style.setProperty("--sx", `${(x * 100).toFixed(1)}%`);
+      card.style.setProperty("--sy", `${(y * 100).toFixed(1)}%`);
+      if (!reduced.matches) {
+        card.style.setProperty("--tx", `${((x - 0.5) * 5).toFixed(2)}deg`);
+        card.style.setProperty("--ty", `${((0.5 - y) * 5).toFixed(2)}deg`);
+      }
+    };
+    const onLeave = (event) => {
+      const card = event.target.closest?.(".pl-card");
+      if (!card) return;
+      card.style.removeProperty("--tx");
+      card.style.removeProperty("--ty");
+    };
+    grid.addEventListener("pointermove", onMove);
+    grid.addEventListener("pointerout", onLeave);
+    return () => {
+      grid.removeEventListener("pointermove", onMove);
+      grid.removeEventListener("pointerout", onLeave);
+    };
+  }, []);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.target.classList.toggle("is-live", entry.isIntersecting)),
+      { rootMargin: "120px" },
+    );
+    grid.querySelectorAll(".pl-card-visual").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [displayed]);
 
   return (
-    <div ref={gridRef} className="pl-grid">
-      {displayed.map(({ project, leaving, rect }) => (
+    <div ref={gridRef} className="pl-grid pl-grid--table">
+      <TraceFilter />
+      {displayed.map(({ project, leaving, rect }, position) => (
         <div
           key={project.slug}
           data-slug={project.slug}
+          data-size={leaving ? undefined : sizeFor(displayed.slice(0, position).filter((item) => !item.leaving).length, liveCount)}
           className={`pl-cell${leaving ? " is-leaving" : ""}`}
-          data-reveal={reveal && !leaving ? "" : undefined}
+          // Plates land on the drawing even after a click navigation: the
+          // library's first row is the page's arrival.
+          data-reveal={reveal && !leaving ? "plate" : undefined}
+          data-reveal-entrance={reveal && !leaving ? "" : undefined}
           aria-hidden={leaving ? "true" : undefined}
           inert={leaving || undefined}
           style={leaving && rect ? { left: rect.left, top: rect.top, width: rect.width, height: rect.height } : undefined}

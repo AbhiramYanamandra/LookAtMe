@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { formatRoleDuration, formatRoleSpan } from "@/lib/format";
+import { techIcon } from "@/lib/tech-icons";
+import { SkillIcon } from "@/components/home/SkillIcon";
 import { ExperienceSpan } from "./ExperienceSpan";
 
 /**
@@ -29,7 +31,14 @@ export function ExperienceTimeline({ roles }) {
         {roles.map((role) => {
           const span = formatRoleSpan(role);
           return (
-            <li key={role.slug} className={`xp-role xp-role--${role.kind}`} data-reveal>
+            <li
+              key={role.slug}
+              className={`xp-role xp-role--${role.kind}`}
+              data-reveal
+              data-circuit="role"
+              data-circuit-kind={role.kind}
+              data-circuit-label={role.organisation.toUpperCase()}
+            >
               <div className="xp-when">
                 <span className="al-mono">{span}</span>
                 <span className="al-mono xp-duration">{formatRoleDuration(role)}</span>
@@ -53,7 +62,10 @@ export function ExperienceTimeline({ roles }) {
                 {role.technologies.length > 0 && (
                   <ul className="xp-stack" aria-label={`Technologies used at ${role.organisation}`}>
                     {role.technologies.map((tech) => (
-                      <li key={tech}>{tech}</li>
+                      <li key={tech}>
+                        <SkillIcon name={techIcon(tech) ?? "code"} size={14} />
+                        {tech}
+                      </li>
                     ))}
                   </ul>
                 )}

@@ -2,7 +2,7 @@
 .ab-hero { display: grid; grid-template-columns: 1.25fr 0.85fr; align-items: center; gap: 80px; padding: 72px 0 64px; }
 .ab-intro > .al-mono, .ab-section-heading > .al-mono, .ab-connect .al-mono { display: block; color: var(--al-blue-soft); margin-bottom: 22px; }
 .ab-intro h1 { font-size: clamp(46px, 5.5vw, 76px); font-weight: 450; line-height: 1.04; letter-spacing: -0.055em; max-width: 620px; text-wrap: balance; }
-.ab-name { margin-top: 30px; font-size: 21px; color: #e3edff; }
+.ab-name { margin-top: 30px; font-size: 21px; color: #fcf2e6; }
 .ab-description { max-width: 490px; margin-top: 14px; color: var(--al-text-intro); font-size: 16px; line-height: 1.8; }
 .ab-links { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 30px; font-size: 13px; }
 .ab-links a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
@@ -89,7 +89,13 @@
   background: var(--al-badge-bg);
   border: 1px solid var(--al-badge-border);
   border-radius: 4px;
-  padding: 4px 7px;
+  padding: 4px 8px 4px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.xp-stack li svg {
+  flex: none;
 }
 /* A service role is recorded, not argued. It gets the line and no more. */
 .xp-role--service .xp-what h3 { font-size: 17px; color: var(--al-text-card); }
@@ -190,7 +196,7 @@
 .xp-bar[data-anchor="start"] :is(.xp-bar-label, .xp-bar-reading) { left: 0; }
 .xp-bar[data-anchor="end"] :is(.xp-bar-label, .xp-bar-reading) { right: 0; }
 a.xp-bar:hover .xp-bar-label { color: var(--al-blue-hover); }
-a.xp-bar:hover .xp-bar-line { background: var(--al-blue-hover); box-shadow: 0 0 14px #1685ff80; }
+a.xp-bar:hover .xp-bar-line { background: var(--al-blue-hover); box-shadow: 0 0 14px #e8942d80; }
 
 /* A service role is on the record at hairline weight. */
 .xp-lane--service .xp-bar-line { height: 1px; margin-top: 0; background: var(--al-text-faint); }
@@ -295,7 +301,7 @@ a.xp-bar:hover .xp-bar-line { background: var(--al-blue-hover); box-shadow: 0 0 
   align-items: baseline;
   gap: 14px;
   padding: 11px 0;
-  border-bottom: 1px solid #14213a;
+  border-bottom: 1px solid #34251a;
 }
 .xp-courses li:last-child { border-bottom: 0; }
 .xp-course-code { color: var(--al-text-faint); font-size: 10px; }
@@ -425,4 +431,106 @@ a.xp-bar:hover .xp-bar-line { background: var(--al-blue-hover); box-shadow: 0 0 
 }
 @keyframes ab-reveal-safety-mask {
   to { clip-path: inset(-24px -24px -24px -24px); }
+}
+
+/* --- The page as a circuit ------------------------------------------------
+   One copper trace from the portrait to the closing line, routed in the
+   gutter with 45° chamfers. Unpowered copper is the hairline tone; current
+   is Instrument Blue with the wordmark's conducting head — atmosphere,
+   conducting blue, near-white core. Light here is state (current is
+   flowing), so it follows the Glow/Paste Rule. See CircuitTrace.jsx. */
+main.ab-page { position: relative; }
+.ct {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+.ct path { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.ct-base path { stroke: var(--al-border); stroke-width: 1.5; }
+.ct-lit { stroke: var(--al-blue); stroke-width: 1.75; }
+.ct-lit-glow { stroke: var(--al-blue); stroke-width: 7; opacity: 0.16; }
+.ct-origin { fill: var(--al-blue); }
+
+/* Branches fill from their junction outward when the current reaches them. */
+.ct-branch > path:first-child {
+  stroke: var(--al-blue);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 380ms var(--ease-out) var(--ct-delay, 0ms);
+}
+.ct-branch[data-on] > path:first-child { stroke-dashoffset: 0; }
+.ct-branch--bus > path:first-child { transition-duration: 300ms; }
+
+/* A surge: a short bright packet runs the branch once, on pointer arrival. */
+.ct-surge { stroke: #fbebd8; stroke-width: 2; stroke-dasharray: 0.16 1.2; stroke-dashoffset: 0.16; opacity: 0; }
+.ct-branch[data-surge] .ct-surge { animation: ct-surge 520ms var(--ease-out) forwards; }
+@keyframes ct-surge {
+  0% { stroke-dashoffset: 0.16; opacity: 1; }
+  85% { opacity: 1; }
+  100% { stroke-dashoffset: -1; opacity: 0; }
+}
+
+/* Pads, vias, and the terminal: dark copper at rest, lit when powered. */
+.ct .ct-end,
+.ct .ct-ring { fill: var(--al-black); stroke: var(--al-border); stroke-width: 1.5; transition: fill 240ms var(--ease-out) var(--ct-delay, 0ms), stroke 240ms var(--ease-out) var(--ct-delay, 0ms); }
+.ct .ct-via { fill: none; stroke: var(--al-border-soft); stroke-width: 1; transition: stroke 240ms var(--ease-out) var(--ct-delay, 0ms), opacity 240ms var(--ease-out); }
+:is(.ct-pad, .ct-branch, .ct-terminal)[data-on] .ct-end { fill: var(--al-blue); stroke: var(--al-blue); }
+:is(.ct-pad, .ct-branch, .ct-terminal)[data-on] .ct-via { stroke: #e8942d73; }
+.ct-terminal[data-on] .ct-ring { fill: var(--al-blue); stroke: #fbebd8; }
+/* The pad flashes once as the current lands on it. */
+.ct-pad[data-on] .ct-end { animation: ct-land 600ms var(--ease-out); }
+.ct-terminal[data-on] .ct-via { animation: ct-ring 900ms var(--ease-out); transform-box: fill-box; transform-origin: center; }
+@keyframes ct-land {
+  0% { fill: #fbebd8; stroke: #fbebd8; }
+}
+@keyframes ct-ring {
+  0% { stroke: #fbebd8; scale: 0.6; }
+  100% { scale: 1; }
+}
+
+/* Silkscreen: reference designators, set like a board's legend. */
+.ct-silk {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  fill: var(--al-text-faint);
+  opacity: 0.7;
+  transition: fill 240ms var(--ease-out), opacity 240ms var(--ease-out);
+}
+.ct-silk--v { text-anchor: end; dominant-baseline: middle; }
+:is(.ct-pad, .ct-branch, .ct-terminal)[data-on] .ct-silk { fill: var(--al-blue-soft); opacity: 1; }
+
+/* The conducting head: visible while current moves, a dim ember at rest. */
+.ct-head { opacity: 0.35; transition: opacity 420ms var(--ease-out); }
+.ct-head[data-moving] { opacity: 1; transition-duration: 120ms; }
+.ct-head-atmos { fill: var(--al-blue); opacity: 0.18; }
+.ct-head-blue { fill: var(--al-blue); opacity: 0.75; }
+.ct-head-core { fill: #fbebd8; }
+
+/* Reduced motion: the board, fully powered and still. */
+.ct[data-still] .ct-head { display: none; }
+.ct[data-still] * { transition: none !important; animation: none !important; }
+
+/* What the current reaches brightens like a powered component. */
+.xp-when .al-mono { transition: color 300ms var(--ease-out); }
+.xp-role[data-powered] .xp-when > .al-mono:first-child { color: var(--al-blue-soft); }
+.xp-courses li .xp-course-code { transition: color 300ms var(--ease-out); }
+.xp-courses li[data-powered] .xp-course-code { color: var(--al-blue-soft); }
+.xp-bar[data-powered] .xp-bar-line { animation: ct-bar-flash 700ms var(--ease-out); }
+@keyframes ct-bar-flash {
+  0% { box-shadow: 0 0 16px #e8942dcc; background-color: var(--al-blue-hover); }
+}
+.ab-field { transition: border-color 300ms var(--ease-out) var(--ct-delay, 0ms); }
+.ab-field[data-powered] { border-color: var(--al-border); }
+.ab-field[data-powered]:hover { border-color: var(--al-blue); }
+#about-connect-title { transition: text-shadow 900ms var(--ease-out); }
+#about-connect-title[data-powered] { text-shadow: var(--al-glow-wordmark); }
+
+/* Room for the field buses to run between the rows of tiles. */
+@media (min-width: 701px) {
+  .ab-field-grid { row-gap: 30px; margin-top: 40px; }
 }

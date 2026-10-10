@@ -3,35 +3,37 @@
 @tailwind utilities;
 
 /* ------------------------------------------------------------------
-   Design tokens — the approved black + electric-blue system.
+   Design tokens — the warm "night lamp" system (black, amber, maroon, cream).
    Values come from design/approved-landing-page/DESIGN-SPEC.md.
    ------------------------------------------------------------------ */
 :root {
-  --al-black: #000000;
-  --al-near-black: #050505;
-  --al-blue: #1685ff;
-  --al-blue-soft: #82b8ff;
-  --al-blue-hover: #afc7ff;
-  --al-muted: #a4a7b0;
+  --al-black: #0c0a09;
+  --al-near-black: #0a0807;
+  --al-blue: #f0a64b; /* accent amber; name kept so existing rules keep working */
+  --al-blue-soft: #f4c58a;
+  --al-blue-hover: #f8dcb4;
+  --al-muted: #a89a8a;
 
-  --al-surface: #080d16;
-  --al-surface-raised: #070e19;
-  --al-border: #1b3559;
-  --al-border-soft: #192436;
-  --al-separator: #223651;
+  --al-surface: #16120f;
+  --al-surface-raised: #1a1511;
+  --al-border: #4a3626;
+  --al-border-soft: #2e2620;
+  --al-separator: #3a2e24;
 
-  --al-text-card: #b1bfd5;
-  --al-text-intro: #bcc9dd;
-  --al-text-muted: #8192ae;
-  --al-text-faint: #647b9f;
+  --al-text-card: #d6c8b6;
+  --al-text-intro: #e0d3c1;
+  --al-text-muted: #a89a8a;
+  --al-text-faint: #85786a;
 
-  --al-badge-bg: #0b2342;
-  --al-badge-text: #80bbff;
-  --al-badge-border: #173d6a;
+  --al-maroon: #8e1f3f;
+  --al-cream: #f4ece0;
+  --al-badge-bg: #2a0f18;
+  --al-badge-text: #f4c9b0;
+  --al-badge-border: #5a1a2f;
 
-  --al-glow-wordmark: 0 0 35px #1685ff32, 0 0 100px #0879ff12;
-  --al-glow-logo: 0 0 26px #1685ff30;
-  --al-glow-card: 0 0 27px #1685ff14;
+  --al-glow-wordmark: 0 0 35px #f0a64b32, 0 0 100px #e8902012;
+  --al-glow-logo: 0 0 26px #f0a64b30;
+  --al-glow-card: 0 0 27px #f0a64b14;
 
   --font-sans: var(--font-geist-sans), "Geist", Arial, sans-serif;
   --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;

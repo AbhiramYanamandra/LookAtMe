@@ -11,6 +11,7 @@ import { ExperienceTimeline } from "@/components/experience/ExperienceTimeline";
 import { Education } from "@/components/experience/Education";
 import { populatedFields } from "@/lib/project-queries";
 import { LineReveal } from "@/components/site/LineReveal";
+import { CircuitTrace } from "@/components/experience/CircuitTrace";
 
 export const metadata = {
   title: "Background",
@@ -47,7 +48,7 @@ export default function BackgroundPage() {
                 width={profile.portrait.width} height={profile.portrait.height}
                 sizes="(max-width: 700px) 80vw, 430px" quality={85} priority />
             </span>
-            <figcaption className="al-mono">{profile.name} / software &amp; hardware</figcaption>
+            <figcaption className="al-mono" data-circuit="start">{profile.name} / software &amp; hardware</figcaption>
           </figure>
         </section>
 
@@ -64,7 +65,7 @@ export default function BackgroundPage() {
             {fields.map((field) => {
               const info = getField(field.id);
               return (
-                <Link key={field.id} href={`/projects?field=${field.id}`} className="ab-field" data-reveal>
+                <Link key={field.id} href={`/projects?field=${field.id}`} className="ab-field" data-reveal data-circuit="tile">
                   {/* The count is the useful number; the 01/02 index was
                       ordinal decoration that the craft floor rules out. */}
                   <span className="al-mono">
@@ -83,7 +84,7 @@ export default function BackgroundPage() {
         <section className="ab-connect" data-reveal aria-labelledby="about-connect-title">
           <div>
             <span className="al-mono">[ Get in touch ]</span>
-            <h2 id="about-connect-title">{profile.footer.invitation}</h2>
+            <h2 id="about-connect-title" data-circuit="end">{profile.footer.invitation}</h2>
           </div>
           <div className="ab-links">
             <a href={`mailto:${profile.email}`} className="ab-primary">Say hello <ArrowUpRight aria-hidden="true" /></a>
@@ -91,6 +92,7 @@ export default function BackgroundPage() {
             <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn <ArrowUpRight aria-hidden="true" /></a>
           </div>
         </section>
+        <CircuitTrace />
       </main>
       <div className="ab-page"><SiteFooter /></div>
     </>

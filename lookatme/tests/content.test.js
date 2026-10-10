@@ -4,19 +4,29 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { ContentValidationError, loadAllProjects } from "../src/lib/projects.js";
-import { featuredProjects, heroProjects } from "../src/lib/project-queries.js";
+import { featuredProjects } from "../src/lib/project-queries.js";
+import { profile } from "../src/content/profile.js";
+import { spectrumOf } from "../src/lib/spectrum.js";
 
 test("the real content collection loads and validates", () => {
   const projects = loadAllProjects();
   const published = projects.filter((p) => !p.draft);
-  assert.ok(published.length >= 5, "expected at least the five carousel projects");
+  assert.ok(published.length >= 5, "expected at least the lead projects");
   assert.equal(new Set(projects.map((p) => p.slug)).size, projects.length, "slugs are unique");
   for (const project of published) {
     assert.ok(project.title && project.summary, `${project.slug} has title and summary`);
     if (project.cover) assert.ok(project.cover.width > 0 && project.cover.height > 0, `${project.slug} cover has dimensions`);
   }
-  assert.deepEqual(featuredProjects(published).map((p) => p.slug), ["presto", "macropad", "pipeline-processor"]);
-  assert.equal(heroProjects(published).length, 5);
+  assert.deepEqual(featuredProjects(published).map((p) => p.slug), ["presto", "macropad", "photonic-correction"]);
+  // Every published project sits somewhere on the Work page's spectrum.
+  for (const project of published) {
+    const position = spectrumOf(project);
+    assert.ok(position >= 0 && position <= 1, `${project.slug} spectrum ${position}`);
+  }
+  // Every role typed in the hero points at a real published project.
+  for (const role of profile.hero.roles) {
+    assert.ok(published.some((p) => p.slug === role.slug), `hero role "${role.label}" -> ${role.slug} exists`);
+  }
 });
 
 function fixture(files, images = ["ok.png"]) {
@@ -67,7 +77,7 @@ test("validation catches the documented mistakes", () => {
   const broken = fixture({
     "a.mdx": `---\ntitle: A\nsummary: s\nslug: dup\nfields: [nope]\norder: 1\ndate: 2024-13\n---\n`,
     "b.mdx": `---\ntitle: B\nsummary: s\nslug: dup\norder: 2\ncover:\n  src: /images/missing.png\n  alt: x\nlinks:\n  - label: bad\n    url: not a url\nfeatured: 1\n---\n`,
-    "c.mdx": `---\nsummary: no title\norder: 3\nfeatured: 1\nhero:\n  order: 1\n  treatment: board\n---\n`,
+    "c.mdx": `---\nsummary: no title\norder: 3\nfeatured: 1\n---\n`,
   });
   assert.throws(
     () => loadAllProjects(broken),
@@ -82,7 +92,6 @@ test("validation catches the documented mistakes", () => {
         "valid http(s)/mailto URL",
         "title is required",
         "featured rank 1 is also used",
-        'needs a cover image',
       ]) {
         assert.match(text, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `reports: ${expected}`);
       }

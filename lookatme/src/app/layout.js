@@ -7,6 +7,10 @@ import "@/styles/home.css";
 import "@/styles/projects.css";
 import "@/styles/background.css";
 import "@/styles/motion.css";
+import "@/styles/terminal.css";
+import "@/styles/skills.css";
+import "@/styles/story.css";
+import "@/styles/work.css";
 import { ENTRANCE_STORAGE_KEY } from "@/lib/motion";
 import { PageTransition } from "@/components/site/PageTransition";
 import { RevealObserver } from "@/components/site/RevealObserver";
@@ -53,7 +57,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#000000",
+  themeColor: "#0c0a09",
   colorScheme: "dark",
 };
 
@@ -64,7 +68,7 @@ const bootstrap = `
 (function(){
   var h=document.documentElement;h.classList.add('js');
   try{
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&location.pathname==='/'&&sessionStorage.getItem('${ENTRANCE_STORAGE_KEY}')!=='done'){h.classList.add('al-entrance-pending');}
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&location.pathname==='/'&&sessionStorage.getItem('${ENTRANCE_STORAGE_KEY}')!=='done'){h.classList.add('al-entrance-pending','al-intro');}
   }catch(e){}
 })();`;
 

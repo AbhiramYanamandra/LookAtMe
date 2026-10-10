@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { CaseStudyBody, Figure, Gallery, kindLabel } from "@/components/project/CaseStudyContent";
 import { QuickFacts } from "@/components/project/QuickFacts";
 import { ProjectCard } from "@/components/project/ProjectCard";
+import { TraceFilter } from "@/components/project/CardDrawing";
 import { BackToLibrary } from "@/components/project/LibraryState";
 import { ReadingProgress } from "@/components/project/ReadingProgress";
 import { FieldBadge, projectBadge } from "@/components/project/CardBody";
@@ -161,6 +162,7 @@ export default async function ProjectPage({ params }) {
               </div>
             </div>
             <div className="pl-grid">
+              <TraceFilter />
               {related.map((item) => (
                 <div key={item.slug} className="pl-cell" data-reveal>
                   <ProjectCard project={item} />

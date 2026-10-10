@@ -65,11 +65,11 @@ export function ExperienceSpan({ roles }) {
             return (
               <li key={role.slug} className={`xp-lane xp-lane--${role.kind}`}>
                 {role.hasStory ? (
-                  <Link href={`/experience/${role.slug}`} className="xp-bar" data-anchor={anchor} style={style} tabIndex={-1}>
+                  <Link href={`/experience/${role.slug}`} className="xp-bar" data-anchor={anchor} data-circuit="bar" style={style} tabIndex={-1}>
                     {body}
                   </Link>
                 ) : (
-                  <span className="xp-bar" data-anchor={anchor} style={style}>{body}</span>
+                  <span className="xp-bar" data-anchor={anchor} data-circuit="bar" style={style}>{body}</span>
                 )}
               </li>
             );

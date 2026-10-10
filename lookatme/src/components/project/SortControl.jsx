@@ -8,18 +8,19 @@ import { SORT_OPTIONS, libraryHref } from "@/lib/project-queries";
  * (the Apply button submits); with JavaScript the change navigates at once
  * and the button is hidden.
  */
-export function SortControl({ field, sort, options = SORT_OPTIONS }) {
+export function SortControl({ field, sort, view, options = SORT_OPTIONS }) {
   const router = useRouter();
 
   return (
     <form method="get" action="/projects" className="pl-sort">
       {field !== "all" && <input type="hidden" name="field" value={field} />}
+      {view === "list" && <input type="hidden" name="view" value="list" />}
       <label htmlFor="library-sort">Sort by</label>
       <select
         id="library-sort"
         name="sort"
         defaultValue={sort}
-        onChange={(event) => router.push(libraryHref({ field, sort: event.target.value }), { scroll: false })}
+        onChange={(event) => router.push(libraryHref({ field, sort: event.target.value, view }), { scroll: false })}
       >
         {options.map((option) => (
           <option key={option.id} value={option.id}>

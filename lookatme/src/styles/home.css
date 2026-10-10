@@ -35,7 +35,7 @@
   font-weight: 650;
   font-size: 20px;
   letter-spacing: -1.5px;
-  box-shadow: 0 0 0 1px #1685ff30;
+  box-shadow: 0 0 0 1px #e8942d30;
 }
 .al-nav {
   display: flex;
@@ -62,18 +62,28 @@
 /* --- Hero ---------------------------------------------------------- */
 .al-hero {
   position: relative;
-  height: 720px;
+  /* Layout is driven by the photo's height so the name, role line and tiles
+     always sit beneath it, at any width. */
+  --pw: min(720px, 100cqw);
+  --ph: calc(var(--pw) * 0.64);
+  --wm-size: 12cqw;
+  --wm-y: calc(76px + var(--ph) + 8px);
+  --role-y: calc(var(--wm-y) + var(--wm-size) * 0.75 + 4px);
+  height: calc(var(--role-y) + 130px);
   overflow: hidden;
   container-type: inline-size;
+  /* An explicit backdrop so the photo's screen blend has something to blend
+     with (the hero is its own stacking context). */
+  background: var(--al-black);
 }
 .al-wordmark {
   position: absolute;
   z-index: 1;
-  top: 45%;
+  top: var(--wm-y);
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-5deg);
+  transform: translate(-50%, -50%) rotate(-4deg);
   font-family: var(--font-script);
-  font-size: 20cqw;
+  font-size: var(--wm-size);
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 1.5;
@@ -99,7 +109,7 @@
   pointer-events: none;
   opacity: 0;
   mix-blend-mode: screen;
-  background: radial-gradient(closest-side, #1685ff2b, #1685ff10 46%, transparent 72%);
+  background: radial-gradient(closest-side, #e8942d2b, #e8942d10 46%, transparent 72%);
   transform: translate3d(var(--hero-lx, 0px), var(--hero-ly, 0px), 0);
   transition: opacity 420ms var(--ease-out);
 }
@@ -121,364 +131,18 @@
   pointer-events: none;
 }
 
-.al-side {
-  position: absolute;
-  z-index: 4;
-  top: 46%;
-  font-size: 13px;
-  font-weight: 450;
-  letter-spacing: -0.3px;
-  pointer-events: none;
-}
-.al-side-left {
-  left: 34px;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-.al-side-right {
-  right: 34px;
-  writing-mode: vertical-rl;
-}
-.al-subtitle {
-  position: absolute;
-  top: 77%;
-  left: 0;
-  right: 0;
-  z-index: 4;
-  text-align: center;
-  pointer-events: none;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-}
-.al-orbit {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  overflow: hidden;
-  touch-action: pan-y;
-  cursor: grab;
-  perspective: 1200px;
-  /* Pre-hydration approximations of the JS scale (stageWidth / 1024, clamped). */
-  --al-object-scale: 1;
-  --al-sway: 19px;
-}
-.al-orbit.is-dragging {
-  cursor: grabbing;
-}
-.al-orbit:before,
-.al-orbit:after {
-  content: "";
-  position: absolute;
-  z-index: 8;
-  left: 0;
-  right: 0;
-  height: 100px;
-  pointer-events: none;
-}
-.al-orbit:before {
-  top: 0;
-  background: linear-gradient(#050505a6, transparent);
-}
-.al-orbit:after {
-  bottom: 0;
-  background: linear-gradient(transparent, #050505);
-}
-@media (min-width: 1147px) {
-  .al-orbit { --al-object-scale: 1.12; }
-}
-@media (max-width: 1146px) {
-  .al-orbit { --al-object-scale: 1.05; }
-}
-@media (max-width: 1050px) {
-  .al-orbit { --al-object-scale: 0.97; }
-}
-@media (max-width: 950px) {
-  .al-orbit { --al-object-scale: 0.88; }
-}
-@media (max-width: 850px) {
-  .al-orbit { --al-object-scale: 0.78; }
-}
-@media (max-width: 750px) {
-  .al-orbit { --al-object-scale: 0.68; }
-}
-@media (max-width: 650px) {
-  .al-orbit { --al-object-scale: 0.58; }
-}
-@media (max-width: 542px) {
-  .al-orbit { --al-object-scale: 0.53; }
-}
-@media (max-width: 499px) {
-  .al-orbit { --al-sway: 0px; }
-}
-.al-object {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  text-align: left;
-  will-change: transform;
-  display: block;
-  transform-origin: 50% 50%;
-  filter: drop-shadow(9px 19px 12px #0009);
-  user-select: none;
-  -webkit-user-drag: none;
-  color: var(--al-blue);
-  max-width: none;
-}
-.al-object img {
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-.al-object:focus-visible {
-  outline-offset: 6px;
-  border-radius: 8px;
-}
-.al-object-caption {
-  position: absolute;
-  left: 50%;
-  bottom: -42px;
-  transform: translateX(-50%);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  white-space: nowrap;
-  letter-spacing: 0;
-  background: #071025;
-  color: #a8c4ff;
-  border: 1px solid #285dc380;
-  padding: 8px 11px;
-  border-radius: 3px;
-  opacity: 0;
-  transition: opacity 0.16s;
-  pointer-events: none;
-}
-.al-object:hover .al-object-caption,
-.al-object:focus-visible .al-object-caption {
-  opacity: 1;
+/* --- Carousel object treatments ----------------------------------- */
+
+.al-terminal {
+  background: #1a1410;
+  border: 1px solid #866e51;
+  border-radius: 7px;
+  box-shadow: 3px 5px 0 #3b2e24;
+  padding: 16px;
+  color: #f2c58d;
 }
 
-/* --- Carousel object treatments ----------------------------------- */
-.al-board {
-  position: relative;
-  width: 178px;
-  height: 231px;
-  overflow: hidden;
-  border-radius: 11px;
-  background: #223d28;
-  box-shadow: 2px 6px 0 #19271a, 0 0 0 1px #36513b;
-}
-.al-board img {
-  position: absolute;
-  width: 500px;
-  max-width: none;
-  height: auto;
-  left: -161px;
-  top: -48px;
-}
-.al-board-object {
-  width: 178px;
-  height: 231px;
-}
-.al-screen-object {
-  width: 285px;
-}
-.al-screen {
-  background: #11131a;
-  border: 2px solid #606573;
-  border-radius: 10px;
-  padding: 9px 9px 14px;
-  box-shadow: 3px 6px 0 #272d39, inset 0 0 0 1px #000;
-}
-.al-screen-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: #a7aab1;
-  padding: 2px 3px 10px;
-}
-.al-screen-head span:first-child {
-  display: flex;
-  gap: 4px;
-}
-.al-screen-head b {
-  display: block;
-  width: 4px;
-  height: 4px;
-  background: #5f6c86;
-  border-radius: 50%;
-}
-.al-screen img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 3px;
-}
-.al-screen-foot {
-  display: flex;
-  justify-content: space-between;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  font-family: var(--font-mono);
-  padding: 13px 3px 0;
-  color: #94b4ff;
-}
-.al-paper-object {
-  width: 216px;
-  height: 266px;
-}
-.al-paper {
-  height: 100%;
-  background: #dce8f7;
-  color: #122e63;
-  padding: 19px 17px;
-  box-shadow: 3px 3px 0 #8094b8, 5px 5px 0 #455671;
-  border-radius: 1px;
-  position: relative;
-}
-.al-paper-top {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.04em;
-  border-bottom: 1px solid #8fa6c7;
-  padding-bottom: 12px;
-}
-.al-paper h3 {
-  font-size: 28px;
-  font-weight: 550;
-  letter-spacing: -1.3px;
-  line-height: 1.04;
-  margin-top: 13px;
-  margin-bottom: 13px;
-}
-.al-paper img {
-  width: 100%;
-  height: 106px;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-}
-.al-paper-foot {
-  position: absolute;
-  left: 17px;
-  right: 17px;
-  bottom: 13px;
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 8px;
-  border-top: 1px solid #8fa6c7;
-  padding-top: 7px;
-}
-.al-type-object {
-  width: 187px;
-  height: 223px;
-}
-.al-type {
-  height: 100%;
-  background: #dde6d7;
-  color: #162510;
-  padding: 9px;
-  border: 1px solid #eaf3e4;
-  box-shadow: 3px 4px 0 #717c6b;
-  border-radius: 4px;
-}
-.al-type img {
-  width: 100%;
-  height: 162px;
-  object-fit: cover;
-  display: block;
-  border-radius: 2px;
-}
-.al-type-foot {
-  padding: 8px 3px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 550;
-  font-size: 14px;
-  letter-spacing: -0.4px;
-}
-.al-type-foot span:last-child {
-  font-size: 10px;
-  font-family: var(--font-mono);
-}
-.al-terminal-object {
-  width: 245px;
-}
-.al-terminal {
-  background: #0e131c;
-  border: 1px solid #4a638d;
-  border-radius: 7px;
-  box-shadow: 3px 5px 0 #1f2c40;
-  padding: 16px;
-  color: #80aaff;
-}
-.al-terminal-head {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #23324c;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-  color: #8b9ebc;
-}
-.al-terminal-title {
-  font-size: 23px;
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.7px;
-}
-.al-terminal-tree {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.7;
-  color: #abbfdc;
-  margin-top: 12px;
-  white-space: pre;
-}
-.al-terminal-tag {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.05em;
-  color: #7993b7;
-  margin-top: 15px;
-}
 /* Default treatment for new projects: a plain framed cover image. */
-.al-frame-object {
-  width: 230px;
-}
-.al-frame {
-  background: #0e131c;
-  border: 1px solid #4a638d;
-  border-radius: 7px;
-  box-shadow: 3px 5px 0 #1f2c40;
-  padding: 8px;
-}
-.al-frame img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  display: block;
-  border-radius: 3px;
-  background: #11131a;
-}
-.al-frame-foot {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  color: #94b4ff;
-  padding: 10px 3px 2px;
-  display: flex;
-  justify-content: space-between;
-}
 
 /* --- Hero bottom bar ---------------------------------------------- */
 .al-hero-bottom {
@@ -508,58 +172,15 @@
   width: 13px;
   height: 13px;
 }
-.al-bottom-center {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.07em;
-  color: #778aa8;
-}
-.al-motion-controls {
-  display: flex;
-  gap: 7px;
-  align-items: center;
-}
-.al-control {
-  position: relative;
-  border: 1px solid #253249;
-  background: #050505bb;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 35px;
-  height: 35px;
-  padding: 0;
-  color: var(--al-blue);
-}
+
 /* Larger invisible hit area for touch without changing the visual size. */
-.al-control::before {
-  content: "";
-  position: absolute;
-  inset: -5px;
-}
-.al-control svg {
-  width: 14px;
-  height: 14px;
-}
-.al-control:hover {
-  background: #101f3b;
-  border-color: var(--al-blue);
-}
-.al-pause {
-  width: auto;
-  border-radius: 20px;
-  gap: 7px;
-  padding: 0 12px;
-  font-size: 11px;
-}
 
 /* --- Below the hero ----------------------------------------------- */
 .al-below {
   padding: 0 34px;
 }
 .al-introduction {
-  border-top: 1px solid #192436;
+  border-top: 1px solid #32261d;
   padding: 42px 0;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
@@ -575,12 +196,12 @@
 .al-intro-text {
   font-size: 14px;
   line-height: 1.8;
-  color: #a5b2c8;
+  color: #c4b8a8;
   max-width: 400px;
 }
 .al-intro-text strong {
   font-weight: 500;
-  color: #d4e1ff;
+  color: #fbebd8;
 }
 .al-intro-links {
   display: flex;
@@ -615,18 +236,18 @@
   margin-bottom: 20px;
 }
 .al-work-heading span {
-  color: #8192ae;
+  color: #aa9986;
 }
 .al-contact {
   padding: 26px 0 28px;
-  border-top: 1px solid #192436;
+  border-top: 1px solid #32261d;
   display: flex;
   justify-content: space-between;
   gap: 20px;
   font-size: 12px;
 }
 .al-contact span {
-  color: #647b9f;
+  color: #99846a;
 }
 .al-contact-links {
   display: flex;
@@ -634,14 +255,6 @@
 }
 
 /* --- Reference breakpoints (first pass) --------------------------- */
-@media (min-width: 1200px) {
-  .al-hero {
-    height: 790px;
-  }
-  .al-wordmark {
-    font-size: 19cqw;
-  }
-}
 @media (max-width: 700px) {
   .al-header {
     padding: 21px 22px;
@@ -650,33 +263,13 @@
     gap: 20px;
     font-size: 12px;
   }
-  .al-hero {
-    height: 650px;
-  }
-  .al-wordmark {
-    top: 46%;
-    font-size: 20cqw;
-    width: 96%;
-  }
-  .al-side-left {
-    left: 20px;
-  }
-  .al-side-right {
-    right: 20px;
-  }
+
   .al-hero-bottom {
     left: 22px;
     right: 22px;
     bottom: 22px;
   }
-  .al-bottom-center {
-    display: none;
-  }
-  .al-subtitle {
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    top: 77%;
-  }
+
   .al-below {
     padding: 0 22px;
   }
@@ -707,28 +300,7 @@
   .al-nav-contact {
     gap: 6px;
   }
-  .al-hero {
-    height: 590px;
-  }
-  .al-wordmark {
-    font-size: 20cqw;
-    top: 46%;
-  }
-  .al-side {
-    font-size: 11px;
-    top: 47%;
-  }
-  .al-side-left {
-    left: 14px;
-  }
-  .al-side-right {
-    right: 14px;
-  }
-  .al-subtitle {
-    top: 79%;
-    font-size: 8px;
-    letter-spacing: 0.05em;
-  }
+
   .al-hero-bottom {
     left: 18px;
     right: 18px;
@@ -741,20 +313,7 @@
   .al-bottom-left a {
     font-size: 11px;
   }
-  .al-control {
-    width: 34px;
-    height: 34px;
-  }
-  .al-pause {
-    width: 34px;
-    padding: 0;
-  }
-  .al-pause-label {
-    display: none;
-  }
-  .al-motion-controls {
-    gap: 5px;
-  }
+
   .al-below {
     padding: 0 18px;
   }
@@ -809,8 +368,8 @@
   object-fit: cover;
   object-position: 43% 50%;
   border-radius: 10px;
-  border: 1px solid #1685ff88;
-  box-shadow: 7px 7px 0 #1685ff, 0 12px 35px #0007;
+  border: 1px solid #e8942d88;
+  box-shadow: 7px 7px 0 #e8942d, 0 12px 35px #0007;
   transition: transform var(--motion-hover) var(--ease-out),
     box-shadow var(--motion-hover) var(--ease-out);
 }
@@ -834,7 +393,7 @@
 }
 .al-profile-copy .al-mono {
   display: block;
-  color: #82b8ff;
+  color: #f2c58e;
   margin-bottom: 13px;
 }
 .al-profile-copy h2 {
@@ -845,7 +404,7 @@
 .al-profile-copy .al-intro-text {
   max-width: 570px;
   font-size: 15px;
-  color: #bcc9dd;
+  color: #dacebf;
 }
 .al-work-heading {
   align-items: end;
@@ -860,13 +419,9 @@
 .al-work-heading .al-mono {
   display: block;
   margin-bottom: 10px;
-  color: #7bacf6;
+  color: #eabd87;
 }
-.al-featured-grid {
-  display: grid;
-  grid-template-columns: 1.18fr 1fr;
-  gap: 20px;
-}
+
 .al-project-card {
   background: var(--al-surface);
   border: 1px solid var(--al-border);
@@ -880,57 +435,11 @@
   border-color: var(--al-blue);
   box-shadow: var(--al-glow-card);
 }
-.al-lead-card {
-  grid-row: span 2;
-  display: flex;
-  flex-direction: column;
-}
+
 /* The lead card is as tall as the two support cards stacked, but its copy is
    no longer. The artefact takes the slack instead of the body, which used to
    leave ~130px of void under the summary — and the screenshot gets the room. */
-.al-lead-card .al-card-visual {
-  flex: 1;
-  height: auto;
-  min-height: 264px;
-  /* Clearance for the index label so it never collides with the plate. */
-  padding: 44px 25px 25px;
-}
-.al-lead-card .al-card-body {
-  flex: 0 0 auto;
-}
-.al-card-visual {
-  height: 264px;
-  background: radial-gradient(ellipse at 50% 75%, #163a75, #080e1b 80%);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 25px;
-  overflow: hidden;
-}
-.al-card-visual img {
-  width: 100%;
-  height: auto;
-  /* The plate is contained, never cropped: a screenshot clipped by its own
-     frame reads as a mistake, not as a crop. */
-  max-height: 100%;
-  object-fit: contain;
-  display: block;
-  border: 1px solid #4c6792;
-  border-radius: 6px;
-  box-shadow: 0 16px 35px #0009;
-  transform: perspective(900px) rotateY(-5deg) rotateX(3deg) translateY(var(--lag, 0px));
-}
-.al-visual-index {
-  position: absolute;
-  left: 20px;
-  top: 16px;
-  color: #80b4ff;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
+
 /* --- Drafting annotations on the selected-work cards ------------------
    The card becomes a plate on a drawing: crop marks strike out from their
    corners, the dimension line draws from the centre, the measurement lands
@@ -1019,7 +528,7 @@
   font-size: 9px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #8dc5ff;
+  color: #f4cb98;
   opacity: 0;
   transition: opacity var(--motion-hover) var(--ease-out) 140ms;
 }
@@ -1139,30 +648,12 @@
   width: 16px;
   height: 16px;
 }
-.al-support-card {
-  display: grid;
-  grid-template-columns: 116px 1fr;
-}
-.al-support-card .al-card-body {
-  padding: 20px 18px;
-}
-.al-support-card h3 {
-  font-size: 23px;
-}
-.al-support-card p {
-  font-size: 12px;
-  margin-bottom: 15px;
-}
-.al-support-card .al-card-field {
-  font-size: 9px;
-  padding: 3px 5px;
-  margin-bottom: 10px;
-}
+
 .al-hardware-visual {
   position: relative;
   overflow: hidden;
   min-height: 242px;
-  background: radial-gradient(ellipse, #193d37, #0b171d);
+  background: radial-gradient(ellipse, #193d37, #1a130e);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1184,67 +675,13 @@
   left: -78px;
   top: -23px;
 }
-.al-diagram-visual {
-  position: relative;
-  background: radial-gradient(ellipse, #103261, #091423);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 14px;
-  min-height: 242px;
-}
-.al-stage-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-}
-.al-stage-stack span {
-  position: relative;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: #8dc5ff;
-  background: #0b2344;
-  border: 1px solid #26598b;
-  width: 65px;
-  text-align: center;
-  padding: 6px 0;
-  border-radius: 3px;
-}
-.al-stage-stack span:not(:last-child):after {
-  content: "";
-  position: absolute;
-  width: 1px;
-  height: 8px;
-  left: 50%;
-  bottom: -9px;
-  background: #3d92ea;
-}
+
 /* Generic supporting-card image (used when a project has no bespoke visual). */
-.al-image-visual {
-  position: relative;
-  overflow: hidden;
-  min-height: 242px;
-  background: radial-gradient(ellipse, #103261, #091423);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-.al-image-visual img {
-  width: 100%;
-  height: 100%;
-  max-height: 210px;
-  object-fit: contain;
-  display: block;
-  border-radius: 4px;
-}
+
 .al-field-discovery {
   margin-top: 23px;
   padding: 18px 20px;
-  border: 1px solid #193658;
+  border: 1px solid #4f3622;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -1253,7 +690,7 @@
   background: var(--al-surface-raised);
 }
 .al-field-discovery > span {
-  color: #a4b9d8;
+  color: #d3c0a9;
   font-size: 12px;
 }
 .al-field-actions {
@@ -1266,9 +703,9 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid #24538b;
-  background: #0b1a2e;
-  color: #88bcff;
+  border: 1px solid #815c2e;
+  background: #291b10;
+  color: #f3c894;
   border-radius: 5px;
   padding: 10px 13px;
   font-size: 12px;
@@ -1284,7 +721,7 @@
 .al-field-count {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: #6f86ad;
+  color: #a79075;
 }
 .al-field-actions a:hover {
   border-color: var(--al-blue);
@@ -1294,42 +731,11 @@
   scale: 0.98;
 }
 @media (max-width: 800px) {
-  .al-featured-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-  }
-  .al-lead-card {
-    grid-column: span 2;
-    grid-row: auto;
-  }
-  .al-card-visual {
-    height: 240px;
-    padding: 32px;
-  }
-  .al-card-visual img {
-    max-width: 500px;
-  }
-  .al-support-card {
-    display: flex;
-    flex-direction: column;
-  }
-  .al-hardware-visual,
-  .al-diagram-visual,
-  .al-image-visual {
+
+  .al-hardware-visual{
     min-height: 180px;
   }
-  .al-stage-stack {
-    flex-direction: row;
-    gap: 4px;
-  }
-  .al-stage-stack span {
-    width: 35px;
-    font-size: 9px;
-    padding: 8px 0;
-  }
-  .al-stage-stack span:after {
-    display: none;
-  }
+
   .al-mini-board {
     width: 106px;
     height: 137px;
@@ -1339,9 +745,7 @@
     left: -96px;
     top: -28px;
   }
-  .al-image-visual img {
-    max-height: 150px;
-  }
+
   .al-field-discovery {
     flex-direction: column;
     align-items: start;
@@ -1401,40 +805,15 @@
   .al-work-heading > span {
     max-width: none;
   }
-  .al-featured-grid {
-    grid-template-columns: 1fr;
-    gap: 17px;
-  }
-  .al-lead-card {
-    grid-column: auto;
-  }
-  .al-card-visual {
-    height: 200px;
-    padding: 20px;
-  }
+
   .al-card-body {
     padding: 22px;
   }
-  .al-support-card {
-    display: grid;
-    grid-template-columns: 94px 1fr;
-  }
-  .al-support-card .al-card-body {
-    padding: 20px 15px;
-  }
-  .al-hardware-visual,
-  .al-diagram-visual,
-  .al-image-visual {
+
+  .al-hardware-visual{
     min-height: 237px;
   }
-  .al-stage-stack {
-    flex-direction: column;
-    gap: 7px;
-  }
-  .al-stage-stack span {
-    width: 60px;
-    padding: 6px 0;
-  }
+
   .al-mini-board {
     width: 73px;
     height: 96px;
@@ -1455,3 +834,226 @@
     padding: 10px 11px;
   }
 }
+
+/* --- Hero: photo, role line, project tiles ------------------------ */
+.al-hero-photo {
+  position: absolute;
+  z-index: 0;
+  top: 76px;
+  left: 50%;
+  width: var(--pw);
+  height: var(--ph);
+  /* The face sits at ~56% of the frame; centre it on the page. */
+  transform: translateX(-56.5%);
+  overflow: hidden;
+  /* Screen blend: the photo's black becomes the page colour, so there is no
+     rectangle. The mask then dissolves every edge, including the bottom where
+     the jacket runs out of frame. */
+  translate: 0 var(--hero-shift, 0px);
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse 62% 78% at 56% 52%, #000 38%, transparent 100%);
+  mask-image: radial-gradient(ellipse 62% 78% at 56% 52%, #000 38%, transparent 100%);
+  animation: al-photo-in 900ms var(--ease-out) both;
+  pointer-events: none;
+}
+.al-hero-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* The top of the frame is empty night sky; show the subject. */
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+@keyframes al-photo-in {
+  from {
+    opacity: 0;
+    transform: translateX(-56.5%) translateY(12px);
+  }
+}
+
+.al-role {
+  position: absolute;
+  z-index: 4;
+  top: var(--role-y);
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(18px, 2.3cqw, 30px);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--al-cream);
+}
+.al-role-prefix {
+  color: var(--al-text-muted);
+}
+.al-role-text {
+  color: var(--al-blue);
+  font-weight: 500;
+}
+.al-role-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: var(--al-blue);
+  animation: al-caret 1s steps(1) infinite;
+}
+@keyframes al-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.al-tiles {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+.al-tile {
+  --op: 1;
+  position: absolute;
+  width: clamp(150px, 17cqw, 240px);
+  pointer-events: auto;
+  display: block;
+  border: 1px solid var(--al-border-soft);
+  border-radius: 10px;
+  background: var(--al-surface);
+  box-shadow: 0 18px 40px #0009;
+  overflow: hidden;
+  /* Tiles arrive one after another: each rides the shared visibility value
+     with its own offset (--i), rising into place as it fades in. */
+  --arrive: min(1, max(0, calc(var(--al-tiles-visibility, 1) * 2.4 - var(--i, 0) * 0.7)));
+  opacity: calc(var(--arrive) * var(--op) * var(--hero-fade, 1));
+  translate: 0 calc((1 - var(--arrive)) * 34px);
+  transition:
+    opacity 500ms var(--ease-out),
+    scale 500ms var(--ease-out),
+    border-color 300ms var(--ease-out);
+}
+.al-tile[data-slot="0"] {
+  left: 4cqw;
+  top: 96px;
+  --tilt: -4deg;
+}
+.al-tile[data-slot="1"] {
+  --i: 1;
+  right: 4cqw;
+  top: 150px;
+  --tilt: 3deg;
+}
+.al-tile[data-slot="2"] {
+  --i: 2;
+  left: 9cqw;
+  top: calc(76px + var(--ph) - 150px);
+  --tilt: 2deg;
+}
+.al-tiles[data-animate] .al-tile {
+  --op: 0.5;
+  scale: 0.94;
+  animation: al-drift 11s ease-in-out infinite alternate;
+}
+.al-tiles[data-animate] .al-tile[data-slot="1"] {
+  animation-duration: 13s;
+  animation-delay: -4s;
+}
+.al-tiles[data-animate] .al-tile[data-slot="2"] {
+  animation-duration: 9s;
+  animation-delay: -7s;
+}
+.al-tiles[data-animate] .al-tile[data-active] {
+  --op: 1;
+  scale: 1.1;
+  border-color: var(--al-blue);
+  box-shadow: 0 18px 40px #0009, var(--al-glow-card);
+  z-index: 2;
+}
+@keyframes al-drift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(var(--tilt));
+  }
+  to {
+    transform: translate3d(10px, -18px, 0) rotate(calc(var(--tilt) * 0.3));
+  }
+}
+.al-tile:not([data-animate] *) {
+  transform: rotate(var(--tilt));
+}
+.al-tile:hover,
+.al-tile:focus-visible {
+  --op: 1;
+  border-color: var(--al-blue-soft);
+}
+.al-tile-frame {
+  background: var(--al-surface-raised);
+}
+.al-tile-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.al-tile-frame[data-fit="contain"] img {
+  object-fit: contain;
+}
+.al-tile-caption {
+  display: block;
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--al-text-muted);
+  border-top: 1px solid var(--al-border-soft);
+}
+
+@media (max-width: 900px) {
+  /* Narrow: tiles leave the orbit and sit in a row under the role line. */
+  .al-hero {
+    height: calc(var(--role-y) + 290px);
+  }
+  .al-tiles {
+    inset: auto;
+    top: calc(var(--role-y) + 60px);
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 16px;
+  }
+  .al-tile,
+  .al-tile[data-slot] {
+    position: relative;
+    inset: auto;
+    width: calc((100% - 20px) / 3);
+    max-width: 150px;
+    animation: none !important;
+    transform: none !important;
+  }
+  .al-tile-caption {
+    padding: 6px 7px;
+    font-size: 8px;
+  }
+  .al-glyph-foot {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .al-hero {
+    --wm-size: 22cqw;
+  }
+  .al-hero-photo {
+    top: 70px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-hero-photo {
+    animation: none;
+  }
+}
+
