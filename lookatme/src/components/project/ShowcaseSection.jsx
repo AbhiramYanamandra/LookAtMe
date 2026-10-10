@@ -1,6 +1,6 @@
 import { profile } from "@/content/profile";
 import { ModelViewer } from "./ModelViewer";
-import { PrestoWalkthrough } from "./PrestoWalkthrough";
+import { WyaAccess } from "./WyaAccess";
 import { ThesisFigure } from "./ThesisFigure";
 import { Showcase } from "./Showcase";
 
@@ -9,7 +9,7 @@ export function ShowcaseSection({ projects }) {
   const { story } = profile;
   const visuals = {
     macropad: <ModelViewer {...story.model} poster="/images/macropad.png" />,
-    presto: <PrestoWalkthrough url={projects.find((p) => p.slug === "presto")?.links?.find((l) => l.label === "Live demo")?.url ?? "/projects/presto"} />,
+    wya: <WyaAccess url={projects.find((p) => p.slug === "wya")?.links?.find((l) => l.label === "Website")?.url ?? "/projects/wya"} />,
     "photonic-correction": <ThesisFigure />,
   };
   const posters = {

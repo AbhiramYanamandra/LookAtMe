@@ -11,6 +11,7 @@ import "@/styles/terminal.css";
 import "@/styles/skills.css";
 import "@/styles/story.css";
 import "@/styles/work.css";
+import "@/styles/wya.css";
 import { ENTRANCE_STORAGE_KEY } from "@/lib/motion";
 import { PageTransition } from "@/components/site/PageTransition";
 import { RevealObserver } from "@/components/site/RevealObserver";

@@ -30,7 +30,7 @@ export const profile = {
     // Each role is typed in turn; its project tile comes forward while it shows.
     roles: [
       { label: "hardware engineer", slug: "macropad" },
-      { label: "software engineer", slug: "presto" },
+      { label: "software engineer", slug: "wya" },
       { label: "ML engineer", slug: "photonic-correction" },
     ],
     staticRoles: "Hardware, software and ML engineer",
@@ -103,7 +103,6 @@ export const profile = {
         { label: "XIAO RP2040 (underside)", position: "-0.00034m -0.00919m -0.02915m", normal: "0m -1m 0m" },
       ],
     },
-    presto: { poster: "/images/presto.png" },
     chapters: [
       {
         slug: "macropad",
@@ -117,14 +116,14 @@ export const profile = {
         ],
       },
       {
-        slug: "presto",
+        slug: "wya",
         kicker: "Software",
-        headline: "A presentation builder that runs in the browser.",
+        headline: "An RSVP app where “I’m in” actually means something.",
         cta: "Read the case study",
         facts: [
-          { value: "React + TS", label: "single-page app on Vite, with drag and resize editing" },
-          { value: "1 min", label: "throttled revision snapshots you can restore" },
-          { value: "Cypress", label: "end-to-end tested and deployed on Vercel" },
+          { value: "No app", label: "needed to RSVP: invite links open in any browser" },
+          { value: "72", label: "automated tests proving each guest sees only what they should" },
+          { value: "$0", label: "if you show up. No-shows lose a small deposit (built next)" },
         ],
       },
       {

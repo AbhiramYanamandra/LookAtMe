@@ -1,0 +1,96 @@
+---
+title: wya
+summary: An RSVP app where “I’m in” means something. Invites, guest lists and chat on Expo and Supabase, with access rules enforced in Postgres and deposits for no-shows designed next.
+badge: Product build
+fields: [frontend, backend]
+technologies: [Expo, React Native, TypeScript, Supabase, PostgreSQL, Row-level security, Next.js, GSAP]
+date: 2026-10
+status: in-progress
+cover:
+  src: /images/wya.png
+  alt: The wya website hero in dark mode, “Plans that actually happen.”, beside a phone showing the Rooftop Night event with I’m in, Maybe and Can’t go buttons
+  fit: contain
+  kind: screenshot
+role: App, database and security
+team: Two-person startup project
+order: 3
+spectrum: 0.9
+metric: "72/72 access checks"
+links:
+  - label: Website
+    url: https://wya-gules.vercel.app
+  - label: Web app
+    url: https://wya.expo.app
+featured: 1
+card:
+  visual: rsvp
+  action: Explore wya
+draft: false
+---
+
+## Overview
+
+Hosts over-prepare for guests who flake. You invite 30 people, cook for 30, and 10 show up. A free RSVP is easy to give and easier to ignore.
+
+**wya makes an RSVP mean something.** A guest who says “Going” puts down a small deposit that the host sets. Show up and you pay nothing; no-show without an excuse the host accepts, and the deposit goes to the host. Everything else in the app (invites, the guest list, chat, the event page as the one place for the night) is there to support that commitment.
+
+It’s a two-person project. My collaborator built the first prototype and the marketing site. I took the app from that prototype to something we could put in front of people: the security model, the invite flow, host tools, a design system, desktop layouts, chats and activity, and the tests that hold it together. The deposits themselves are the next phase, designed but not built.
+
+## Who sees what
+
+The prototype trusted the app to hide things. Anyone, logged in or not, could list every event with its invite code, and every user’s name and phone number. Any signed-in user could open any event by its URL and RSVP.
+
+The rule I replaced it with is short: **you can see an event only if you host it, or you’ve opened its invite link.** Everything is enforced in Postgres, so a modified client gets no more than the real one. Pick a person to see the same event as they get it:
+
+<WyaAccess url="https://wya-gules.vercel.app" />
+
+Three details made it work:
+
+- **Opening the link creates the access.** `accept_invite(code)` gives the user an RSVP row with a new status, `invited`, and from then on the event’s policies let them see it. It counts as neither yes nor maybe, so the chat stays closed until they answer.
+- **Some things hide columns, not rows.** Row-level security decides which rows you get, never which columns. So anything per-viewer goes through a function: `get_invite_preview` returns the title, date, host and cover but never the address; `get_guest_list` gives the host everyone’s notes and gives guests names only; `get_invite_code` hands the code to guests only while the host allows re-sharing. Invite codes moved to their own table, readable by the host alone.
+- **No policy loops.** The events policy checks RSVPs and the RSVPs policy checks events, which Postgres rejects as infinite recursion. The checks go through small `security definer` helpers in a private schema (`is_event_host`, `is_event_guest`, `can_chat`), each with an empty `search_path`.
+
+Guests can update only the status and note on their own RSVP (a column-level grant). Without that, a guest could rewrite their row’s event ID and walk into someone else’s party.
+
+## Proving it
+
+Rules like these fail silently, so I wrote an access-control suite that signs in as each person (host, guest, invited guest, stranger and logged out) against the development database and tries everything, including what should fail. It refuses to run against anything but the dev project, restores whatever it changes, and runs after every migration. It grew phase by phase, from 43 checks to 72.
+
+<AccessMatrix />
+
+It earned its keep. When I added the activity feed, a trigger built its list of changes with `text[] || 'time'`, which Postgres parses as a malformed array literal. Typecheck passed and the app looked fine, but **every host edit to an event’s time, place or name would have failed.** The new “guests are notified when the time changes” check caught it before it shipped, and now also asserts that the edit itself succeeds.
+
+## Invites anyone can open
+
+Most guests first meet wya through a link in a group chat, usually without the app installed. So the web build is a first-class target, hosted on EAS, and invite links always use the web address instead of a `wya://` link that only works with the app.
+
+- A logged-out visitor sees the preview, signs up, and is returned to the invite (the `returnTo` survives switching between sign-up and sign-in), which accepts it and opens the event.
+- Hosts can remove a guest, and a removed guest can’t rejoin with the same link: `accept_invite` checks a removed-guests table first. Without it, removing someone who still had the link would have been pointless.
+- Uploads were rewritten as one helper that reads bytes the right way per platform and takes the file type from the picked asset. On web the image URI is a `blob:` address, which had been producing files named `avatar.blob:http:/localhost:8081/…`.
+
+## A look worth sending
+
+An invite is the first thing every guest sees, so the design had to make people want to send it. The app has two themes with the **same role names**: Soft pop (cream, violet, tangerine, chunky ink outlines with hard shadows) and After dark (near-black, electric lime, hot pink, hairlines). Screens read roles, never hex values, so every screen restyles itself when the theme changes. On top of that, each event gets its own theme that colours its cover, stickers and invite, before the guest has even logged in.
+
+<EventThemeStrip />
+
+Saying “I’m in” fires confetti and a success haptic. It’s a small reward for committing, which is the whole idea. On desktop the app becomes a sidebar layout with a two-column event page, a Chats tab with unread counts, and an Activity feed written entirely by database triggers (“Gary is going”, “Hannah changed the time”). That feed is also where Phase 3’s reminders will land.
+
+## Deposits, designed next
+
+The money is the next phase. The decisions so far:
+
+- **Save the card at RSVP, charge only no-shows, after the event.** Never charge and refund, because Stripe keeps its fee on refunds and that eats small deposits.
+- **Hosts set up nothing to start.** Stripe Connect Express onboarding happens only when a host is actually owed money.
+- **A checked-in guest is never charged.** Guests check in themselves and the host confirms. Maybes put down nothing, but must become a yes or no by the host’s cutoff, or they become a no.
+- **Excuses go to the host,** and charges run only after a review window. All money logic runs server-side in Edge Functions and Stripe webhooks.
+
+The open question is the platform fee, because Stripe’s fixed costs are brutal on small amounts:
+
+<DepositFees />
+
+At $5 a head with three no-shows, about a quarter of the money never reaches the host. That’s why a minimum deposit of around $5, a service fee paid by the no-show, and batched payouts are on the table.
+
+<Note>
+  wya is in private testing with no real users yet. Everything on this page through the desktop layout is built and verified on web; iOS hasn’t been run on a device yet. Deposits are designed, not built. My collaborator built the original prototype and the marketing website; the screens in the “who sees what” figure are a drawn stand-in, but the rules they show are the real ones.
+</Note>

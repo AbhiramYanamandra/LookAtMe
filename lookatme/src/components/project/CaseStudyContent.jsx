@@ -19,6 +19,8 @@ import { ClapDetector } from "./ClapDetector";
 import { ErdExplorer } from "./ErdExplorer";
 import { BreedNormalisation } from "./BreedNormalisation";
 import { SqlRunner } from "./SqlRunner";
+import { WyaAccess } from "./WyaAccess";
+import { AccessMatrix, DepositFees, EventThemeStrip } from "./WyaFigures";
 
 const KIND_LABEL = {
   screenshot: "Screenshot",
@@ -90,6 +92,10 @@ const components = {
   ErdExplorer,
   BreedNormalisation,
   SqlRunner,
+  WyaAccess,
+  AccessMatrix,
+  EventThemeStrip,
+  DepositFees,
   h2: (props) => <h2 data-reveal {...props} />,
   h3: (props) => <h3 data-reveal {...props} />,
 };

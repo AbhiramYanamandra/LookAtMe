@@ -11,6 +11,7 @@ import { PipelineCard } from "./PipelineDiagram";
 import { HogConveyor } from "./HogConveyor";
 import { NavMapCard } from "./NavMapCard";
 import { ClapCard } from "./ClapCard";
+import { WyaCard } from "./WyaCard";
 import { ErdCard } from "./ErdCard";
 
 const VB = "0 0 240 150";
@@ -229,7 +230,7 @@ function PageTable() {
   );
 }
 
-const VISUALS = { clap: ClapCard, dataflow: HogConveyor, detect: Detect, erd: ErdCard, navmap: NavMapCard, sorter: Sorter, cipher: Cipher, ttt: Ttt, guess: Guess, pagetable: PageTable, stages: PipelineCard };
+const VISUALS = { clap: ClapCard, dataflow: HogConveyor, detect: Detect, erd: ErdCard, navmap: NavMapCard, sorter: Sorter, cipher: Cipher, ttt: Ttt, guess: Guess, pagetable: PageTable, stages: PipelineCard, rsvp: WyaCard };
 
 export const GENERATED_VISUALS = Object.keys(VISUALS);
 

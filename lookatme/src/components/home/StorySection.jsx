@@ -1,6 +1,6 @@
 import { profile } from "@/content/profile";
 import { ModelViewer } from "@/components/project/ModelViewer";
-import { PrestoWalkthrough } from "@/components/project/PrestoWalkthrough";
+import { WyaAccess } from "@/components/project/WyaAccess";
 import { ThesisFigure } from "@/components/project/ThesisFigure";
 import { ProjectStory } from "./ProjectStory";
 
@@ -10,9 +10,9 @@ export function StorySection({ projects }) {
 
   const visuals = {
     macropad: <ModelViewer {...story.model} poster="/images/macropad.png" />,
-    presto: (project) => {
-      const live = project.links?.find((link) => link.label === "Live demo");
-      return <PrestoWalkthrough url={live?.url ?? "/projects/presto"} />;
+    wya: (project) => {
+      const site = project.links?.find((link) => link.label === "Website");
+      return <WyaAccess url={site?.url ?? "/projects/wya"} />;
     },
     "photonic-correction": <ThesisFigure />,
   };

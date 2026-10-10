@@ -17,7 +17,7 @@ test("the real content collection loads and validates", () => {
     assert.ok(project.title && project.summary, `${project.slug} has title and summary`);
     if (project.cover) assert.ok(project.cover.width > 0 && project.cover.height > 0, `${project.slug} cover has dimensions`);
   }
-  assert.deepEqual(featuredProjects(published).map((p) => p.slug), ["presto", "macropad", "photonic-correction"]);
+  assert.deepEqual(featuredProjects(published).map((p) => p.slug), ["wya", "macropad", "photonic-correction"]);
   // Every published project sits somewhere on the Work page's spectrum.
   for (const project of published) {
     const position = spectrumOf(project);

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PROMPT, complete, runCommand } from "@/lib/terminal-commands";
 
-const CHIPS = ["neofetch", "projects", "interests", "cycling", "open presto", "clap"];
+const CHIPS = ["neofetch", "projects", "interests", "cycling", "open wya", "clap"];
 
 /**
  * A pretend shell: type a command (or tap a suggestion) and read the answer.

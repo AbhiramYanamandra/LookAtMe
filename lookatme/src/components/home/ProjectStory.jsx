@@ -14,7 +14,7 @@ import { storyProgress } from "@/lib/motion";
  * simply stacked and fully revealed.
  *
  * `chapters` carry their visual as a ready-made node (the server builds the
- * model viewer, Presto frame and thesis figure); this component owns scroll.
+ * model viewer, wya demo and thesis figure); this component owns scroll.
  */
 const PIN_QUERY = "(min-width: 801px) and (prefers-reduced-motion: no-preference)";
 
@@ -55,7 +55,7 @@ export function ProjectStory({ label, heading, hint, chapters }) {
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
 
-    // Links to a chapter ("#work-presto") scroll to where that chapter begins.
+    // Links to a chapter ("#work-wya") scroll to where that chapter begins.
     const onClick = (event) => {
       const anchor = event.target.closest?.('a[href^="#work-"]');
       if (!anchor) return;

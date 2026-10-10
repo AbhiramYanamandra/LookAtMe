@@ -18,7 +18,7 @@ import { FIELD_IDS } from "../content/fields.js";
 export const CONTENT_DIR = path.join(process.cwd(), "src", "content", "projects");
 export const PUBLIC_DIR = path.join(process.cwd(), "public");
 
-export const CARD_VISUALS = ["image", "screenshot", "board", "stages", "figure", "clap", "dataflow", "detect", "erd", "navmap", "sorter", "cipher", "ttt", "guess", "pagetable"];
+export const CARD_VISUALS = ["image", "screenshot", "board", "stages", "figure", "clap", "dataflow", "detect", "erd", "navmap", "sorter", "cipher", "ttt", "guess", "pagetable", "rsvp"];
 export const IMAGE_FITS = ["cover", "contain"];
 export const STATUSES = ["complete", "in-progress", "paused", "archived"];
 

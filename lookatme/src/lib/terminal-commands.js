@@ -27,7 +27,7 @@ const COMMANDS = {
   help: "list the commands",
   about: "who I am",
   projects: "things I've built",
-  open: "open NAME  (try: open presto)",
+  open: "open NAME  (try: open wya)",
   skills: "what I work with",
   interests: "what I do off the keyboard",
   neofetch: "a quick system summary, sort of",
@@ -41,7 +41,7 @@ const COMMANDS = {
   clear: "clear the screen",
 };
 export const INTEREST_COMMANDS = ["gym", "workout", "cycling", "bike", "swimming", "swim", "cooking", "cook", "cricket", "reading", "read", "books", "music"];
-export const COMMAND_NAMES = [...Object.keys(COMMANDS), "thesis", "macropad", "presto", "sudo", ...INTEREST_COMMANDS];
+export const COMMAND_NAMES = [...Object.keys(COMMANDS), "thesis", "macropad", "presto", "wya", "sudo", ...INTEREST_COMMANDS];
 
 /** Edit distance, for "did you mean". */
 function distance(a, b) {
@@ -75,7 +75,7 @@ function findProject(projects, query) {
 }
 
 /** Aliases for the three lead projects. */
-const ALIASES = { thesis: "photonic-correction", macropad: "macropad", presto: "presto" };
+const ALIASES = { thesis: "photonic-correction", macropad: "macropad", presto: "presto", wya: "wya" };
 
 function skillLines(skills) {
   const groups = { software: [], hardware: [], ml: [] };
@@ -132,7 +132,7 @@ export function runCommand(input, ctx) {
   }
   if (command === "open" || ALIASES[command]) {
     const query = ALIASES[command] ?? arg;
-    if (!query) return { lines: [text("open what? Try: open presto")] };
+    if (!query) return { lines: [text("open what? Try: open wya")] };
     const project = findProject(projects, query);
     if (!project) {
       return { lines: [text(`no project called "${query}".`), dim("Type projects to see the list.")] };

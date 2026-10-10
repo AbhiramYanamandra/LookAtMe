@@ -1,0 +1,897 @@
+/* --- wya: one event, four people (drawn in wya's After dark theme) -------- */
+.wa-window {
+  --wa-bg: #0b0b0f;
+  --wa-surface: #15151c;
+  --wa-alt: #1f1f29;
+  --wa-text: #ffffff;
+  --wa-soft: #a3a3b8;
+  --wa-muted: #5e5e73;
+  --wa-line: #2a2a36;
+  --wa-lime: #d4ff3f;
+  --wa-pink: #ff3cac;
+  --wa-green: #3ce08a;
+  --wa-amber: #ffb13c;
+  --wa-red: #ff5470;
+  position: relative;
+  container-type: inline-size;
+  padding: 18px 16px 14px;
+  background:
+    radial-gradient(70% 60% at 85% 20%, #d4ff3f1f 0%, transparent 60%),
+    radial-gradient(60% 60% at 0% 100%, #ff3cac1c 0%, transparent 60%),
+    var(--wa-bg);
+  color: var(--wa-text);
+  font-family: var(--font-sans);
+}
+
+.wa-headline {
+  margin: 0 0 12px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.wa-headline span {
+  color: var(--wa-lime);
+}
+
+.wa-viewers {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 2px 4px;
+}
+.wa-viewers::-webkit-scrollbar {
+  display: none;
+}
+.wa-viewers button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 13px 5px 5px;
+  border: 1px solid var(--wa-line);
+  border-radius: 999px;
+  background: var(--wa-surface);
+  color: var(--wa-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms, background-color 160ms, transform 160ms var(--ease-out);
+}
+.wa-viewers button:hover {
+  border-color: var(--wa-muted);
+}
+.wa-viewers button[aria-pressed="true"] {
+  border-color: var(--wa-lime);
+  background: #d4ff3f14;
+}
+.wa-viewers button:focus-visible {
+  outline: 2px solid var(--wa-lime);
+  outline-offset: 2px;
+}
+.wa-viewers b {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.15;
+}
+.wa-viewers small {
+  display: block;
+  font-size: 10.5px;
+  color: var(--wa-soft);
+  line-height: 1.2;
+}
+
+.wa-av {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--wa-bg);
+  color: #fff;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.wa-body {
+  display: grid;
+  grid-template-columns: minmax(0, 236px) 1fr;
+  gap: 26px;
+  align-items: center;
+  margin-top: 14px;
+}
+@container (max-width: 540px) {
+  .wa-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    justify-items: center;
+  }
+  .wa-rule {
+    justify-self: stretch;
+  }
+}
+
+/* The phone */
+.wa-phone {
+  position: relative;
+  width: min(236px, 100%);
+  height: 400px;
+  padding: 7px;
+  border: 1px solid #34343f;
+  border-radius: 34px;
+  background: #1a1a22;
+  box-shadow: 0 24px 50px #0008;
+}
+.wa-notch {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  z-index: 2;
+  width: 64px;
+  height: 16px;
+  border-radius: 999px;
+  background: #000;
+  transform: translateX(-50%);
+}
+.wa-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  border-radius: 28px;
+  background: var(--wa-bg);
+  animation: wa-in 320ms var(--ease-out);
+}
+.wa-scroll::-webkit-scrollbar {
+  display: none;
+}
+@keyframes wa-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.wa-cover {
+  position: relative;
+  height: 128px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.wa-cover b {
+  position: relative;
+  font-size: 84px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  transform: rotate(-6deg);
+}
+.wa-cover-shape {
+  position: absolute;
+  top: -40%;
+  right: -18%;
+  width: 72%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.wa-cover-shape-2 {
+  top: auto;
+  right: auto;
+  bottom: -14%;
+  left: 6%;
+  width: 30%;
+}
+.wa-sticker {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--wa-lime);
+  color: var(--wa-bg);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  transform: rotate(-3deg);
+}
+.wa-round-row {
+  position: absolute;
+  top: 34px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+}
+.wa-round {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #0b0b0fb3;
+  color: #fff;
+}
+.wa-round svg {
+  width: 12px;
+  height: 12px;
+}
+
+.wa-pad {
+  padding: 12px 14px 18px;
+}
+.wa-kicker {
+  margin: 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wa-soft);
+}
+.wa-title {
+  margin: 2px 0 6px;
+  font-size: 21px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--wa-text);
+}
+.wa-place {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--wa-soft);
+}
+.wa-place svg {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  margin-top: 1px;
+}
+.wa-hidden {
+  padding: 7px 9px;
+  border: 1px dashed var(--wa-muted);
+  border-radius: 10px;
+}
+
+.wa-card {
+  margin: 0 0 12px;
+  padding: 10px;
+  border: 1px solid var(--wa-line);
+  border-radius: 14px;
+  background: var(--wa-surface);
+}
+.wa-h {
+  margin: 0 0 7px;
+  font-size: 13px;
+  font-weight: 800;
+}
+.wa-choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.wa-choice {
+  padding: 6px 2px;
+  border: 1px solid var(--wa-line);
+  border-radius: 999px;
+  background: var(--wa-alt);
+  color: var(--wa-text);
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms var(--ease-out), background-color 120ms;
+}
+.wa-choice:disabled {
+  cursor: default;
+}
+.wa-choice:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+.wa-choice:not(:disabled):active {
+  transform: scale(0.95);
+}
+.wa-choice:focus-visible {
+  outline: 2px solid var(--wa-lime);
+  outline-offset: 2px;
+}
+.wa-choice[data-nudge] {
+  border-color: var(--wa-green);
+  animation: wa-nudge 1.6s ease-in-out infinite;
+}
+@keyframes wa-nudge {
+  50% {
+    box-shadow: 0 0 0 4px #3ce08a33;
+  }
+}
+.wa-choice[aria-pressed="true"] {
+  color: var(--wa-bg);
+}
+.wa-choice[aria-pressed="true"][data-value="yes"] {
+  border-color: var(--wa-green);
+  background: var(--wa-green);
+}
+.wa-choice[aria-pressed="true"][data-value="maybe"] {
+  border-color: var(--wa-amber);
+  background: var(--wa-amber);
+}
+.wa-choice[aria-pressed="true"][data-value="no"] {
+  border-color: var(--wa-red);
+  background: var(--wa-red);
+}
+
+.wa-label {
+  margin: 0 0 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wa-soft);
+}
+.wa-guests {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.wa-guests li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 7px;
+  font-size: 11.5px;
+  animation: wa-in 260ms var(--ease-out);
+}
+.wa-guest-name {
+  font-weight: 700;
+}
+.wa-chip {
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  background: var(--wa-alt);
+  color: var(--wa-soft);
+}
+.wa-chip[data-status="yes"] {
+  background: #3ce08a24;
+  color: var(--wa-green);
+}
+.wa-chip[data-status="maybe"] {
+  background: #ffb13c24;
+  color: var(--wa-amber);
+}
+.wa-note {
+  grid-column: 2 / -1;
+  font-size: 10px;
+  font-style: italic;
+  color: var(--wa-pink);
+}
+
+.wa-chat {
+  display: grid;
+  gap: 5px;
+}
+.wa-bubble {
+  max-width: 85%;
+  margin: 0;
+  padding: 6px 9px;
+  border-radius: 12px 12px 12px 4px;
+  background: var(--wa-alt);
+  font-size: 11px;
+}
+.wa-bubble b {
+  display: block;
+  font-size: 9px;
+  color: var(--wa-lime);
+}
+.wa-bubble-me {
+  justify-self: end;
+  border-radius: 12px 12px 4px 12px;
+  background: #ff3cac26;
+}
+.wa-bubble-me b {
+  color: var(--wa-pink);
+}
+.wa-locked {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 10px;
+  border: 1px dashed var(--wa-muted);
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--wa-soft);
+}
+.wa-locked svg {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+}
+
+.wa-btn {
+  display: block;
+  margin-top: 8px;
+  padding: 9px;
+  border-radius: 999px;
+  background: var(--wa-lime);
+  color: var(--wa-bg);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+.wa-btn-ghost {
+  border: 1px solid var(--wa-line);
+  background: transparent;
+  color: var(--wa-text);
+}
+
+/* Confetti when Jo says yes */
+.wa-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 34px;
+  pointer-events: none;
+}
+.wa-confetti i {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 7px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--c, #d4ff3f);
+  opacity: 0;
+  animation: wa-pop 900ms var(--ease-out) forwards;
+  --a: calc(var(--i) * 25.7deg);
+  --c: hsl(calc(var(--i) * 47) 95% 62%);
+}
+@keyframes wa-pop {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(0) rotate(0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-120px) rotate(200deg);
+  }
+}
+
+/* What this person can see */
+.wa-rule {
+  max-width: 330px;
+}
+.wa-rule-who {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wa-soft);
+}
+.wa-sees {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+.wa-sees li {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-items: start;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--wa-muted);
+}
+.wa-sees li[data-ok] {
+  color: var(--wa-text);
+}
+.wa-sees svg {
+  width: 18px;
+  height: 18px;
+  color: var(--wa-muted);
+}
+.wa-sees li[data-ok] svg {
+  color: var(--wa-lime);
+}
+.wa-sees small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--wa-soft);
+}
+.wa-blurb {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--wa-soft);
+}
+
+.wa-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin: 16px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--wa-line);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--wa-soft);
+}
+.wa-foot span:last-child {
+  color: var(--wa-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-scroll,
+  .wa-guests li,
+  .wa-choice[data-nudge] {
+    animation: none;
+  }
+  .wa-confetti {
+    display: none;
+  }
+}
+
+/* --- wya library card (After dark) -------------------------------------- */
+.pv-wya text {
+  font-family: var(--font-sans);
+}
+.pv-wya .wy-initial {
+  fill: #ffffff;
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+.pv-wya .wy-sticker {
+  font-size: 5.6px;
+  font-weight: 800;
+  fill: #0b0b0f;
+}
+.pv-wya .wy-kicker {
+  font-size: 5.2px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  fill: #a3a3b8;
+}
+.pv-wya .wy-title {
+  font-size: 11.5px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  fill: #ffffff;
+}
+.pv-wya .wy-av {
+  font-size: 6.5px;
+  font-weight: 800;
+  fill: #fff;
+}
+.pv-wya .wy-count {
+  font-size: 7.5px;
+  font-weight: 700;
+  fill: #ffffff;
+}
+.pv-wya .wy-cta {
+  font-size: 8.5px;
+  font-weight: 800;
+  fill: #ffffff;
+}
+.pv-wya .wy-cta-on {
+  fill: #0b0b0f;
+}
+.pv-wya .wy-tag {
+  font-size: 7.5px;
+  font-weight: 800;
+  fill: #0b0b0f;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Hold the finished frame: everyone in, "4 going", I'm in pressed. */
+  .pv-wya .wy-n0,
+  .pv-wya .wy-n1,
+  .pv-wya .wy-n2,
+  .pv-wya .wy-bit {
+    opacity: 0;
+  }
+}
+
+/* --- wya case study: access matrix ---------------------------------------- */
+.wm {
+  background: var(--al-surface);
+}
+.wm table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.wm thead th {
+  padding: 12px 8px 10px;
+  border-bottom: 1px solid var(--al-border);
+  text-align: center;
+  font-weight: 400;
+  vertical-align: bottom;
+}
+.wm thead th b {
+  display: block;
+  font-size: 12.5px;
+  color: var(--al-cream);
+}
+.wm thead th span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--al-text-faint);
+}
+.wm tbody th {
+  padding: 9px 14px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--al-text-card);
+  white-space: nowrap;
+}
+.wm tbody tr + tr {
+  border-top: 1px solid var(--al-border-soft);
+}
+.wm td {
+  padding: 9px 8px;
+  text-align: center;
+  font-size: 11.5px;
+  line-height: 1.25;
+  color: var(--al-blue-soft);
+}
+.wm td svg {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+.wm td[data-v="yes"] {
+  color: var(--al-blue);
+}
+.wm td[data-v="no"] {
+  color: var(--al-border);
+}
+
+/* --- wya case study: event themes ----------------------------------------- */
+.wt {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px;
+  background: var(--al-surface);
+}
+@media (max-width: 640px) {
+  .wt {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.wt-item {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+.wt-item .al-mono {
+  font-size: 10.5px;
+  color: var(--al-text-muted);
+}
+.wt-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.wt-cover b {
+  position: relative;
+  font-size: clamp(34px, 6vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  transform: rotate(-7deg);
+}
+.wt-shape {
+  position: absolute;
+}
+.wt-circle {
+  top: -25%;
+  right: -15%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.wt-circle-2 {
+  top: auto;
+  right: auto;
+  bottom: -8%;
+  left: 8%;
+  width: 30%;
+}
+.wt-bar {
+  left: -20%;
+  width: 140%;
+  height: 16%;
+  border-radius: 999px;
+  transform: rotate(-9deg);
+}
+.wt-blob {
+  top: 10%;
+  left: 30%;
+  width: 65%;
+  aspect-ratio: 1.3;
+  border-radius: 40%;
+  transform: rotate(12deg);
+}
+
+/* --- wya case study: deposit fees ----------------------------------------- */
+.wf-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+  padding: 16px 18px 6px;
+  background: var(--al-surface);
+}
+@media (max-width: 560px) {
+  .wf-controls {
+    grid-template-columns: 1fr;
+  }
+}
+.wf-controls label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--al-text-muted);
+}
+.wf-controls b {
+  color: var(--al-cream);
+  font-family: var(--font-mono);
+}
+.wf-controls input[type="range"] {
+  width: 100%;
+  accent-color: var(--al-blue);
+}
+.wf-bar {
+  display: flex;
+  gap: 2px;
+  height: 22px;
+  margin: 0;
+  padding: 10px 18px 0;
+  background: var(--al-surface);
+  box-sizing: content-box;
+}
+.wf-bar span {
+  flex-basis: 0;
+  min-width: 0;
+}
+.wf-host {
+  border-radius: 4px 0 0 4px;
+  background: var(--al-blue);
+}
+.wf-fee {
+  background: #d4486b;
+}
+.wf-fee:nth-child(3) {
+  opacity: 0.8;
+}
+.wf-fee:nth-child(4) {
+  opacity: 0.6;
+}
+.wf-fee:last-child {
+  border-radius: 0 4px 4px 0;
+}
+.wf-read {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 12px 18px 4px;
+  background: var(--al-surface);
+}
+.wf-read dt {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--al-text-faint);
+}
+.wf-read dd {
+  margin: 2px 0 0;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--al-cream);
+}
+.wf-read small {
+  font-size: 12px;
+  color: var(--al-text-muted);
+}
+.wf-hot dt::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 2px;
+  background: #d4486b;
+}
+.wf-read div:nth-child(2) dt::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 2px;
+  background: var(--al-blue);
+}
+.cs-body .wf-parts {
+  margin: 0;
+  padding: 6px 18px 14px;
+  background: var(--al-surface);
+  font-size: 11px;
+  color: var(--al-text-faint);
+}
+
+/* In the pinned home story the stage is one screen tall: let the demo fill the
+   visual's height and shrink the phone (which scrolls inside) to fit, dropping
+   the extras on short screens. The headline repeats the chapter's own copy. */
+.al-story[data-mode="pinned"] .al-chapter:has(.wa) {
+  grid-template-rows: minmax(0, 1fr);
+}
+.al-story[data-mode="pinned"] .al-chapter-visual:has(.wa) {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+}
+.al-story[data-mode="pinned"] .wa {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+}
+.al-story[data-mode="pinned"] .wa-window {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.al-story[data-mode="pinned"] .wa-headline {
+  display: none;
+}
+.al-story[data-mode="pinned"] .wa-body {
+  grid-template-columns: minmax(0, 220px) 1fr;
+  justify-items: stretch;
+  gap: 20px;
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr);
+}
+.al-story[data-mode="pinned"] .wa-phone {
+  height: 100%;
+  max-height: 400px;
+  min-height: 0;
+}
+.al-story[data-mode="pinned"] .wa-rule {
+  max-height: 100%;
+  overflow: hidden;
+}
+@media (max-height: 820px) {
+  .al-story[data-mode="pinned"] .wa-blurb {
+    display: none;
+  }
+  .al-story[data-mode="pinned"] .wa-sees li {
+    padding: 3px 0;
+    font-size: 13px;
+  }
+}
+@media (max-height: 700px) {
+  .al-story[data-mode="pinned"] .wa-foot {
+    display: none;
+  }
+  .al-story[data-mode="pinned"] .wa-sees small {
+    display: none;
+  }
+}
