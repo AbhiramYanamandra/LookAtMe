@@ -7,6 +7,18 @@ import { imageSize } from "image-size";
 import fs from "node:fs";
 import path from "node:path";
 import { PUBLIC_DIR } from "@/lib/projects";
+import { DetectionGrid } from "./DetectionGrid";
+import { ConfusionMatrix } from "./ConfusionMatrix";
+import { PipelineTrace } from "./PipelineTrace";
+import { HogAnatomy } from "./HogAnatomy";
+import { HogDataflow, HogVersions } from "./HogCharts";
+import { WatchSim } from "./WatchSim";
+import { LcdIconTable } from "./LcdIconTable";
+import { I2sFrame } from "./I2sFrame";
+import { ClapDetector } from "./ClapDetector";
+import { ErdExplorer } from "./ErdExplorer";
+import { BreedNormalisation } from "./BreedNormalisation";
+import { SqlRunner } from "./SqlRunner";
 
 const KIND_LABEL = {
   screenshot: "Screenshot",
@@ -65,6 +77,19 @@ const components = {
   Figure,
   Note,
   Gallery,
+  DetectionGrid,
+  ConfusionMatrix,
+  PipelineTrace,
+  HogAnatomy,
+  HogDataflow,
+  HogVersions,
+  WatchSim,
+  LcdIconTable,
+  I2sFrame,
+  ClapDetector,
+  ErdExplorer,
+  BreedNormalisation,
+  SqlRunner,
   h2: (props) => <h2 data-reveal {...props} />,
   h3: (props) => <h3 data-reveal {...props} />,
 };

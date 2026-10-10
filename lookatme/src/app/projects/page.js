@@ -10,7 +10,8 @@ import { ListView } from "@/components/project/ListView";
 import { SortControl } from "@/components/project/SortControl";
 import { RememberLibraryState } from "@/components/project/LibraryState";
 import { getPublishedProjects, toSummary } from "@/lib/projects";
-import { ALL_FIELDS, availableSorts, filterByField, populatedFields, resolveField, resolveSort, sortProjects } from "@/lib/project-queries";
+import { ALL_FIELDS, availableSorts, filterByField, filterByRange, populatedFields, resolveField, resolveSort, sortProjects } from "@/lib/project-queries";
+import { describeRange, parseRange } from "@/lib/spectrum";
 import { fieldLabel, getField } from "@/content/fields";
 import { profile } from "@/content/profile";
 import { libraryHref } from "@/lib/project-queries";
@@ -36,8 +37,9 @@ export default async function ProjectsPage({ searchParams }) {
   const sortOptions = availableSorts(projects);
   const fields = populatedFields(projects);
   const view = first(params?.view) === "list" ? "list" : "grid";
-  const matches = sortProjects(filterByField(projects, field), sort);
-  const isFiltered = field !== ALL_FIELDS || sort !== "recommended";
+  const range = parseRange(first(params?.range));
+  const matches = sortProjects(filterByRange(filterByField(projects, field), range), sort);
+  const isFiltered = field !== ALL_FIELDS || sort !== "recommended" || range !== null;
   // The three lead projects get their own showcase above the grid, unless the
   // visitor is filtering or sorting: then every match belongs in the results.
   const showShowcase = view === "grid" && !isFiltered;
@@ -58,20 +60,20 @@ export default async function ProjectsPage({ searchParams }) {
         <Suspense fallback={null}>
           <RememberLibraryState />
         </Suspense>
-        <LibraryHero projects={projects} fields={fields} />
+        <LibraryHero projects={projects} fields={fields} field={field} sort={sort} view={view} range={range} />
 
         {showShowcase && <ShowcaseSection projects={projects} />}
 
         <div className="pl-sticky">
           <div className="pl-toolbar" id="browse">
-            <FilterChips fields={chipFields} total={projects.length} field={field} sort={sort} view={view} />
+            <FilterChips fields={chipFields} total={projects.length} field={field} sort={sort} view={view} range={range} />
             <div className="pl-toolbar-end">
-              <SortControl field={field} sort={sort} view={view} options={sortOptions} />
+              <SortControl field={field} sort={sort} view={view} range={range} options={sortOptions} />
               <nav className="pl-view" aria-label="View">
-                <Link href={libraryHref({ field, sort })} scroll={false} aria-current={view === "grid" ? "true" : undefined} aria-label="Grid view">
+                <Link href={libraryHref({ field, sort, range })} scroll={false} aria-current={view === "grid" ? "true" : undefined} aria-label="Grid view">
                   <LayoutGrid aria-hidden="true" />
                 </Link>
-                <Link href={libraryHref({ field, sort, view: "list" })} scroll={false} aria-current={view === "list" ? "true" : undefined} aria-label="List view">
+                <Link href={libraryHref({ field, sort, view: "list", range })} scroll={false} aria-current={view === "list" ? "true" : undefined} aria-label="List view">
                   <List aria-hidden="true" />
                 </Link>
               </nav>
@@ -86,6 +88,12 @@ export default async function ProjectsPage({ searchParams }) {
               <>
                 {" "}
                 in <strong>{activeField.label}</strong>
+              </>
+            ) : null}
+            {range ? (
+              <>
+                {" "}
+                · <strong>{describeRange(range)}</strong>
               </>
             ) : null}
             {sort !== "recommended" ? <> · sorted by {sortLabel(sort)}</> : null}

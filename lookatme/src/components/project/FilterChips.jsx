@@ -12,7 +12,7 @@ import { ALL_FIELDS, libraryHref } from "@/lib/project-queries";
  * old chip to the new one, so a filter change reads as the selection
  * moving rather than one chip switching off and another switching on.
  */
-export function FilterChips({ fields, total, field, sort, view }) {
+export function FilterChips({ fields, total, field, sort, view, range }) {
   const [pending, setPending] = useState(null);
   const navRef = useRef(null);
   const inkRef = useRef(null);
@@ -68,7 +68,7 @@ export function FilterChips({ fields, total, field, sort, view }) {
     return (
       <Link
         key={id}
-        href={id === ALL_FIELDS ? libraryHref({ sort, view }) : libraryHref({ field: id, sort, view })}
+        href={id === ALL_FIELDS ? libraryHref({ sort, view, range }) : libraryHref({ field: id, sort, view, range })}
         scroll={false}
         aria-current={active ? "true" : undefined}
         className={pending === id && field !== id ? "is-pending" : undefined}

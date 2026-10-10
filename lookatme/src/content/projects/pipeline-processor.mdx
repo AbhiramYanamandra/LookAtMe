@@ -1,52 +1,74 @@
 ---
 title: Five-stage processor
-summary: A pipelined MIPS-style processor, extended to support Branch Not Equal.
+summary: A pipelined processor in VHDL with a custom instruction set that checks tagged vote records and tallies them in real time on a Basys-3.
 badge: Digital systems
 fields: [hardware]
 technologies: [VHDL, Vivado, Basys-3, Artix-7]
-cover:
-  src: /images/processor.png
-  alt: Diagram of a five-stage pipelined MIPS datapath with IF/ID, ID/EX, EX/MEM, and MEM/WB pipeline registers
-  fit: contain
-  kind: diagram
-  caption: Reference diagram of the standard five-stage pipelined datapath with control signals. It explains the architecture the project follows; it is not the project’s own schematic or a simulation screenshot.
 team: Course project (COMP3211)
 order: 5
 spectrum: 0.1
 metric: "5 pipeline stages"
 card:
   visual: stages
-  action: Inside the architecture
+  action: Watch a record go through
   titleLines: [Five-stage, processor]
 draft: false
 ---
 
 ## Overview
 
-A pipelined, MIPS-style processor split into the classic five stages — **Fetch, Decode, Execute, Memory, and Writeback** — with pipeline registers between each stage so several instructions are in flight at once.
+The brief was an election-centre server. Districts send in incremental vote records over a network nobody trusts. Each record carries a **district ID, a candidate ID, a vote count, and a tag**. The server regenerates the tag from the record using a shared secret key, throws away any record whose tag doesn't match, and adds the rest to a live table of per-candidate and per-district totals.
 
-## The BNE extension
+We built that as a custom **five-stage pipelined processor** in VHDL, starting from a classic IF / ID / EX / MEM / WB core. The team of six split into three pairs: decoder, memory and processor. I was on the processor pair, and I wrote the simulation analysis.
 
-The base design was extended to support the **Branch Not Equal (BNE)** instruction, which requires the branch-decision logic to act on the ALU's comparison result and steer the program counter accordingly.
+## One record, three instructions
 
-## About the diagram
+The processor runs a small custom instruction set. Each incoming record is processed as three instructions issued back to back:
 
-The datapath diagram at the top of this page is the **standard textbook five-stage pipeline** with its control signals. It is shown to explain the architecture the project follows; it is not the project’s own schematic or a simulation screenshot. The simplified five-box illustration on the homepage card is likewise an explanatory graphic, not implementation evidence.
+- **SEC** loads the secret key into the key register.
+- **BNE** compares the record's tag with the one the decoder regenerates.
+- **WRITE** adds the vote count to tally memory.
 
-## Hazard handling
+**CAND** and **DIST** read totals back out. In the board build a record is 12 bits (an 8-bit vote count, a 2-bit district and a 2-bit candidate) plus a 4-bit tag. All of these widths are generics, so the same design scales to larger elections.
 
-A pipeline is only correct once it handles instructions that depend on each other.
+Step through it below. These traces are not an illustration. I re-ran the submitted VHDL in a simulator and sampled every pipeline register on each clock, so every stage, tag and flush value is what the hardware does.
 
-**Forwarding** logic detects source/destination dependencies and routes results from MEM and WB directly back into EX. In the documented simulation, a dependent add consumes the forwarded value — `8` — without stalling for write-back.
+<PipelineTrace />
 
-**Flushing** handles control hazards: branch and tag-mismatch logic replaces wrong-path instructions with NOPs, which is what prevents invalid writes reaching tally memory when a branch resolves the other way.
+## What each stage does
+
+- **IF.** The opcode, the record, its tag and the secret key are latched into IF/ID together. The record then travels with its instruction through every pipeline register, so there is no separate data path to keep in sync.
+- **ID.** The control unit decodes the opcode into `sec_enable`, `bne_enable` and a two-bit tally-memory `mode`.
+- **EX.** The ALU and register comparison from the base core stay in place for ordinary instructions. Tally instructions pass straight through.
+- **MEM.** All the real work happens here. The key register loads when SEC arrives. A combinational **decoder** splits the record into blocks, then flips, swaps, shifts and XORs them under the key to regenerate the tag. A comparator checks that tag against the one that came with the record. **Tally memory** updates three cells on a single clock edge: the candidate-in-district entry, the candidate's total and the district's total.
+- **WB.** Unused by tally instructions, which retire in MEM.
+
+The forwarding unit and hazard detection from the base design are kept for register-to-register instructions. Forwarding routes results from MEM and WB back into EX, and the hazard unit stalls and inserts bubbles where a value isn't ready yet.
+
+## What re-simulating it showed
+
+Running the core cycle by cycle for this page turned up something the original testing missed.
+
+The tag check doesn't resolve until the cycle after BNE reaches MEM. By then, WRITE has already moved up behind it into MEM. When the tags don't match, `sig_flush` goes high, but the flush clears the **IF/ID** register, which is empty. So the tampered record's vote is written to tally memory anyway. Choose *Tampered tag* above: the tally goes from 1 to 2.
+
+The fix is one line. It forces tally memory's mode to idle in the same cycle the tag check fails:
+
+```vhdl
+sig_tally_mode_gated <= "11" when sig_tag_flush = '1' else sig_tally_mode_MEM;
+```
+
+With that gate in place, the same simulation drops the tampered write and leaves the valid record's behaviour unchanged (*With fix* above). The general lesson: a flush only helps if it reaches the stage that commits. Here the commit happens in MEM, not at the front of the pipeline.
 
 ## On hardware
 
-The design is written in **VHDL**, synthesised in **Vivado**, and implemented on a **Basys-3 (Artix-7)** board, driven interactively through switches, buttons and the seven-segment display.
+The design is synthesised in **Vivado** and runs on a **Basys-3 (Artix-7)**. The centre button sends a record, the switches set the record and tag, and the direction buttons show each candidate's total on the seven-segment display.
 
-It is small: **334 LUTs (1.61%)** and **393 flip-flops (0.94%)**, with I/O the binding constraint at **49 pins (46.23%)** — a processor whose cost is dominated by talking to the outside world rather than by computing.
+It is small: **334 LUTs (1.61%)** and **393 flip-flops (0.94%)**. The binding constraint is I/O, at **49 pins (46.23%)**: this is a processor whose cost is dominated by talking to the outside world rather than by computing. Timing closes at 100 MHz with **1.819 ns of worst negative slack**, which puts the maximum clock at about **122 MHz**. The critical path runs from the EX/MEM register through the decoder into tally memory, the same stage that does all the work.
+
+## What I'd change
+
+The decoder and comparator are pure combinational logic, so they don't need to be in the pipeline at all. If you check the tag *before* the processor and only issue WRITE when it matches, the processor becomes a plain read/write interface to tally memory. That shortens the critical path and makes the late-flush bug impossible by construction. For a national-scale election, the next steps would be caching the frequently hit tally entries and issuing independent records in parallel.
 
 <Note>
-  A team project. The processor subgroup and the simulation-analysis section are the personal contribution, distinct from the decoder and memory subgroup work. The implementation is a custom 16-bit design following the classic five-stage structure rather than an implementation of the MIPS instruction set.
+  A six-person team project, split into decoder, memory and processor pairs. The processor work and the simulation analysis are my part. The re-simulation and the one-line fix on this page were done afterwards, for this write-up, on the submitted source.
 </Note>

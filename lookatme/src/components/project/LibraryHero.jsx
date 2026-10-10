@@ -1,25 +1,20 @@
 import { LineReveal } from "@/components/site/LineReveal";
 import { CountUp } from "./CountUp";
 import { Spectrum } from "./Spectrum";
-import { fieldLabel } from "@/content/fields";
 import { spectrumOf } from "@/lib/spectrum";
-import { projectBadge } from "./CardBody";
 
 /**
- * The Work page opener: the headline, three real numbers, and the spectrum of
- * every project from hardware to software.
+ * The Work page opener: the headline, three real numbers, and the spectrum
+ * filter — where the work sits from hardware to software, and a brush to
+ * narrow the library to any part of it.
  */
-export function LibraryHero({ projects, fields }) {
+export function LibraryHero({ projects, fields, field, sort, view, range }) {
   const technologies = new Set(projects.flatMap((project) => project.technologies)).size;
   const items = projects.map((project) => ({
     slug: project.slug,
     title: project.title,
-    badge: projectBadge(project),
     fields: project.fields,
-    fieldLabel: project.fields[0] ? fieldLabel(project.fields[0]) : null,
     spectrum: spectrumOf(project),
-    visual: project.card.visual,
-    cover: project.cover?.src ?? null,
   }));
 
   return (
@@ -28,8 +23,8 @@ export function LibraryHero({ projects, fields }) {
         <span className="al-mono">[ The work ]</span>
         <LineReveal as="h1" text="From silicon to browser." />
         <p>
-          Everything I’ve built, laid out on one line: circuit boards and FPGAs on the left, models and research in
-          the middle, web and tooling on the right. Hover a dot, click to filter.
+          Everything I’ve built sits somewhere between circuit boards and FPGAs, through models and research, to web
+          and tooling. Drag across the spectrum to narrow the work below.
         </p>
       </div>
       <dl className="pl-stats" data-reveal>
@@ -53,7 +48,7 @@ export function LibraryHero({ projects, fields }) {
         </div>
       </dl>
       <div className="pl-hero-spectrum" data-reveal>
-        <Spectrum items={items} />
+        <Spectrum items={items} field={field} sort={sort} view={view} range={range} />
       </div>
     </header>
   );

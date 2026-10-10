@@ -74,6 +74,9 @@ const ICONS = {
   timers: "timer",
   lcd: "monitor",
   c: "code",
+  os161: "memory",
+  mips: "cpu",
+  gdb: "bug",
 };
 
 const normalise = (label) => label.toLowerCase().replace(/[^a-z0-9+]/g, "");

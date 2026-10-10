@@ -10,6 +10,7 @@ spectrum: 0.55
 metric: "0.77 mAP@50"
 card:
   visual: detect
+  action: See what it detects
 draft: false
 ---
 
@@ -22,6 +23,20 @@ Detecting pests in field photography is object detection under unhelpful conditi
 The transformer detector needed a data path that did not exist off the shelf. YOLO-format annotations were converted to COCO, then fed through a **custom PyTorch wrapper** so Hugging Face's `AutoImageProcessor` and the Supervision toolkit could drive fine-tuning on a custom dataset.
 
 A pretrained **RT-DETR R50** was fine-tuned across several configurations. The best short run reached **0.77 mAP@50** and **0.49 mAP@50:95** — competitive coarse localisation, weaker under strict IoU.
+
+## What the model actually sees
+
+These are real photos from the held-out test set, with the boxes the 15-epoch checkpoint drew on them (that run scored **0.75 mAP@50, 0.48 mAP@50:95, 0.86 precision and 0.78 recall** at IoU 0.5). Switch to the label view to see where it agrees with the annotators. Single insects are boxed tightly (IoU 0.76–0.92), and it separates three touching ants. The last tile is a clean miss: a beetle, found but called an **earwig**.
+
+<DetectionGrid />
+
+## Where it goes wrong
+
+The confusion matrix shows that miss is part of a pattern. **Beetles became a catch-all class.** 63 objects from other classes were predicted as beetles, including **28 of 47 wasps** and **18 of 44 bees**. Wasp recall falls to 9% and bee recall to 27%, while moths, snails and weevils all stay above 90%.
+
+The other big loss is **objects that were never detected at all**: 160 of 689 labelled objects, concentrated in caterpillars (31), ants (29) and grasshoppers (25). Those are the small, clustered and well-camouflaged targets. Caterpillars and earthworms also get mixed up with each other, which makes sense for two long, segmented bodies.
+
+<ConfusionMatrix />
 
 ## The more useful result is the ceiling
 

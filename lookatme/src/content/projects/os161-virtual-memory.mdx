@@ -1,0 +1,60 @@
+---
+title: OS/161 virtual memory
+summary: Replaced OS/161's toy VM with a real one — a two-level page table, per-region permissions, on-demand zero-filled pages, and a software-refilled MIPS TLB.
+badge: Operating systems
+fields: [embedded]
+technologies: [C, OS/161, MIPS, GDB]
+date: 2024-04
+team: Course project (COMP3231)
+order: 8
+spectrum: 0.45
+metric: "10 · 10 · 12-bit walk"
+card:
+  visual: pagetable
+  action: Walk the page table
+draft: false
+---
+
+## Overview
+
+OS/161 is a teaching kernel that runs on an emulated MIPS machine. Out of the box it ships with `dumbvm`: every process gets a few contiguous physical chunks, nothing is ever freed, and the TLB is the only translation structure there is. This assignment replaces it with a real virtual memory system — **address spaces, a page table, and a TLB refill handler** — so user programs can be loaded, forked and torn down properly.
+
+## The hardware problem
+
+The MIPS R3000 has no hardware page-table walker. It has a **64-entry TLB**, and when a translation misses, the CPU traps into the kernel and leaves the rest to software. Every user memory access that isn't already cached in the TLB ends up in `vm_fault()`, so that function *is* the memory system.
+
+## Two-level page table
+
+Each address space owns a **two-level page table** indexed by splitting the 32-bit virtual address **10 · 10 · 12**:
+
+- the top 10 bits pick one of 1,024 entries in the page directory,
+- the next 10 bits pick one of 1,024 entries in a second-level table,
+- the low 12 bits are the offset inside a 4 KB page.
+
+Second-level tables are only allocated when something in their 4 MB range is first touched, so a process with a small code segment and a stack at the top of user space pays for two small tables rather than one enormous flat one. Entries are stored already in the TLB's `EntryLo` format — frame number plus `VALID` and `DIRTY` bits — so a refill is a straight copy.
+
+## Regions and the fault path
+
+An address space is a **list of regions** (code, data, stack — 16 pages), each with read / write / execute permissions. On a TLB miss, `vm_fault()`:
+
+1. rejects writes to read-only pages outright,
+2. if the page is already mapped, checks the access against its region and loads the entry into the TLB,
+3. otherwise checks that the address falls inside a valid region at all,
+4. allocates a fresh frame, **zero-fills it**, and inserts it into the page table — marked dirty only if the region is writable,
+5. loads the new translation with `tlb_random()`, with interrupts disabled around the write.
+
+Pages are therefore allocated **lazily**: nothing is backed by memory until the program actually touches it.
+
+## Loading read-only code
+
+ELF loading has a chicken-and-egg problem: the kernel needs to *write* the program's text segment into memory, but that segment must be *read-only* once the program runs. `as_prepare_load()` temporarily makes every region writable and remembers the real permission; `as_complete_load()` restores it, strips the `DIRTY` bit from every page that belongs to a read-only region, and flushes the TLB so no stale writable entries survive.
+
+## fork, context switch and teardown
+
+- **`as_copy()`** duplicates the region list and deep-copies the page table, allocating a new frame for every mapped page and copying its contents — the child gets its own memory, with the same permission bits.
+- **`as_activate()`** invalidates all 64 TLB entries on a context switch, since the TLB has no address-space tags in this configuration.
+- **`as_destroy()`** walks both levels, frees every frame, every second-level table, the directory and the regions.
+
+<Note>
+  A pair assignment for UNSW COMP3231 (Operating Systems), built on the course's OS/161 base code. The diagram on the library card is an explanatory illustration of the address split and table walk, not output from the kernel.
+</Note>

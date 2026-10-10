@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   featuredProjects,
   filterByField,
+  filterByRange,
   libraryHref,
   populatedFields,
   relatedProjects,
@@ -87,4 +88,24 @@ test("library URLs omit defaults and encode state", () => {
   assert.equal(libraryHref({ field: "hardware" }), "/projects?field=hardware");
   assert.equal(libraryHref({ field: "hardware", sort: "newest" }), "/projects?field=hardware&sort=newest");
   assert.equal(libraryHref({ field: "bogus", sort: "bogus" }), "/projects");
+});
+
+test("libraryHref carries a range and drops the full axis", () => {
+  assert.equal(libraryHref({ range: { from: 10, to: 45 } }), "/projects?range=10-45");
+  assert.equal(libraryHref({ field: "hardware", range: { from: 0, to: 35 } }), "/projects?field=hardware&range=0-35");
+  assert.equal(libraryHref({ range: { from: 0, to: 100 } }), "/projects");
+  assert.equal(libraryHref({ range: null }), "/projects");
+});
+
+test("filterByRange keeps projects in the range and combines with a field filter", () => {
+  const projects = [
+    make({ slug: "a", fields: ["hardware"], spectrum: 0.1 }),
+    make({ slug: "b", fields: ["fpga"], spectrum: 0.3 }),
+    make({ slug: "c", fields: ["frontend"], spectrum: 0.95 }),
+    make({ slug: "d", fields: ["hardware"], spectrum: 0.5 }),
+  ];
+  const range = { from: 0, to: 35 };
+  assert.deepEqual(filterByRange(projects, range).map((p) => p.slug), ["a", "b"]);
+  assert.deepEqual(filterByRange(filterByField(projects, "hardware"), range).map((p) => p.slug), ["a"]);
+  assert.equal(filterByRange(projects, null).length, 4);
 });

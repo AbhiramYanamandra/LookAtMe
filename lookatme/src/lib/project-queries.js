@@ -4,6 +4,7 @@
  * so they can run in the browser, in tests, or on the server.
  */
 import { FIELDS } from "../content/fields.js";
+import { formatRange, inRange, spectrumOf } from "./spectrum.js";
 
 export const SORT_OPTIONS = [
   { id: "recommended", label: "Recommended" },
@@ -95,6 +96,12 @@ export function filterByField(projects, fieldId) {
   return projects.filter((project) => project.fields.includes(field));
 }
 
+/** Projects whose spectrum position falls inside `range` (null keeps everything). */
+export function filterByRange(projects, range) {
+  if (!range) return [...projects];
+  return projects.filter((project) => inRange(spectrumOf(project), range));
+}
+
 /** Fields that at least one published project belongs to, with counts. */
 export function populatedFields(projects) {
   return FIELDS.map((field) => ({
@@ -121,13 +128,15 @@ export function relatedProjects(project, projects, limit = 3) {
 }
 
 /** Build a `/projects` URL for the given browsing state, omitting defaults. */
-export function libraryHref({ field, sort, view } = {}) {
+export function libraryHref({ field, sort, view, range } = {}) {
   const params = new URLSearchParams();
   if (view === "list") params.set("view", "list");
   const resolvedField = resolveField(field);
   const resolvedSort = resolveSort(sort);
+  const resolvedRange = formatRange(range);
   if (resolvedField !== ALL_FIELDS) params.set("field", resolvedField);
   if (resolvedSort !== DEFAULT_SORT) params.set("sort", resolvedSort);
+  if (resolvedRange) params.set("range", resolvedRange);
   const query = params.toString();
   return query ? `/projects?${query}` : "/projects";
 }

@@ -1,42 +1,70 @@
 ---
 title: Smartwatch prototype
-summary: A full smartwatch feature set driven by four buttons and a 16×2 character LCD.
+summary: A smartwatch's feature set on an STM32 dev board — four buttons, a 16×2 LCD, a buzzer, a stepper motor for haptics, and light sensors standing in for everything else.
 badge: Embedded firmware
 fields: [embedded]
 technologies: [STM32F303RE, C, LCD, GPIO, Interrupts, Timers]
 team: Course project (DESN2000)
 order: 7
 spectrum: 0.18
-metric: "74 / 87 in the viva"
+metric: "20 pages · 4 buttons"
 card:
-  visual: lcd
+  visual: navmap
+  action: Try the watch
 draft: false
 ---
 
 ## Overview
 
-The constraint is the project. An STM32 Nucleo-F303RE, **four buttons**, and a **16×2 character LCD** — thirty-two characters of output, total — and the brief is a smartwatch.
+The brief was a smartwatch. The hardware was UNSW's coaST education board: an **STM32 Nucleo-F303RE** with **four buttons**, a **16×2 character LCD** (thirty-two characters of output, total), a buzzer, a stepper motor, two light-dependent resistors and a row of LEDs. There's no touchscreen, no accelerometer and no heart-rate sensor.
 
-Implemented on that hardware: time and day display, activity screens, alarm, stopwatch, countdown timer, configurable sound and haptic feedback, an LDR-driven charging screen, and an LED flashlight.
+On that we built a home screen, activity tracking (steps, heart rate, floors climbed, blood oxygen), an alarm, a stopwatch, a countdown timer, sound and haptic settings, a solar-charging screen, a flashlight, do-not-disturb and a power-saving mode. We started as a team of three; one member moved groups in week 4, and Samyak Diwan and I finished it as a pair.
 
-## Designing an interface with no room
+## Try it
 
-Thirty-two characters cannot hold a menu, so the interface is **paged**, and the four buttons are **context-dependent** — each one means something different depending on which page you are on. Navigation is a finite state machine, which keeps the mapping explicit rather than scattered through the input handling.
+The watch has **20 pages and 38 transitions** between them. The simulator below follows the navigation map from our user guide exactly: press the same four buttons, and the map shows where you are and where each button leads from here.
 
-Getting that right is the actual UX problem here: the user has to be able to predict what a button will do before pressing it, with no on-screen affordance to tell them.
+<WatchSim />
+
+## Twenty pages, four buttons
+
+Four buttons can't each have one job, so we weighed two ways to stretch them: short vs long presses, and buttons whose meaning changes with the page. We settled on **context-dependent buttons**, with a long press used only once, on Home, to open the quick-access menu. Navigation is a finite state machine: each page is a state, and each button press is a transition. That keeps every mapping explicit in one place instead of scattered through the input handling.
+
+The cost shows up in the map above. SW1 means *Settings* on Home, *Steps* on Activity, *Alarm* on Clock, and *back* on every settings page. We wrote a user guide built around that navigation map so a new user could find their way, and both markers still flagged navigation as the weakest part: one called it "a steep learning curve" that "requires a map". That's a fair verdict. A map in a manual patches the problem rather than fixing it. Context-dependent buttons need the screen itself to say what each button will do next, which is what the simulator's button list does and the watch didn't.
+
+## Making 32 characters go further
+
+Every page gets two 16-character rows, so we cut words to codes: **HAP**, **SND**, **SLR**, **TIM** on the settings page. Static information like the time stays in fixed positions, and dynamic readings get their own zones. Where a word wouldn't fit at all, we drew it instead: seven custom 5×8 characters stored in the LCD's character RAM, so one cell can say *heart rate* or *battery*.
+
+<LcdIconTable />
+
+## Feedback, and sensors we didn't have
+
+Every button press gives feedback twice: a **buzzer** tone, and a short turn of the **stepper motor** as vibration. Each can be switched off in settings. The board had no real health sensors, so the activity readings are simulated. The two **light-dependent resistors** do the rest: the solar-charging screen shows their light readings over the last few minutes, and the blood-oxygen page reuses the same readings. The flashlight lights every LED on the board (D1–D20 and LD2). Do-not-disturb silences alarms and button sounds from the quick-access menu.
 
 ## Firmware approach
 
-The implementation is deliberately conservative with resources:
+Our design journal set out a deliberately conservative approach for a small microcontroller:
 
 - **Interrupt-driven buttons** rather than polling.
-- **Fixed, statically allocated data structures** — no dynamic allocation.
+- **A finite state machine** for navigation.
+- **Fixed, statically allocated data**: settings packed as bitfields in a single byte, light readings in an 8-entry rolling buffer indexed with a bit mask, and no dynamic allocation.
 - **Integer arithmetic** throughout, avoiding floating point.
 
 <Note>
-  These are design and implementation choices, described as such. No power or performance measurements were taken, so no low-power optimisation claim is made for them.
+  These are design choices, described as such. No power or performance measurements were taken, so no low-power claim is made for them.
 </Note>
 
 ## Assessment
 
-The prototype was assessed by viva, scoring **74 of 87** across two marking sheets, with most core features receiving full or near-full marks.
+Two tutors marked the viva separately, each out of 100: **74 and 87** (the second an HD). The core features scored full or near-full marks on both sheets: sound and haptics with their settings, the solar-charging screen, the flashlight, the stopwatch and the countdown timer.
+
+The critiques are worth more than the marks:
+
+- **Navigation** was the shared complaint, as above.
+- **Editing** could only increase a field, never decrease it.
+- **The display** visibly refreshed, which made the timer pages hard to watch. One tutor also found the watch sluggish to respond.
+- **The alarm** rang for a full minute and couldn't be stopped, on one marker's run.
+- **Advanced features** (do-not-disturb, power saving, the fitness pages) scored 13 and 22 of 30. Power saving only changed what was on screen. It didn't actually save power.
+
+The display and responsiveness problems come down to one fix: redraw only what changed, and handle input before anything else. That's the partial-update plan from our own journal, followed through more strictly.

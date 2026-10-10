@@ -1,26 +1,64 @@
 ---
 title: PETspot relational database
-summary: An ER model and normalised schema for a multi-sided pet marketplace, carried through to third normal form.
+summary: An ER model for a pet marketplace (buyers, sellers, pets, services and the enquiries between them), normalised to 3NF and built in PostgreSQL.
 badge: Data modelling
 fields: [backend]
-technologies: [Relational modelling, ERD, Normalization]
-team: Course project
+technologies: [PostgreSQL, SQL, Relational modelling, ERD, Normalization]
+date: 2022
+team: Course project (UTS 31271)
 order: 9
 spectrum: 0.75
-metric: "3rd normal form"
+metric: "10 relations · 3NF"
 card:
-  visual: schema
+  visual: erd
+  action: Explore the model
 draft: false
 ---
 
 ## Overview
 
-PETspot is a marketplace with several distinct kinds of participant, which is what makes it a worthwhile modelling exercise rather than a CRUD table. The data model covers **buyers, sellers, pets, services, enquiries and breeds**, and the relationships between them are where the design decisions live — a seller offering services is not the same relationship as a seller listing a pet, and an enquiry can point at either.
+PETspot.com is an online marketplace where breeders list dogs and dog-related services, and buyers search by breed, coat, size, shedding and location, then enquire and transact. Our team of three designed its database for UTS's Database Fundamentals: case study, business rules, ER model, relations, functional dependencies and normalisation to third normal form, then the seller side built and queried in PostgreSQL.
+
+What makes it a worthwhile modelling exercise rather than a single CRUD table is that it's **multi-sided**. Buyers and sellers are different kinds of account, a seller can list both pets and services, and an enquiry can come from either side and point at either kind of listing.
+
+## From rules to a model
+
+The first draft (Part A) described the product: matching buyers to breeders, application questionnaires and in-site chat. Part B narrowed it to twelve business rules that the database could actually enforce, and Part C revised the model again, adding a pet's parent and litter. Every entity and relationship below traces back to one of those rules. Select one to see which.
+
+<ErdExplorer />
+
+## The decisions in the model
+
+- **Buyers and sellers are separate entities.** Only sellers can post (BR3), and the two are identified differently: a buyer by email address, a seller by a generated identifier (BR2, BR4). Merging them would mean nullable seller-only columns and a role flag doing the work of a schema.
+- **Enquiries are entities, not just links.** A buyer can enquire about many pets and a pet can receive many enquiries (BR9), and each enquiry carries its own date-time and status. A many-to-many relationship with attributes of its own needs an associative entity, and there are three: buyer–pet, buyer–service and seller–service.
+- **Listings belong to their seller.** Pets and services are keyed by their own ID *plus* the seller's (an identifying relationship), because a pet must be created by exactly one seller (BR6, BR11).
+- **A pet can point at a pet.** The optional Parent attribute is a self-referencing foreign key, which is what lets litters be recorded at all (BR5).
 
 ## Normalisation
 
-Functional dependencies were derived from the model and the relations carried through **first, second and third normal form**, producing a schema with redundancy removed and update anomalies designed out rather than handled in application code.
+Each business rule became a functional dependency (nine in total), and each relation was checked for atomic attributes (1NF), no partial dependencies on a composite key (2NF), and no dependencies between non-key attributes (3NF). The most important of these was the breed.
+
+<BreedNormalisation />
+
+## Building it in PostgreSQL
+
+Part D turned the seller side of the model into a working database: **Seller**, **Service** and **Seller_Service_Enquiry**, with primary and foreign keys enforced by PostgreSQL, seeded with 10 sellers, 6 services and 5 enquiries, and queried with a GROUP BY, an INNER JOIN and a subquery. Running the script again for this page, unchanged, every table builds and every query returns:
+
+<SqlRunner />
+
+The SQL also settled something the written relations left ambiguous: the enquiry table names its two seller columns by role, with SellerID for the seller asking and ServSellerID for the seller who owns the service.
+
+## What I'd tighten
+
+Re-running the script also surfaced problems that the sample data happened to avoid. Each of these was confirmed against PostgreSQL:
+
+- **One service per seller.** Service.SellerID is declared UNIQUE, so inserting a second service for the same seller fails with a duplicate-key error, which contradicts the model. The composite primary key already guarantees uniqueness, so that UNIQUE should go, and the enquiry's foreign key should then reference (ServiceID, SellerID) together.
+- **The script can't be re-run.** It drops Seller first, while Service and the enquiry table still reference it, so the second run stops on a dependency error. Dropping child tables first (or using CASCADE) fixes it.
+- **3.a answers a different question.** It asks for the most expensive service by state but averages instead, so WA comes back NULL because its only service has no price. MAX(Cost) answers what was asked.
+- **3.c filters on the inside only.** The subquery finds NSW's cheapest price, but the outer query doesn't repeat the state filter, so a service elsewhere at the same price would also be returned.
+- **Types worth upgrading.** DateTime is stored as text ('20221015:093015') rather than a TIMESTAMP, and passwords are stored as plain text where a real schema would keep hashes.
+- **On the design side**, litters are modelled three ways (a Litter attribute, PET_LITTER and LITTERID) where one LITTER entity would do, and the written PET relation leaves off the breed foreign key that the ERD and FD3 include.
 
 <Note>
-  A team project; the model is a contribution rather than sole ownership. The final database creation was submitted as a separate SQL file that is not part of this record, so this write-up covers the design and normalisation work only — not a claim of substantial SQL implementation.
+  A three-person team project. The model, rules, normalisation and SQL were shared work. Part D implemented the seller-side tables only; the buyer, pet and breed relations exist in the design but weren't built.
 </Note>

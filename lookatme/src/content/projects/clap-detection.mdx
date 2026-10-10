@@ -1,38 +1,63 @@
 ---
 title: Clap detection sensor
-summary: I²S microphone data streamed through FPGA fabric into ARM-side processing, ending in a clap-triggered LED.
+summary: Clap to toggle the lights and mute the music. An I²S microphone streamed through FPGA fabric and DMA into PYNQ on a Kria KV260.
 badge: FPGA / embedded audio
 fields: [fpga, embedded]
 technologies: [Kria KV260, VHDL, I2S, AXI4-Stream, AXI DMA, PYNQ, Python, NumPy]
 team: Course project (COMP3601)
 order: 8
 spectrum: 0.2
-metric: "100+ lab demos"
+metric: "100+ runs in a noisy room"
 card:
-  visual: signal
+  visual: clap
+  action: Clap at it
 draft: false
 ---
 
 ## Overview
 
-A clap detector is a trivial algorithm sitting behind a genuinely awkward data path. On a Kria KV260, audio has to get from an **I²S microphone**, through FPGA fabric, across the programmable-logic / processing-system boundary, and into software — in real time, without dropping samples.
+The pitch was a party trick: clap once to toggle the lights, and the same clap mutes or unmutes the Bluetooth speaker. Clap detection itself is a trivial algorithm. The hard part was the data path behind it. On a **Kria KV260**, audio has to get from an **I²S MEMS microphone** (SPH0645), through FPGA fabric, across the boundary into the ARM cores, and into Python, without arriving as silence or garbage.
 
-The final system streams microphone data through a **FIFO and AXI4-Stream into AXI DMA**, landing it in memory where **ARM-side PYNQ/Python** performs threshold detection and drives LED and Bluetooth output.
+We were a team of four. My part was the hardware foundation everything else sat on: the audio pipeline, the I²S master and FIFO debugging, bringing up Ubuntu and PYNQ on the board, the first working clap-to-LED path, and diagnosing why the LED state reset on every loop.
 
-<Note>
-  Detection happens on the ARM side in PYNQ, not in FPGA DSP. The programmable logic handles capture and streaming; the decision logic is software.
-</Note>
+## The data path
+
+The microphone speaks I²S: a bit clock, a word-select clock that picks left or right, and one bit of audio per clock. Our I²S master in the programmable logic generates those clocks and turns the serial stream into samples:
+
+<I2sFrame />
+
+From there, samples go into a FIFO and onto an **AXI4-Stream**. An **AXI DMA** engine writes them into DDR memory in packets that end with a TLAST marker every **4,096 samples (about 131 ms of audio)**. Python on the ARM side then reads each packet as a NumPy array. The programmable logic only captures and moves audio; every decision is made in software.
 
 ## Where the work actually went
 
 Almost none of it was the detection.
 
-**Debugging the capture path** was the bulk of the project — the I²S interface, the FIFO, and the PS–PL boundary where timing and handshaking problems surface as silence or garbage rather than as errors. Stabilising that path is what made everything downstream possible.
+- **Packets cut short.** The pipeline originally asserted TLAST after 1,024 samples, so the DMA engine ended transfers early and buffers came back truncated or empty. Printing the raw binary from DMA showed the wrong frame size, and moving the TLAST counter to 4,096 fixed it.
+- **Audio far too quiet.** Our first saved WAV files held nothing but noise-level samples. The fault was in the I²S master: BCLK, LRCLK and the data capture were slightly misaligned, and only the left channel was being captured properly. Extending the state machine to clock through the right channel too, even though we discard it, realigned the frame, and the recordings started sounding like the room.
+- **A FIFO that never output.** Pointer and empty/full logic bugs left the FIFO's output stuck at zero until they were fixed and checked in simulation testbenches.
+- **Bare-metal storage that wouldn't work.** We first tried saving WAV files from a bare-metal C application to the SD card. That meant writing the WAV header, managing caches and sequencing DMA by hand. FAT filesystem errors (`FR_NOT_READY`, `FR_INVALID_NAME`, `FR_NOT_ENABLED`) persisted even after a weekend help session, so I proposed switching to **Ubuntu and PYNQ**, set up the board, and got WAV capture working in Python. Being able to *listen* to what the microphone heard is what made the hardware debugging tractable.
 
-**Bringing up the software side** meant standing up Ubuntu and PYNQ on the board and establishing the **first end-to-end clap-to-LED path** — the moment that proves the whole chain, hardware through software, actually carries data.
+## The detector
 
-The system was demonstrated over **100+ iterations** in the lab.
+Each pass of the loop takes one DMA packet and asks a single question: is any sample louder than the threshold?
+
+```python
+pcm16 = buf.view(np.int32).astype(np.int16)
+clap_detected = np.any(np.abs(pcm16) > THRESHOLD)
+```
+
+A hit toggles the LED over AXI GPIO and toggles the speaker's mute with `pactl`, then the loop sleeps for 0.5 s so the clap's echo doesn't count twice. We tried an adaptive threshold calibrated at startup first. It struggled because the gap between background noise and a clap varied too much, so a fixed, tuned threshold won. Drag it below to see the trade-off:
+
+<ClapDetector />
+
+The last bug was the strangest one. Once detection ran continuously, the LED would flash on a clap and then switch itself off. The loop reloaded the FPGA overlay on every pass, which reset the GPIO. Writing the saved LED state back straight after each reload fixed it. In the demo the system ran reliably for **100+ iterations in a noisy room**.
+
+## What I'd change
+
+- **Load the overlay once.** Reloading it every pass is what wiped the LED state, and it leaves gaps between packets where audio is never examined. Restoring the state was the quick fix; loading the overlay once, outside the loop, is the real one.
+- **Scale, don't truncate.** `astype(np.int16)` keeps the low 16 bits of an 18-bit sample, so the very loudest samples wrap around instead of saturating. Shifting right by two bits first would scale them properly.
+- **Detect in the fabric.** A peak comparator on the stream in the programmable logic would decide within one sample, with no DMA round trip.
 
 <Note>
-  A team project. The audio pipeline debugging is a contribution rather than sole ownership; the Ubuntu/PYNQ bring-up and the first working end-to-end path are supported as personal contributions.
+  A four-person team project. The audio pipeline, I²S master and FIFO debugging were shared with a teammate; the TLAST fix, the I²S alignment fix, the Ubuntu/PYNQ bring-up, WAV capture, the first end-to-end clap-to-LED path and diagnosing the LED-state reset are my contributions; the team made the loop run continuously. The waveforms on this page are synthetic, since the project kept no recordings; the clocking, packet size, threshold logic and cooldown come straight from our VHDL and notebook.
 </Note>

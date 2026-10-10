@@ -9,45 +9,68 @@ order: 2
 spectrum: 0.3
 metric: "308k images/s"
 card:
-  visual: silicon
+  visual: dataflow
+  action: Follow an image through
 draft: false
 ---
 
 ## Overview
 
-Histogram of Oriented Gradients is a classical feature descriptor: cheap in concept, expensive in practice when you need it ten thousand times. This project implements an **8-bin HOG descriptor for 32×32 images**, producing a **288-element feature vector**, and then accelerates it on an FPGA with Vitis HLS against a **10,000-image benchmark**.
+Histogram of Oriented Gradients is a classical feature descriptor. It turns an image into a short vector that describes its edges rather than its brightness: cheap in concept, expensive when you need it ten thousand times. This project implements an **8-bin HOG descriptor for 32×32 images**, producing a **288-value feature vector**, and accelerates it on an FPGA with Vitis HLS against a **10,000-image CIFAR-10 benchmark**.
 
-The interesting part is not the descriptor. It is the sequence of decisions that took it from working to fast, and the one that was measured and thrown away.
+The interesting part is not the descriptor. It's the sequence of measured decisions that took the kernel from slower than the ARM core beside it to **135× faster**, including one change that was measured and thrown away.
 
-## Fixed-point, without silently changing the answer
+## What the hardware computes
 
-Floating point is the default and the wrong default here. Key computation was converted to `ap_fixed`, which cuts both resource usage and latency — but only counts if the output is still the same output.
+Pick an image and step through the pipeline. Each step is labelled with the hardware stage that performs it and what that stage costs in clock cycles.
 
-Numerical equivalence was validated against the floating-point reference with a **maximum absolute difference of ~3.10 × 10⁻⁶**. That regression signature is the evidence that the optimisation is free rather than quietly lossy.
+<HogAnatomy />
+
+## From slower than software to 6×
+
+The first working kernel was **slower than the ARM processor: 0.79×**. It used floating point, and pipelining had to be switched off just to fit on the device. Synthesis showed where the area was going:
+
+- a generic double-precision `pow` for gamma correction
+- about **68,000 LUTs** of hazard logic for the runtime-indexed `hist[bin] += weight`
+- about **17,700 LUTs** for a CORDIC arctangent
+
+Three changes replaced those costs instead of tuning around them:
+
+- **Fixed point.** Key computation moved to `ap_fixed`, so each accumulation completes in one cycle and loops reach II = 1. Every later version was checked against the floating-point reference with the same signature, a **maximum absolute difference of ~3.1 × 10⁻⁶**, so the optimisation is free rather than quietly lossy.
+- **No angles.** HOG only needs the orientation *bin*, not the angle. Comparing dy against dx·tan 22.5° and dx·tan 67.5° removed the CORDIC entirely.
+- **Predicated histogram updates** to fixed addresses, which removed the hazard network.
+
+Together these took the kernel from 533 µs to **68 µs per image (6.16×)**.
 
 ## Removing the overhead that wasn't the algorithm
 
-Two structural changes mattered more than any arithmetic tuning:
+The board measured 68 µs per image, but synthesis estimated only 20 µs. The gap was launch overhead, not computation. Two structural changes followed:
 
-- **Batching.** All 10,000 images were moved into a single kernel launch instead of ten thousand, removing repeated host-launch overhead entirely.
-- **Width matching.** Memory copies were matched to the **512-bit AXI** interface width, so transfers stopped wasting most of the bus.
+- **Batching.** All 10,000 images go into a single kernel launch instead of ten thousand.
+- **Width matching.** Copy loops were unrolled 16 wide to match the **512-bit AXI** interface, so transfers stopped wasting most of the bus.
 
-Together these brought board time to about **20.81 µs per image** at that stage of optimisation.
+Board time dropped to about **20.8 µs per image**.
 
 ## Overlapping the pipeline
 
-The six HOG stages were then re-architected with `dataflow` so they execute concurrently rather than in sequence. Concurrency was verified with co-simulation **under randomly injected stalls** — the condition where a dataflow design either holds up or deadlocks. That restructuring carried the design from roughly 33× to 81× over the course of the work.
+By then the cost of each of the six stages was known, so they were restructured into an HLS `dataflow` region. Different images now occupy different stages at the same time, and throughput is set by the **slowest stage** rather than the sum of all of them. Concurrency was verified with co-simulation **under randomly injected stalls**, the condition where a dataflow design either holds up or deadlocks. This took the design from roughly **33× to 81×**.
 
-## The optimisation that was reverted
+<HogDataflow />
 
-A three-wide fixed-point square-root was implemented to parallelise that stage. It worked, and **LUT utilisation rose from 51% to 92%** — so it was measured, costed, and reverted.
+The dataflow report then pointed straight at the next bottleneck: gradients, at 1,033 cycles. Widening that stage to two pixels per cycle brought it to 583, close behind normalisation at 621, so there was no single obvious bottleneck left. One image still takes about 2,128 cycles (10.6 µs) end to end, but a new one finishes every **622 cycles (3.1 µs)**. For a batch, that interval is the number that matters.
 
-Knowing the number before accepting the change is the point. A design at 92% LUT has no room left for anything that comes after it.
+## The optimisation that was reverted, and where it stopped
+
+A three-wide fixed-point square root was built to parallelise block normalisation. It worked, but **LUT utilisation rose from 51% to 92%**, so it was measured, costed, and reverted the same day in favour of a cheaper pipelined square root.
+
+<HogVersions />
+
+The same reasoning decided where to stop. The final design uses **66% of the LUTs**. Widening normalisation again would have cost about 12,000 more, which would push the design past the roughly 75% where routing, not logic, becomes the risk. `compute_cells` shows why cycles and area are different budgets: it takes only 301 cycles, but its four parallel histogram units use 32% of the device.
 
 ## Result
 
-The final accelerator processed the **10,000-image benchmark in approximately 32.4 ms**, a throughput of roughly **308,000 images per second**.
+The final accelerator processed the **10,000-image benchmark in 32.4 ms**, about **308,000 images per second**. Against the ARM software baseline (420 µs per image), that is **135.5× for the kernel and 129.7× end to end**, including data transfer.
 
 <Note>
-  This was a team project. The HOG structure and data path were co-developed; the fixed-point conversion, batching and AXI width work, dataflow restructuring and the square-root cost analysis are supported as personal contributions. An end-to-end speedup figure of ~129.7× was reported in the final presentation, but the baseline it is measured against is not well specified here, so the runtime figure above is the one worth quoting.
+  This was a team project. The HOG structure and data path were co-developed; the fixed-point conversion, batching and AXI width work, dataflow restructuring and the square-root cost analysis are supported as personal contributions. The images on this page are from the CIFAR-10 benchmark set, and their HOG data was regenerated with the course reference algorithm and checked against its published output.
 </Note>

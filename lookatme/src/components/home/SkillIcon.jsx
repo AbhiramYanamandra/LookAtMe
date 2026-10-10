@@ -28,6 +28,7 @@ import {
 } from "simple-icons";
 import {
   AudioWaveform,
+  Bug,
   Cable,
   CircuitBoard,
   Cloud,
@@ -39,6 +40,7 @@ import {
   Code,
   Database,
   Keyboard,
+  MemoryStick,
   Monitor,
   MousePointer2,
   Package,
@@ -98,6 +100,8 @@ const GLYPHS = {
   circuit: CircuitBoard,
   cloud: Cloud,
   cpu: Cpu,
+  bug: Bug,
+  memory: MemoryStick,
   images: Images,
   keyboard: Keyboard,
   monitor: Monitor,
