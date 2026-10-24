@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * A draggable 3D model. `@google/model-viewer` is a web component and a large
@@ -10,9 +10,21 @@ import { useEffect, useState } from "react";
  * Wheel zoom is off, touch-action is `pan-y`, and wheel/touch gestures only
  * reach the model once it is focused (`interaction-policy`), so dragging
  * rotates it while scrolling the page still works over it.
+ *
+ * If the model has a material named "Enclosure", a control switches the case
+ * between solid, clear (the default, so the board shows through) and off.
  */
+const CASE_MODES = [
+  { id: "solid", label: "Case" },
+  { id: "clear", label: "Clear" },
+  { id: "off", label: "Board" },
+];
+
 export function ModelViewer({ src, poster, alt, hotspots = [] }) {
   const [ready, setReady] = useState(false);
+  const viewer = useRef(null);
+  const [enclosure, setEnclosure] = useState(null);
+  const [caseMode, setCaseMode] = useState("clear");
 
   useEffect(() => {
     let live = true;
@@ -23,6 +35,22 @@ export function ModelViewer({ src, poster, alt, hotspots = [] }) {
       live = false;
     };
   }, []);
+
+  useEffect(() => {
+    const element = viewer.current;
+    if (!element) return undefined;
+    const onLoad = () => setEnclosure(element.model?.materials.find((material) => material.name === "Enclosure") ?? null);
+    element.addEventListener("load", onLoad);
+    return () => element.removeEventListener("load", onLoad);
+  }, [ready]);
+
+  useEffect(() => {
+    if (!enclosure) return;
+    const [r, g, b] = enclosure.pbrMetallicRoughness.baseColorFactor;
+    // MASK with alpha 0 discards every fragment, so "off" hides the case and its shadow.
+    enclosure.setAlphaMode(caseMode === "solid" ? "OPAQUE" : caseMode === "clear" ? "BLEND" : "MASK");
+    enclosure.pbrMetallicRoughness.setBaseColorFactor([r, g, b, caseMode === "solid" ? 1 : caseMode === "clear" ? 0.3 : 0]);
+  }, [enclosure, caseMode]);
 
   if (!ready) {
     return (
@@ -36,6 +64,7 @@ export function ModelViewer({ src, poster, alt, hotspots = [] }) {
   return (
     <div className="al-model">
       <model-viewer
+        ref={viewer}
         src={src}
         poster={poster}
         alt={alt}
@@ -72,6 +101,15 @@ export function ModelViewer({ src, poster, alt, hotspots = [] }) {
           </button>
         ))}
       </model-viewer>
+      {enclosure && (
+        <div className="al-model-case" role="group" aria-label="Enclosure">
+          {CASE_MODES.map((mode) => (
+            <button key={mode.id} type="button" aria-pressed={caseMode === mode.id} onClick={() => setCaseMode(mode.id)}>
+              {mode.label}
+            </button>
+          ))}
+        </div>
+      )}
       <p className="al-model-hint" aria-hidden="true">
         drag to rotate · flip it over
       </p>

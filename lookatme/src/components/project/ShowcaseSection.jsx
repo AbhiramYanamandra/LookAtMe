@@ -2,21 +2,23 @@ import { profile } from "@/content/profile";
 import { ModelViewer } from "./ModelViewer";
 import { WyaAccess } from "./WyaAccess";
 import { ThesisFigure } from "./ThesisFigure";
+import { HudTile } from "./HudSim";
 import { Showcase } from "./Showcase";
 
 /** Server wrapper: joins the lead chapters from profile.story to their projects and interactive visuals. */
 export function ShowcaseSection({ projects }) {
   const { story } = profile;
   const visuals = {
-    macropad: <ModelViewer {...story.model} poster="/images/macropad.png" />,
+    macropad: <ModelViewer {...story.model} poster="/images/macropad-case.jpg" />,
     wya: <WyaAccess url={projects.find((p) => p.slug === "wya")?.links?.find((l) => l.label === "Website")?.url ?? "/projects/wya"} />,
     "photonic-correction": <ThesisFigure />,
+    "redback-hud": <HudTile />,
   };
   const posters = {
     macropad: (
       <div className="al-model al-model-poster">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/macropad.png" alt={story.model.alt} />
+        <img src="/images/macropad-case.jpg" alt={story.model.alt} />
       </div>
     ),
   };

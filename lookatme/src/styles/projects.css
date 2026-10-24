@@ -2144,3 +2144,358 @@
   font-size: 11px;
   color: var(--al-text-faint);
 }
+
+/* Exploded 3D model in the cover slot (ExplodedModel.jsx). */
+.cs-cover--model .xm-stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-height: 620px;
+  width: 100%;
+  overflow: hidden;
+}
+.xm-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+.xm-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 32px;
+  opacity: 0.85;
+}
+.xm[data-status="loading"] .xm-poster {
+  animation: xm-pulse 1.6s ease-in-out infinite alternate;
+}
+@keyframes xm-pulse {
+  to {
+    opacity: 0.55;
+  }
+}
+.xm-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  gap: 4px;
+  max-width: 260px;
+  padding: 10px 12px;
+  border: 1px solid var(--al-border);
+  border-radius: 8px;
+  background: #120d09ee;
+  box-shadow: 0 12px 28px #0008;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--al-text-muted);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+.xm-tip[data-visible] {
+  opacity: 1;
+}
+.xm-tip strong {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--al-blue);
+}
+.xm-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 7px 14px;
+  border: 1px solid var(--al-border);
+  border-radius: 999px;
+  background: #120d09cc;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--al-cream);
+  cursor: pointer;
+}
+.xm-toggle:hover {
+  border-color: var(--al-blue);
+}
+.xm-hint {
+  position: absolute;
+  left: 16px;
+  bottom: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--al-text-faint);
+  pointer-events: none;
+}
+.xm-hint-touch {
+  display: none;
+}
+@media (hover: none) {
+  .xm-hint-fine {
+    display: none;
+  }
+  .xm-hint-touch {
+    display: inline;
+  }
+}
+.xm-layers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 16px 14px;
+  list-style: none;
+  border-top: 1px solid var(--al-separator);
+}
+.xm-layers button {
+  padding: 5px 10px;
+  border: 1px solid var(--al-border-soft);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--al-text-muted);
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms, background 150ms;
+}
+.xm-layers button:hover,
+.xm-layers button[aria-pressed="true"] {
+  border-color: var(--al-blue);
+  color: var(--al-cream);
+  background: #e8942d1f;
+}
+:is(.xm-toggle, .xm-layers button):focus-visible {
+  outline: 2px solid var(--al-blue);
+  outline-offset: 2px;
+}
+.xm-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .cs-cover--model .xm-stage {
+    aspect-ratio: 4 / 5;
+  }
+  .xm-tip {
+    max-width: 220px;
+  }
+}
+
+/* Short silent clips (<Clip>), sized like figures but capped in height. */
+.cs-clip video {
+  display: block;
+  max-width: 100%;
+  max-height: 560px;
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  background: #000;
+}
+
+/* Redback driver display recreation (HudSim.jsx). */
+.hud-device {
+  display: grid;
+  gap: 18px;
+  padding: 18px 16px;
+  background: radial-gradient(ellipse at 30% 80%, #2c1d11, #120d09 80%);
+}
+.hud-screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 6px solid #0b0b0b;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px #3a2a1c, 0 16px 35px #0009;
+}
+.hud-screen text {
+  font-family: var(--font-sans);
+}
+.hud-screen .hud-timer {
+  font-size: 100px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.hud-screen .hud-big {
+  font-size: 38px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.hud-screen .hud-mid {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.hud-screen .hud-small {
+  font-size: 19px;
+}
+.hud-screen .hud-label {
+  font-size: 16px;
+}
+.hud-screen .hud-tiny {
+  font-size: 13px;
+}
+.hud-screen .hud-bold {
+  font-weight: 700;
+}
+.hud-screen .hud-banner {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.hud-warning {
+  animation: hud-drop 220ms ease-out;
+}
+@keyframes hud-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hud-warning {
+    animation: none;
+  }
+}
+.hud-controls {
+  display: grid;
+  gap: 14px;
+}
+.hud-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+:is(.hud-modes, .hud-demo) button {
+  flex: 1 1 auto;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--al-border);
+  border-radius: 999px;
+  background: #2a1d12;
+  color: var(--al-cream);
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+:is(.hud-modes, .hud-demo, .hud-warnings) button:hover {
+  border-color: var(--al-blue);
+}
+.hud-modes button[aria-pressed="true"] {
+  background: var(--al-blue);
+  border-color: var(--al-blue);
+  color: #1a1008;
+}
+:is(.hud-modes, .hud-demo, .hud-warnings) button:focus-visible {
+  outline: 2px solid var(--al-blue-soft);
+  outline-offset: 2px;
+}
+.hud-warnings {
+  display: grid;
+  gap: 6px;
+}
+.hud-warnings > .al-mono {
+  font-size: 10px;
+  color: var(--al-text-faint);
+}
+.hud-warnings button {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--al-border-soft);
+  border-radius: 8px;
+  background: #1a120b;
+  color: var(--al-text-muted);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.hud-warnings button small {
+  font: 10px var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--al-text-faint);
+}
+/* An active warning reads like its banner on the screen. */
+.hud-warnings button[aria-pressed="true"] {
+  border-color: #d6413a;
+  background: #d6413a;
+  color: #fff;
+}
+.hud-warnings button[aria-pressed="true"] small {
+  color: #ffd9d6;
+}
+.hud-demo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hud-demo button {
+  flex: 0 0 auto;
+}
+.hud-status {
+  margin: 0;
+  font: 11px var(--font-mono);
+  color: var(--al-text-muted);
+}
+
+/* The live display opening the Redback case study, in the full-width cover slot. */
+.cs-cover--hud .hud-device {
+  grid-template-columns: minmax(0, 1.75fr) minmax(230px, 1fr);
+  align-items: center;
+  gap: 22px 28px;
+  padding: 28px;
+  background: none;
+}
+.cs-cover--hud .hud-controls {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+@media (max-width: 900px) {
+  .cs-cover--hud .hud-device {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+}
+
+/* The compact display in homepage and showcase tiles (HudTile). */
+.hud-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 22px 56px;
+}
+.hud-tile .hud-screen {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+}
+.hud-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

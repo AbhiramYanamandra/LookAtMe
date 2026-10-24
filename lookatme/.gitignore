@@ -57,3 +57,6 @@ next-env.d.ts
 # (scripts/build-macropad-model.sh rebuilds it from Macropad-mk2.step)
 /Macropad-mk2.zip
 /Macropad-mk2.step
+
+# Source media too large for git; web versions live in public/images/redback
+/design/redback-source/

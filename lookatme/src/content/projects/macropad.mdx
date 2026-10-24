@@ -3,20 +3,20 @@ title: 3×3 Macropad
 summary: A custom nine-key macropad with per-key RGB and programmable layers.
 badge: Hardware engineering
 fields: [hardware]
-technologies: [XIAO RP2040, KiCad, CircuitPython, KMK, SSD1306, I2C, FreeCAD]
+technologies: [XIAO RP2040, KiCad, CircuitPython, KMK, SSD1306, I2C, Fusion 360]
 cover:
-  src: /images/macropad.png
-  alt: PCB render of the nine-key macropad showing the 3×3 switch grid, a display module, and a pin header
-  fit: contain
+  src: /images/macropad-case.jpg
+  model: /models/macropad.glb
+  alt: Render of the assembled macropad in its dark grey case, nine switches in a 3×3 grid through the top plate, with the OLED and encoder header in a window behind them
+  fit: cover
   kind: render
-  caption: Full PCB render of the board, shown uncropped. The carousel and homepage card use a tight CSS crop of this same image.
+  caption: The assembled macropad in its case. Take it apart to see each layer, then hover or tap a part to name it.
 role: Personal project
 order: 4
 spectrum: 0.12
 metric: "9 keys + OLED"
 featured: 2
 card:
-  visual: board
   action: Explore the build
 draft: false
 ---
@@ -25,14 +25,9 @@ draft: false
 
 A custom-built nine-key macropad: a 3×3 grid of mechanical switches with per-key RGB lighting and programmable layers, so each key can do different things depending on the active layer.
 
-## What the render shows
+## What the model shows
 
-The image on this page is a **PCB render**, not a photograph of a finished unit. Visible in the render:
-
-- a 3×3 grid of mechanical switch footprints;
-- a small display module on a four-pin header labelled GND, VCC, SCL, and SDA (an I²C connection);
-- a six-pin header beside the display;
-- four mounting holes at the board corners.
+The model at the top of this page is built from the board's own **KiCad STEP export**, with the XIAO and part colours the export drops added back, inside the enclosure described below. It is a CAD model, not a photograph of a finished unit. Take it apart to see each layer, from the switches down to the bottom tray, and hover any part to name it.
 
 ## The board
 
@@ -46,7 +41,9 @@ Firmware runs **CircuitPython with KMK**, presenting the board as a USB HID devi
 
 ## Enclosure
 
-The finished PCB was exported to **STEP** and a matching enclosure modelled in **FreeCAD**, so the electrical and mechanical designs are dimensioned against the same source geometry rather than measured by hand.
+The finished PCB was exported to **STEP** and the enclosure modelled around it in **Fusion 360**, so the electrical and mechanical designs are dimensioned against the same source geometry rather than measured by hand.
+
+The case has 2 mm walls and a top plate 5 mm above the board, the standard MX plate height, with a pocket for each switch, a window for the OLED and header, M2 standoffs at the four mounting holes, and a slot for the XIAO's USB-C port. The 3D model shows the board inside it: switch the case to clear, or hide it, to see the PCB.
 
 <Note>
   An earlier prototype of this board used an ESP32-S3; the final design is the XIAO RP2040 described above. Per-key RGB appears in the summary but is not covered by the build record this page draws on.

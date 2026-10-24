@@ -6,9 +6,10 @@ import { subscribeSpread, getSpread } from "@/lib/hero-entrance-state";
 import { whenPhase } from "@/lib/intro-state";
 
 /**
- * The role line and the three project tiles that move with it.
+ * The role line and the four project tiles that move with it.
  *
- * "hardware engineer", "software engineer", "ML engineer" are typed, held,
+ * "hardware engineer", "software engineer", "embedded engineer" and
+ * "ML engineer" are typed, held,
  * backspaced and looped (see src/lib/role-typer.js); while a role is on
  * screen its project tile steps forward. Under reduced motion nothing types
  * or moves: the line is the static sentence and the tiles sit at rest.

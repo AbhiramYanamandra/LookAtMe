@@ -20,6 +20,8 @@ export const PUBLIC_DIR = path.join(process.cwd(), "public");
 
 export const CARD_VISUALS = ["image", "screenshot", "board", "stages", "figure", "clap", "dataflow", "detect", "erd", "navmap", "sorter", "cipher", "ttt", "guess", "pagetable", "rsvp"];
 export const IMAGE_FITS = ["cover", "contain"];
+// Live figures a cover can open with instead of its image (see the project page).
+export const COVER_FIGURES = ["hud"];
 export const STATUSES = ["complete", "in-progress", "paused", "archived"];
 
 export class ContentValidationError extends Error {
@@ -83,6 +85,12 @@ function normaliseImage(raw, publicDir, problems, where) {
   if (!IMAGE_FITS.includes(fit)) {
     problems.push(`${where}: fit must be one of ${IMAGE_FITS.join(", ")}`);
   }
+  if (raw.model !== undefined && (typeof raw.model !== "string" || !raw.model.endsWith(".glb") || !fs.existsSync(path.join(publicDir, raw.model)))) {
+    problems.push(`${where}: model must be a .glb path that exists under public/`);
+  }
+  if (raw.figure !== undefined && !COVER_FIGURES.includes(raw.figure)) {
+    problems.push(`${where}: figure must be one of ${COVER_FIGURES.join(", ")}`);
+  }
   if (raw.position !== undefined && typeof raw.position !== "string") {
     problems.push(`${where}: position must be a CSS object-position string`);
   }
@@ -93,6 +101,8 @@ function normaliseImage(raw, publicDir, problems, where) {
     position: raw.position ?? "50% 50%",
     kind: typeof raw.kind === "string" ? raw.kind : null,
     caption: typeof raw.caption === "string" ? raw.caption : null,
+    model: typeof raw.model === "string" ? raw.model : null,
+    figure: typeof raw.figure === "string" ? raw.figure : null,
     width: size?.width ?? null,
     height: size?.height ?? null,
   };

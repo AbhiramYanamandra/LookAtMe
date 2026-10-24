@@ -253,6 +253,37 @@
   color: var(--al-text-faint);
   pointer-events: none;
 }
+.al-model-case {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--al-border-soft);
+  border-radius: 999px;
+  background: #120d09cc;
+}
+.al-model-case button {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--al-text-faint);
+  cursor: pointer;
+}
+.al-model-case button[aria-pressed="true"] {
+  background: var(--al-cream);
+  color: #120d09;
+}
+.al-model-case button:focus-visible {
+  outline: 2px solid var(--al-blue);
+  outline-offset: 1px;
+}
 .al-hotspot {
   position: relative;
   width: 12px;
@@ -907,4 +938,211 @@
   font-size: 1.3cqw;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* Narrow: the case toggle needs the bottom edge, so the drag hint gives way. */
+@media (max-width: 520px) {
+  .al-model:has(.al-model-case) .al-model-hint {
+    display: none;
+  }
+}
+
+/* --- Phones: the lead projects as image cards -------------------------- */
+.al-story-cards,
+.al-story-hint-cards {
+  display: none;
+}
+/* Narrow screens, and phones held sideways (short and touch-driven). */
+@media (max-width: 800px), (max-height: 500px) and (pointer: coarse) {
+  .al-story .al-chapter,
+  .al-story .al-story-rail,
+  .al-story-hint-wide {
+    display: none;
+  }
+  .al-story-hint-cards {
+    display: inline;
+  }
+  .al-story-stage {
+    padding-top: 44px;
+  }
+  .al-story-head {
+    margin-bottom: 22px;
+  }
+  .al-story-cards {
+    display: grid;
+    /* minmax(0, …): the row inside must not widen the page to its own length. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding-bottom: 32px;
+  }
+  /* One row that swipes sideways, one card at a time. Each card fills the
+     page's content width; the row runs to the screen edges and the gap
+     between cards is wider than both margins, so the next card stays fully
+     off screen until you swipe. */
+  .al-card-row-track {
+    /* The page's side margin (.al-below), so the row reaches the screen edge. */
+    --edge: 34px;
+    display: flex;
+    gap: calc(var(--edge) * 2);
+    margin: 0 calc(-1 * var(--edge));
+    padding: 2px var(--edge) 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    scrollbar-width: none;
+    list-style: none;
+  }
+  @media (max-width: 700px) {
+    .al-card-row-track {
+      --edge: 22px;
+    }
+  }
+  @media (max-width: 470px) {
+    .al-card-row-track {
+      --edge: 18px;
+    }
+  }
+  .al-card-row-track::-webkit-scrollbar {
+    display: none;
+  }
+  .al-card-row-track > li {
+    display: flex;
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    /* One swipe moves one card, however hard the flick. */
+    scroll-snap-stop: always;
+  }
+  .al-card-row-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .al-card-row-dots button {
+    position: relative;
+    width: 32px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .al-card-row-dots button::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--al-border);
+    transform: translate(-50%, -50%);
+    transition: width 250ms var(--ease-out), background-color 250ms;
+  }
+  .al-card-row-dots button[aria-current="true"]::before {
+    width: 20px;
+    background: var(--al-blue);
+  }
+  .al-card-row-dots button:focus-visible {
+    outline: 2px solid var(--al-blue);
+    outline-offset: 2px;
+  }
+  .al-story-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--al-border);
+    border-radius: 12px;
+    background: var(--al-surface);
+    transition: border-color 0.18s, background-color 0.18s;
+  }
+  .al-story-card:active {
+    background: var(--al-surface-raised);
+  }
+  .al-story-card:focus-visible {
+    outline: 2px solid var(--al-blue);
+    outline-offset: 3px;
+  }
+  .al-story-card-image {
+    /* 5:3 shows the display screenshot whole; the other stills crop gently. */
+    aspect-ratio: 5 / 3;
+    overflow: hidden;
+    background: var(--al-surface-raised);
+    border-bottom: 1px solid var(--al-border-soft);
+  }
+  .al-story-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .al-story-card-image .al-glyph {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .al-story-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 16px 18px;
+  }
+  .al-story-card-body .al-mono {
+    color: var(--al-blue);
+    font-size: 11px;
+  }
+  .al-story-card-body h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--al-cream);
+  }
+  .al-story-card-body p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--al-text-intro);
+  }
+  /* Pushed to the bottom so every card's link lines up. */
+  .al-story-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 6px;
+    font-size: 14px;
+    color: var(--al-blue);
+  }
+  .al-story-card-cta svg,
+  .al-story-all svg {
+    width: 15px;
+    height: 15px;
+  }
+  .al-story-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    border: 1px solid var(--al-border);
+    border-radius: 999px;
+    color: var(--al-cream);
+    font-size: 15px;
+  }
+  .al-story-all:active {
+    background: var(--al-surface);
+  }
+  .al-story-all:focus-visible {
+    outline: 2px solid var(--al-blue);
+    outline-offset: 3px;
+  }
+
+  /* Field chips and the terminal are desktop extras: the library has the
+     field filters, and a terminal wants a keyboard. */
+  .al-work-strip,
+  .al-terminal-section {
+    display: none;
+  }
 }

@@ -6,6 +6,10 @@
  * `--part` adds a component the KiCad export left out, placed from its PCB
  * footprint (x, y in KiCad board millimetres, y down; angle in degrees; side).
  *
+ * `--enclosure <module.mjs>` adds the meshes that module's `build()` returns, in
+ * STEP millimetres, each as a node named after the mesh. It does not move the centre, so
+ * positions measured on the bare board still hold.
+ *
  * `--palette <Component>=<library.step>` copies the true per-face colours from a
  * component's library model. KiCad's STEP export drops them, but the models
  * keep them, and instances share the library model's mesh order.
@@ -33,10 +37,14 @@ if (!input || !output) {
 }
 const extras = [];
 const paletteSources = {};
+let enclosureModule = null;
 for (let i = 2; i < args.length; i += 1) {
   if (args[i] === "--palette") {
     const [component, file] = args[i + 1].split("=");
     paletteSources[component] = file;
+    i += 1;
+  } else if (args[i] === "--enclosure") {
+    enclosureModule = args[i + 1];
     i += 1;
   } else if (args[i] === "--part") {
     const [file, x, y, angle, side] = args[i + 1].split(",");
@@ -108,6 +116,15 @@ const centre = min.map((value, k) => (value + max[k]) / 2);
 console.log("size (mm):", max.map((value, k) => (value - min[k]).toFixed(1)).join(" x "));
 console.log("centre (mm, STEP axes):", centre.map((value) => value.toFixed(2)).join(", "));
 
+if (enclosureModule) {
+  const { build } = await import(new URL(enclosureModule, `file://${process.cwd()}/`).href);
+  for (const mesh of await build()) {
+    result.meshes.push(mesh);
+    result.root.children.push({ name: mesh.name, meshes: [result.meshes.length - 1], children: [] });
+    console.log(`added ${mesh.name}`);
+  }
+}
+
 const doc = new Document();
 doc.createBuffer();
 const scene = doc.createScene("macropad");
@@ -117,11 +134,11 @@ const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
 const hex = (value) => [(value >> 16) & 255, (value >> 8) & 255, value & 255].map((c) => c / 255);
 // Colours read from STEP are already linear (KiCad's own render treats them
 // that way); hand-picked hex colours below are sRGB and converted.
-const materialFor = ({ rgb, linear = false, metal = 0, rough = 0.5 }) => {
-  const key = `${rgb.map((c) => c.toFixed(3)).join(",")}|${linear}|${metal}|${rough}`;
+const materialFor = ({ rgb, linear = false, metal = 0, rough = 0.5, name }) => {
+  const key = `${rgb.map((c) => c.toFixed(3)).join(",")}|${linear}|${metal}|${rough}|${name}`;
   if (!materials.has(key)) {
     const [r, g, b] = linear ? rgb : rgb.map(toLinear);
-    materials.set(key, doc.createMaterial(`m${materials.size}`).setBaseColorFactor([r, g, b, 1]).setRoughnessFactor(rough).setMetallicFactor(metal));
+    materials.set(key, doc.createMaterial(name ?? `m${materials.size}`).setBaseColorFactor([r, g, b, 1]).setRoughnessFactor(rough).setMetallicFactor(metal));
   }
   return materials.get(key);
 };
@@ -155,6 +172,8 @@ const finish = (name, size, color) => {
   const thin = Math.min(sx, sy) < 2;
   // KiCad renders the solder mask a muted olive green; match that rather than the STEP's teal.
   if (name === "Macropad-mk2_PCB") return { rgb: hex(0x4f6f46), rough: 0.5 };
+  // Named so the viewer can find it and fade or hide the case.
+  if (name?.startsWith("Enclosure")) return { rgb: hex(0x3a3b3f), rough: 0.7, name: "Enclosure" };
   if (color) return { rgb: color, linear: true, rough: 0.45 };
   if (name?.startsWith("OLED")) return thin && sz > 8 ? goldFinish : { rgb: hex(0xd8d8d8), rough: 0.4 }; // pins; white standoffs
   if (name === "XIAO RP2040") {
@@ -254,7 +273,7 @@ await MeshoptSimplifier.ready;
 // Triangle budget per primitive by component. Repeated parts (nine switches,
 // nine diodes) are dense at this tessellation, so they are decimated to a cap;
 // the PCB, with its round holes and corners, is never touched.
-const TRIANGLE_CAP = { "Macropad-mk2_PCB": Infinity, "XIAO RP2040": 6000, OLED_128x32: 2500, MX_PCB: 1400, "Diode_DO-35": 700 };
+const TRIANGLE_CAP = { "Macropad-mk2_PCB": Infinity, "Enclosure top": Infinity, "Enclosure bottom": Infinity, "XIAO RP2040": 6000, OLED_128x32: 2500, MX_PCB: 1400, "Diode_DO-35": 700 };
 const simplifyHeavy = (document) => {
   for (const node of document.getRoot().listNodes()) {
     const mesh = node.getMesh();

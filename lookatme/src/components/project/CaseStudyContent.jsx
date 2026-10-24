@@ -13,6 +13,8 @@ import { PipelineTrace } from "./PipelineTrace";
 import { HogAnatomy } from "./HogAnatomy";
 import { HogDataflow, HogVersions } from "./HogCharts";
 import { WatchSim } from "./WatchSim";
+import { HudSim } from "./HudSim";
+import { Clip } from "./Clip";
 import { LcdIconTable } from "./LcdIconTable";
 import { I2sFrame } from "./I2sFrame";
 import { ClapDetector } from "./ClapDetector";
@@ -29,6 +31,13 @@ const KIND_LABEL = {
   diagram: "Diagram",
   illustration: "Illustration",
 };
+
+/**
+ * Images narrower than this skip the optimiser. Its srcset offers them at
+ * widths far above their own, so the browser reads them as high-density and
+ * draws them at a fraction of their size; served as-is they keep it.
+ */
+export const SMALL_IMAGE = 1200;
 
 export function kindLabel(kind) {
   return kind ? (KIND_LABEL[kind] ?? kind) : null;
@@ -52,7 +61,7 @@ export function Figure({ src, alt, caption, kind, width, height }) {
   return (
     <figure className="cs-figure" data-reveal>
       <div className="cs-figure-frame">
-        <Image src={src} alt={alt} width={size.width} height={size.height} sizes="(max-width: 900px) 100vw, 680px" />
+        <Image src={src} alt={alt} width={size.width} height={size.height} sizes="(max-width: 900px) 100vw, 680px" unoptimized={size.width < SMALL_IMAGE} />
       </div>
       {(caption || kind) && (
         <figcaption className="cs-figcaption">
@@ -77,6 +86,7 @@ export function Gallery({ children }) {
 // Headings, images, and diagrams reveal on scroll; paragraphs stay readable.
 const components = {
   Figure,
+  Clip,
   Note,
   Gallery,
   DetectionGrid,
@@ -86,6 +96,7 @@ const components = {
   HogDataflow,
   HogVersions,
   WatchSim,
+  HudSim,
   LcdIconTable,
   I2sFrame,
   ClapDetector,

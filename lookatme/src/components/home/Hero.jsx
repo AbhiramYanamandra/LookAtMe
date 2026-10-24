@@ -20,10 +20,10 @@ function TileVisual({ project }) {
 
 /**
  * Hero: a photo of me, the handwritten name beneath it, a typed role line,
- * and three project tiles that drift around the photo and take turns coming
+ * and four project tiles that drift around the photo and take turns coming
  * forward as each role is typed.
  *
- * `projects` is the whole published collection; the hero picks the three
+ * `projects` is the whole published collection; the hero picks the four
  * named in `profile.hero.roles`.
  */
 export function Hero({ projects }) {

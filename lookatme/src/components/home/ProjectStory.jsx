@@ -10,15 +10,18 @@ import { storyProgress } from "@/lib/motion";
  * The pinned project story. Three chapters share one sticky stage; as the
  * page scrolls, each chapter's title, interactive visual, facts and link are
  * revealed in turn, then the next chapter takes over. Scrolling back reverses
- * it. Without JS, with reduced motion, or on narrow screens the chapters are
- * simply stacked and fully revealed.
+ * it. Without JS, or with reduced motion, nothing pins and the chapters are
+ * stacked fully revealed. On phones CSS swaps the chapters for `cards`, a
+ * swipeable row built by the server, so nothing pins or loads a live demo.
  *
  * `chapters` carry their visual as a ready-made node (the server builds the
  * model viewer, wya demo and thesis figure); this component owns scroll.
  */
-const PIN_QUERY = "(min-width: 801px) and (prefers-reduced-motion: no-preference)";
+// Matches the CSS that swaps in the phone cards: narrow screens, and phones
+// held sideways (short and touch-driven), never pin.
+const PIN_QUERY = "(min-width: 801px) and (prefers-reduced-motion: no-preference) and ((min-height: 501px) or (pointer: fine))";
 
-export function ProjectStory({ label, heading, hint, chapters }) {
+export function ProjectStory({ label, heading, hint, cardsHint, chapters, cards }) {
   const sectionRef = useRef(null);
   const [pinned, setPinned] = useState(false);
   const [states, setStates] = useState(() => chapterState(0, chapters.length));
@@ -137,7 +140,10 @@ export function ProjectStory({ label, heading, hint, chapters }) {
         <header className="al-story-head" data-reveal="heading">
           <span className="al-mono">{label}</span>
           <h2 id="story-heading">{heading}</h2>
-          <span className="al-mono al-story-hint">{hint}</span>
+          <span className="al-mono al-story-hint">
+            <span className="al-story-hint-wide">{hint}</span>
+            {cardsHint && <span className="al-story-hint-cards">{cardsHint}</span>}
+          </span>
         </header>
 
         {chapters.map((chapter, index) => {
@@ -180,11 +186,16 @@ export function ProjectStory({ label, heading, hint, chapters }) {
                 </Link>
               </div>
               <div className="al-chapter-visual" data-shown={shown(2)}>
-                {live ? chapter.visual : (chapter.poster ?? chapter.visual)}
+                {/* Stacked, a demo waits until its chapter is reached, so the
+                    phone layout (chapters hidden, cards shown) mounts none. */}
+                {live ? chapter.visual : (chapter.poster ?? (pinned ? chapter.visual : null))}
               </div>
+
             </article>
           );
         })}
+
+        {cards}
 
         {pinned && (
           <nav className="al-story-rail" aria-label="Projects">

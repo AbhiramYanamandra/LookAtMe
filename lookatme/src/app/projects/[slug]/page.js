@@ -4,10 +4,13 @@ import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { CaseStudyBody, Figure, Gallery, kindLabel } from "@/components/project/CaseStudyContent";
+import { CaseStudyBody, Figure, Gallery, SMALL_IMAGE, kindLabel } from "@/components/project/CaseStudyContent";
 import { QuickFacts } from "@/components/project/QuickFacts";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { TraceFilter } from "@/components/project/CardDrawing";
+import { ExplodedModel } from "@/components/project/ExplodedModel";
+import { HudSim } from "@/components/project/HudSim";
+import { models } from "@/content/models";
 import { BackToLibrary } from "@/components/project/LibraryState";
 import { ReadingProgress } from "@/components/project/ReadingProgress";
 import { FieldBadge, projectBadge } from "@/components/project/CardBody";
@@ -48,6 +51,11 @@ export default async function ProjectPage({ params }) {
 
   const related = relatedProjects(project, getPublishedProjects().map(toSummary));
   const { cover } = project;
+  const model = cover?.model ? models[cover.model] : null;
+  // A live figure replaces the cover image on the page; the image stays the
+  // poster for cards and link previews.
+  const figures = { hud: <HudSim /> };
+  const figure = cover?.figure ? figures[cover.figure] : null;
 
   return (
     <>
@@ -70,7 +78,27 @@ export default async function ProjectPage({ params }) {
             </div>
           </header>
 
-          {cover && (
+          {cover && model && (
+            <figure className="cs-cover cs-cover--model" data-reveal>
+              <ExplodedModel src={cover.model} poster={cover.src} alt={model.alt} layers={model.layers} views={model.views} />
+              <figcaption className="cs-figcaption">
+                <span>{cover.caption ?? cover.alt}</span>
+                <span className="al-mono">3D model</span>
+              </figcaption>
+            </figure>
+          )}
+
+          {cover && figure && (
+            <figure className={`cs-cover cs-cover--${cover.figure}`} data-reveal>
+              {figure}
+              <figcaption className="cs-figcaption">
+                <span>{cover.caption ?? cover.alt}</span>
+                <span className="al-mono">Interactive</span>
+              </figcaption>
+            </figure>
+          )}
+
+          {cover && !model && !figure && (
             <figure className="cs-cover" data-reveal>
               <div className="cs-figure-frame">
                 <Image
@@ -81,6 +109,7 @@ export default async function ProjectPage({ params }) {
                   sizes="(max-width: 1120px) 100vw, 1056px"
                   data-fit={cover.fit}
                   style={{ objectPosition: cover.position }}
+                  unoptimized={cover.width < SMALL_IMAGE}
                   priority
                 />
               </div>

@@ -1,0 +1,89 @@
+---
+title: Redback driver display
+summary: The steering-wheel display on UNSW Redback Racing's Formula SAE car. STM32 firmware reads the car's CAN bus and draws live data in front of the driver with TouchGFX.
+badge: Embedded firmware
+fields: [embedded, hardware]
+technologies: [STM32, C++, FreeRTOS, CAN, TouchGFX, Figma]
+date: 2024
+role: Firmware engineer
+team: UNSW Redback Racing
+cover:
+  src: /images/redback/hud-final.png
+  figure: hud
+  alt: The redesigned driver display layout. HV cell voltages and LV battery on the left, Ready, gauge and fan icons above a large lap timer, a green delta bar, brake bias, an RTD badge and the lap count in the centre, accumulator temperature, torque limit and regen on the right, and a row of CAN device status and temperatures along the bottom.
+  fit: contain
+  kind: illustration
+  caption: The redesigned driver display, running in your browser through a simulated lap. Watch each warning stack on, then take over with the toggles. A recreation of the team's TouchGFX design on simulated values, not the car's firmware or data.
+order: 5
+spectrum: 0.16
+featured: 3
+card:
+  action: Try the display
+draft: false
+---
+
+## Overview
+
+A Formula SAE car needs a display behind the steering wheel. It shows the driver lap time, battery state and temperatures at a glance, and it says clearly when something is wrong. On **UNSW Redback Racing** I worked on the firmware for that display: an **STM32 U-series** microcontroller running **C++ on FreeRTOS**, reading vehicle data off the car's **CAN** bus and drawing it with **TouchGFX**.
+
+The display sits at the end of a long chain. Each sensor and controller on the car publishes on CAN. The display has to pick out the values the driver needs, keep up with them, and redraw fast enough to be useful at speed, without the interface stalling while it does.
+
+The screen at the top of this page is where the design ended up. The rest of the page is how it got there: the screen the car raced with, what it looked like on the car, and what the team changed so a driver could read it at speed.
+
+## The screen we raced with
+
+<Clip
+  src="/images/redback/hud-bench.mp4"
+  poster="/images/redback/hud-bench.jpg"
+  width={540}
+  height={960}
+  alt="The driver display on a bench next to a laptop, its grid of values updating live."
+  caption="The car's display on the bench, reading live CAN data. Requested and actual torque, steering, acceleration and velocity update in pairs, beside brake hold, service status, Jetson readiness and the SBG GNSS solution."
+/>
+
+This is the screen the car ran: a dense grid built for engineers as much as drivers. Every control value appears twice, **requested** and **actual**, so a mismatch between what was asked for and what the car did is visible immediately. Next to them sit the state of the car's other computers: whether service is **active**, whether the **Jetson** is ready, and the **SBG** GNSS solution status, accuracy and position.
+
+That's exactly what you want while debugging on a bench. At speed, a driver needs a handful of those numbers, and needs to find them without reading.
+
+## On the car
+
+<Clip
+  src="/images/redback/hud-on-car.mp4"
+  poster="/images/redback/hud-on-car.jpg"
+  width={720}
+  height={580}
+  alt="The display mounted above the carbon-fibre steering wheel of the Redback car, showing HV cells, LV battery voltage and a lap timer."
+  caption="Mounted above the steering wheel at an open day, running a driver-facing layout: HV cells and LV battery voltage on the left, state icons in the middle, lap timer along the bottom."
+/>
+
+Mounted above the wheel, the display is a glance away from the road. This layout was the first step towards a driver's screen: fewer values, bigger type, with the lap timer and the delta to the best lap given their own rows.
+
+## Where the design went next
+
+With the team I worked on a redesign in **Figma** that goes further: keep what a driver needs and arrange everything around it. The redesign is the screen at the top of this page. It wasn't filmed running on the car.
+
+<Gallery>
+  <Figure src="/images/redback/hud-car-layout.png" alt="The driver layout from the open day: HV cells, LV battery, two state icons, eight temperature and limit tiles, a green delta bar and a lap timer." caption="Before: the layout in the open-day clip. Equal-weight tiles, and the lap timer pushed to the bottom." kind="illustration" />
+  <Figure src="/images/redback/hud-final.png" alt="The redesigned layout with a large central lap timer, delta bar, brake bias, RTD badge and lap count, and a status row along the bottom." caption="After: the lap timer moves to the centre, and a bottom row reports each CAN device's health." kind="illustration" />
+</Gallery>
+
+The redesign changes four things:
+
+- **The timer is the centre of the screen.** Lap time and the delta to the best lap are what a driver looks for. Everything else is arranged around them.
+- **State has a shape and a colour.** Ready, Failed and Inactive each have their own icon treatment, and the accumulator and radiator fans, which are PDM channels, show plainly whether they're on.
+- **The car's other computers report in.** A status row shows the CAN Forwarder, the Jetson and the router, beside the discharge current limit and motor and coolant temperatures.
+- **Driving context is on the screen.** Brake bias, the RTD (ready-to-drive) state and the lap count sit under the timer.
+
+## States that matter
+
+A warning only works if the driver can't miss it. Each limit raises its own full-width red banner over the screen, and when several trip at once they stack rather than replace each other. Shutting down swaps every warning for a single blue instruction, the one thing the driver needs to do next. The display at the top plays through each of them; toggle any of them yourself to see it on its own.
+
+<Gallery>
+  <Figure src="/images/redback/hud-warnings.png" alt="Five red warning banners stacked over the display: LV battery too low, accu temp too high, motor temp too high, coolant temp too high, inverter temp too high." caption="All five warnings at once. The design sets the limits at accumulator above 55 °C, motor and coolant above 45 °C, inverter above 55 °C." kind="illustration" />
+  <Figure src="/images/redback/hud-shutdown.png" alt="A blue banner reading 'It is now safe to LV Off' across the display, with the CAN Forwarder and Jetson shown with red power-off icons." caption="Shutdown: one blue instruction, and the CAN devices shown as off." kind="illustration" />
+  <Figure src="/images/redback/hud-icons.png" alt="Icon states: the rocket in Ready, Failed and Inactive colours, the gauge dim and lit, and the accumulator and radiator fans off and on." caption="Icon states: Ready, Failed and Inactive, and each fan off and on." kind="illustration" />
+</Gallery>
+
+<Note>
+  The redesign was a team effort, and only the earlier layouts appear in footage from the car. The interactive display is a recreation for this page: it runs on simulated values, not the car's firmware or data.
+</Note>

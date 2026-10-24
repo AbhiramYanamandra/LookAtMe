@@ -27,7 +27,7 @@ I introduced **Playwright end-to-end testing** across the telemetry workflows, *
 
 ## The other end: firmware on the car
 
-The same work ran down to the vehicle itself. I developed and debugged **real-time firmware for an STM32 U-series driver display HUD**, using **C++ with FreeRTOS**, reading vehicle data off **CAN** and rendering it with **TouchGFX** — live performance information in front of the driver, at a refresh rate that is useful at speed.
+The same work ran down to the vehicle itself. I developed and debugged **real-time firmware for an STM32 U-series driver display HUD**, using **C++ with FreeRTOS**, reading vehicle data off **CAN** and rendering it with **TouchGFX** — live performance information in front of the driver, at a refresh rate that is useful at speed. The [driver display case study](/projects/redback-hud) shows the screen on the car and the redesign that followed, and you can try it in the browser.
 
 I also designed the **compact waterproof enclosure** for that display, with thermal management considered as part of the design. A HUD on a race car is an electronics problem and a mechanical one at the same time, and the two constraints resolve together or not at all.
 

@@ -31,15 +31,17 @@ export const profile = {
     roles: [
       { label: "hardware engineer", slug: "macropad" },
       { label: "software engineer", slug: "wya" },
+      { label: "embedded engineer", slug: "redback-hud" },
       { label: "ML engineer", slug: "photonic-correction" },
     ],
-    staticRoles: "Hardware, software and ML engineer",
+    staticRoles: "Hardware, software, embedded and ML engineer",
     // First-load boot sequence, typed on black before the page lights up.
     intro: {
       lines: [
         { kind: "command", text: "booting abhiram.sh" },
         { kind: "check", text: "hardware" },
         { kind: "check", text: "software" },
+        { kind: "check", text: "embedded" },
         { kind: "check", text: "ml" },
         { kind: "command", text: "hello." },
       ],
@@ -89,11 +91,13 @@ export const profile = {
   },
   story: {
     label: "[ Selected work ]",
-    heading: "Three things I’ve built.",
+    heading: "Four things I’ve built.",
     hint: "Scroll. Then touch things.",
+    // On phones the projects are a swipeable row of cards rather than a pinned scroll.
+    cardsHint: "Swipe through. Tap one to open it.",
     model: {
       src: "/models/macropad.glb",
-      alt: "3D model of the macropad PCB assembly: nine switch sockets, an OLED display and a pin header",
+      alt: "3D model of the macropad in its enclosure: nine switches through the top plate, an OLED window and a pin header, with the PCB visible through the case",
       // Positions are in metres in the model's own space (centred on the board).
       hotspots: [
         { label: "SSD1306 OLED", position: "-0.00918m 0.0007m -0.02756m" },
@@ -124,6 +128,17 @@ export const profile = {
           { value: "No app", label: "needed to RSVP: invite links open in any browser" },
           { value: "72", label: "automated tests proving each guest sees only what they should" },
           { value: "$0", label: "if you show up. No-shows lose a small deposit (built next)" },
+        ],
+      },
+      {
+        slug: "redback-hud",
+        kicker: "Embedded",
+        headline: "The screen a Formula SAE driver reads at speed.",
+        cta: "Try the display",
+        facts: [
+          { value: "CAN", label: "vehicle data read off the car’s bus by STM32 firmware on FreeRTOS" },
+          { value: "5", label: "warnings, each with its own limit, that stack instead of replacing each other" },
+          { value: "2", label: "screens: the engineer’s grid the car raced with, and a driver-first redesign" },
         ],
       },
       {
