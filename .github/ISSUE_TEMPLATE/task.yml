@@ -1,0 +1,53 @@
+name: Task
+description: A piece of work for the owner or an agent. This issue is the task record.
+labels: ["status:needs-owner"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The owner sets a priority (P0 to P3) and a `type:*` label, then changes `status:needs-owner` to `status:ready` when an agent may start.
+        This repository may be public. Do not include personal records, credentials or private paths.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What is true when this is done?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: The problem or goal behind it.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What may change.
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: What must not change.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checkable conditions. Mark any that need a physical or manual test.
+      value: |
+        - [ ] 
+    validations:
+      required: true
+  - type: input
+    id: plan
+    attributes:
+      label: Plan or design link
+      description: Optional detailed plan file or approved design in the repository.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Owner decisions and notes

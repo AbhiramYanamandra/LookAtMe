@@ -1,0 +1,29 @@
+# KAREN OS CI for LookAtMe: content validation, lint, tests and a production build.
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Content, lint, tests and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lookatme
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: lookatme/package-lock.json
+      - name: Install
+        run: npm ci --no-audit --no-fund
+      - name: Validate, lint, test and build
+        run: npm run check
