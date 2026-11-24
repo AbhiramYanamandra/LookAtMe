@@ -4,7 +4,7 @@
   "integration_level": 2,
   "karen_os_path": "~/Desktop/Personal_Projects/karen-os",
   "karen_os_repository": "AbhiramYanamandra/karen-os",
-  "karen_manifest_revision": "engineering-1",
+  "karen_manifest_revision": "engineering-7",
   "project_instructions": "AGENTS.md",
   "pipeline": {
     "tracker": "github",
