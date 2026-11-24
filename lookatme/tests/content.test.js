@@ -68,6 +68,28 @@ test("valid content loads with derived image dimensions and defaults", () => {
   assert.equal(projects[0].body.trim(), "Body.");
 });
 
+test("outcome is optional, trimmed, one line and at most 140 characters", () => {
+  const withOutcome = (value) => valid.replace("draft: false", `draft: false\noutcome: ${value}`);
+  assert.equal(loadAllProjects(fixture({ "valid.mdx": valid }))[0].outcome, null);
+  assert.equal(loadAllProjects(fixture({ "valid.mdx": withOutcome('"  Cut latency to 6 ms.  "') }))[0].outcome, "Cut latency to 6 ms.");
+  assert.equal(loadAllProjects(fixture({ "valid.mdx": withOutcome("x".repeat(140)) }))[0].outcome.length, 140);
+  assert.equal(loadAllProjects(fixture({ "valid.mdx": withOutcome(`"${"\u{1F680}".repeat(140)}"`) }))[0].outcome, "\u{1F680}".repeat(140));
+  for (const [value, expected] of [
+    ['"   "', "outcome must be non-empty text"],
+    ["42", "outcome must be quoted text (got number)"],
+    ["x".repeat(141), "at most 140 characters (has 141)"],
+    ['"first line\\nsecond line"', "outcome must be one line"],
+    ["|\n  first line\n  second line", "outcome must be one line"],
+    ["2025-06-01", "outcome must be quoted text (got a date)"],
+  ]) {
+    assert.throws(
+      () => loadAllProjects(fixture({ "valid.mdx": withOutcome(value) })),
+      (error) => error instanceof ContentValidationError && error.problems.some((p) => p.includes(expected)),
+      `rejects ${value.slice(0, 20)}`,
+    );
+  }
+});
+
 test("drafts are loaded but flagged, so callers can exclude them", () => {
   const projects = loadAllProjects(fixture({ "valid.mdx": valid, "draft.mdx": valid.replace("draft: false", "draft: true") }));
   assert.deepEqual(projects.map((p) => [p.slug, p.draft]), [["draft", true], ["valid", false]]);
