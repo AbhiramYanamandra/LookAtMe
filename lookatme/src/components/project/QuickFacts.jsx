@@ -9,6 +9,7 @@ import { SkillIcon } from "@/components/home/SkillIcon";
 /** Quick facts: only the facts that are actually known are rendered. */
 export function QuickFacts({ project }) {
   const facts = [
+    project.outcome && { label: "Outcome", value: project.outcome, wide: true },
     project.role && { label: "Role", value: project.role },
     project.team && { label: "Context", value: project.team },
     project.date && { label: "Date", value: formatProjectDate(project.date) },
@@ -45,7 +46,7 @@ export function QuickFacts({ project }) {
   return (
     <dl className="cs-facts" aria-label="Quick facts">
       {facts.map((fact) => (
-        <div key={fact.label}>
+        <div key={fact.label} className={fact.wide ? "cs-facts-wide" : undefined}>
           <dt>{fact.label}</dt>
           <dd>{fact.value}</dd>
         </div>

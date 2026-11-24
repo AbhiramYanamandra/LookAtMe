@@ -24,6 +24,9 @@ export const IMAGE_FITS = ["cover", "contain"];
 export const COVER_FIGURES = ["hud"];
 export const STATUSES = ["complete", "in-progress", "paused", "archived"];
 
+/** Quick facts shows the outcome as one short line. */
+const OUTCOME_MAX = 140;
+
 export class ContentValidationError extends Error {
   constructor(problems) {
     super(
@@ -155,6 +158,15 @@ function normaliseProject(file, raw, body, publicDir) {
     }
   }
 
+  let outcome = null;
+  if (raw.outcome !== undefined && raw.outcome !== null) {
+    const text = typeof raw.outcome === "string" ? raw.outcome.trim() : "";
+    if (text === "") problems.push(`${where}: outcome must be non-empty text when given`);
+    else if (text.includes("\n")) problems.push(`${where}: outcome must be one line`);
+    else if (text.length > OUTCOME_MAX) problems.push(`${where}: outcome must be at most ${OUTCOME_MAX} characters (has ${text.length})`);
+    else outcome = text;
+  }
+
   if (raw.status !== undefined && !STATUSES.includes(raw.status)) {
     problems.push(`${where}: status must be one of ${STATUSES.join(", ")}`);
   }
@@ -237,6 +249,7 @@ function normaliseProject(file, raw, body, publicDir) {
     status: raw.status ?? null,
     role: typeof raw.role === "string" && raw.role.trim() ? raw.role.trim() : null,
     team: typeof raw.team === "string" && raw.team.trim() ? raw.team.trim() : null,
+    outcome,
     cover,
     gallery,
     links,
