@@ -277,6 +277,10 @@
 .cs-facts div {
   min-width: 0;
 }
+/* A fact that spans both columns: the case-study outcome, the experience "worked with" list. */
+.cs-facts-wide {
+  grid-column: 1 / -1;
+}
 .cs-facts dt {
   font-family: var(--font-mono);
   font-size: 10px;

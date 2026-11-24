@@ -160,11 +160,19 @@ function normaliseProject(file, raw, body, publicDir) {
 
   let outcome = null;
   if (raw.outcome !== undefined && raw.outcome !== null) {
-    const text = typeof raw.outcome === "string" ? raw.outcome.trim() : "";
-    if (text === "") problems.push(`${where}: outcome must be non-empty text when given`);
-    else if (text.includes("\n")) problems.push(`${where}: outcome must be one line`);
-    else if (text.length > OUTCOME_MAX) problems.push(`${where}: outcome must be at most ${OUTCOME_MAX} characters (has ${text.length})`);
-    else outcome = text;
+    const text = typeof raw.outcome === "string" ? raw.outcome.trim() : null;
+    const length = text === null ? 0 : [...text].length; // characters, not UTF-16 units
+    if (text === null) {
+      problems.push(`${where}: outcome must be quoted text (got ${raw.outcome instanceof Date ? "a date" : typeof raw.outcome})`);
+    } else if (text === "") {
+      problems.push(`${where}: outcome must be non-empty text when given`);
+    } else if (/[\r\n]/.test(text)) {
+      problems.push(`${where}: outcome must be one line`);
+    } else if (length > OUTCOME_MAX) {
+      problems.push(`${where}: outcome must be at most ${OUTCOME_MAX} characters (has ${length})`);
+    } else {
+      outcome = text;
+    }
   }
 
   if (raw.status !== undefined && !STATUSES.includes(raw.status)) {

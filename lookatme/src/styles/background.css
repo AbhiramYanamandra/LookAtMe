@@ -239,9 +239,6 @@ a.xp-bar:hover .xp-bar-line { background: var(--al-blue-hover); box-shadow: 0 0 
   .xp-when .xp-duration { display: inline; margin: 0 0 0 10px; }
 }
 
-/* Case-study facts: let a long "worked with" list span both columns. */
-.cs-facts-wide { grid-column: 1 / -1; }
-
 /* --- Education ----------------------------------------------------------
    Set in the experience timeline's language so the record reads continuously. */
 .ab-education { border-top: 1px solid var(--al-border-soft); padding: 64px 0; }

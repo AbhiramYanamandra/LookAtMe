@@ -73,11 +73,14 @@ test("outcome is optional, trimmed, one line and at most 140 characters", () => 
   assert.equal(loadAllProjects(fixture({ "valid.mdx": valid }))[0].outcome, null);
   assert.equal(loadAllProjects(fixture({ "valid.mdx": withOutcome('"  Cut latency to 6 ms.  "') }))[0].outcome, "Cut latency to 6 ms.");
   assert.equal(loadAllProjects(fixture({ "valid.mdx": withOutcome("x".repeat(140)) }))[0].outcome.length, 140);
+  assert.equal(loadAllProjects(fixture({ "valid.mdx": withOutcome(`"${"\u{1F680}".repeat(140)}"`) }))[0].outcome, "\u{1F680}".repeat(140));
   for (const [value, expected] of [
     ['"   "', "outcome must be non-empty text"],
-    ["42", "outcome must be non-empty text"],
+    ["42", "outcome must be quoted text (got number)"],
     ["x".repeat(141), "at most 140 characters (has 141)"],
     ['"first line\\nsecond line"', "outcome must be one line"],
+    ["|\n  first line\n  second line", "outcome must be one line"],
+    ["2025-06-01", "outcome must be quoted text (got a date)"],
   ]) {
     assert.throws(
       () => loadAllProjects(fixture({ "valid.mdx": withOutcome(value) })),
